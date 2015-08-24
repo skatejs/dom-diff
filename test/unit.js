@@ -3,7 +3,7 @@
 import * as types from '../src/types';
 import diff from '../src/diff';
 import patch from '../src/patch';
-import test from './lib/test';
+import test from 'tipple';
 
 function elem (name, html) {
   var el = document.createElement(name);

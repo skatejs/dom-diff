@@ -1,11 +1,37 @@
 {
-  "dependencies": {},
+  "name": "dom-diff",
+  "version": "0.0.0",
+  "description": "Library for efficiently diffing and patching DOM fragments.",
+  "main": "lib/index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+  },
   "devDependencies": {
     "babel": "^5.8.21",
+    "chippy": "treshugart/chippy#4963683",
     "gulp": "^3.9.0",
     "gulp-auto-task": "0.0.1",
     "jshint": "^2.8.0",
-    "tape": "^4.2.0"
+    "tipple": "treshugart/tipple#10c1861"
   },
-  "peerDependencies": {}
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skatejs/dom-diff.git"
+  },
+  "keywords": [
+    "dom",
+    "diff"
+  ],
+  "author": "Trey Shugart <treshugart@gmail.com> (treshugart.github.io)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/skatejs/dom-diff/issues"
+  },
+  "homepage": "https://github.com/skatejs/dom-diff#readme"
 }

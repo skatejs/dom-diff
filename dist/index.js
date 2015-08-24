@@ -1,5 +1,5 @@
 // src/types.js
-__451dfb926e8c1ee4d08e6924e69a3ccb = (function () {
+__0ca807667308490ecea534df3b4369b8 = (function () {
   var module = {
     exports: {}
   };
@@ -25,7 +25,7 @@ __451dfb926e8c1ee4d08e6924e69a3ccb = (function () {
 }).call(this);
 
 // src/diff.js
-__6197b6cfa6b1333b68978d9741c150d4 = (function () {
+__22dce1b31df73fb8f06bda10d9498f07 = (function () {
   var module = {
     exports: {}
   };
@@ -40,7 +40,7 @@ __6197b6cfa6b1333b68978d9741c150d4 = (function () {
   
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
   
-  var _types = __451dfb926e8c1ee4d08e6924e69a3ccb;
+  var _types = __0ca807667308490ecea534df3b4369b8;
   
   var types = _interopRequireWildcard(_types);
   
@@ -210,7 +210,7 @@ __6197b6cfa6b1333b68978d9741c150d4 = (function () {
 }).call(this);
 
 // src/patch.js
-__8615174fa038c8ae72fb164ae5f35e0f = (function () {
+__d49832510105705a679155ef252b6786 = (function () {
   var module = {
     exports: {}
   };
@@ -224,7 +224,7 @@ __8615174fa038c8ae72fb164ae5f35e0f = (function () {
   
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
   
-  var _types = __451dfb926e8c1ee4d08e6924e69a3ccb;
+  var _types = __0ca807667308490ecea534df3b4369b8;
   
   var types = _interopRequireWildcard(_types);
   
@@ -258,8 +258,8 @@ __8615174fa038c8ae72fb164ae5f35e0f = (function () {
   return module.exports;
 }).call(this);
 
-// test/lib/test.js
-__dd27f1aa9620386958596959cdee4272 = (function () {
+// src/index.js
+__d0534c9e7312e01df51511bab04ed9e4 = (function () {
   var module = {
     exports: {}
   };
@@ -270,154 +270,27 @@ __dd27f1aa9620386958596959cdee4272 = (function () {
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
-  var queue = [];
-  
-  function test(name, func) {
-    queue.push([name, func]);
-    return test;
-  }
-  
-  test.equal = function (left, right) {
-    var message = arguments.length <= 2 || arguments[2] === undefined ? 'equal: ' : arguments[2];
-  
-    this.ok(left === right, message + ': expected "' + left + '" to equal "' + right + '"');
-  };
-  
-  test.ok = function (expr) {
-    var message = arguments.length <= 1 || arguments[1] === undefined ? 'Assertion failed.' : arguments[1];
-  
-    if (!expr) {
-      throw new Error(message);
-    }
-  };
-  
-  test.run = function () {
-    var index = -1;
-    var failures = [];
-  
-    function done() {
-      ++index;
-      var data = queue[index];
-  
-      if (!data) {
-        return console.log('# ' + (failures ? 'fail ' + failures.length : 'ok'));
-      }
-  
-      var desc = data[0];
-      var func = data[1];
-  
-      try {
-        (function () {
-          var async = false;
-          var pass = function pass() {
-            console.log('ok ' + (index + 1) + ' - ' + desc);
-            done();
-          };
-  
-          func(function () {
-            async = true;
-            return pass;
-          });
-  
-          if (!async) {
-            pass();
-          }
-        })();
-      } catch (e) {
-        console.log('not ok ' + (index + 1) + ' - ' + desc);
-        console.error('# ' + e.stack.split('\n').join('\n #'));
-        failures.push(e);
-        done();
-      }
-    }
-  
-    console.log('1..' + queue.length);
-    done();
-  };
-  
-  if (document) {
-    document.addEventListener('DOMContentLoaded', test.run);
-  }
-  
-  exports['default'] = test;
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
-
-// test/unit.js
-__8a6b3d8e91c0ca037465764bc31b218c = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  'use strict';
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+  var _diff = __22dce1b31df73fb8f06bda10d9498f07;
   
-  var _srcTypes = __451dfb926e8c1ee4d08e6924e69a3ccb;
+  var _diff2 = _interopRequireDefault(_diff);
   
-  var types = _interopRequireWildcard(_srcTypes);
+  var _patch = __d49832510105705a679155ef252b6786;
   
-  var _srcDiff = __6197b6cfa6b1333b68978d9741c150d4;
+  var _patch2 = _interopRequireDefault(_patch);
   
-  var _srcDiff2 = _interopRequireDefault(_srcDiff);
+  var _types = __0ca807667308490ecea534df3b4369b8;
   
-  var _srcPatch = __8615174fa038c8ae72fb164ae5f35e0f;
+  var _types2 = _interopRequireDefault(_types);
   
-  var _srcPatch2 = _interopRequireDefault(_srcPatch);
-  
-  var _libTest = __dd27f1aa9620386958596959cdee4272;
-  
-  var _libTest2 = _interopRequireDefault(_libTest);
-  
-  function elem(name, html) {
-    var el = document.createElement(name);
-    el.innerHTML = html;
-    return el;
-  }
-  
-  var div = elem.bind(null, 'div');
-  
-  function testPatch(srcHtml, dstHtml) {
-    (0, _libTest2['default'])('patching "' + srcHtml + '" with "' + dstHtml + '"', function () {
-      var src = div(srcHtml);
-      var dst = div(dstHtml);
-      (0, _srcPatch2['default'])((0, _srcDiff2['default'])(src, dst));
-      _libTest2['default'].equal(src.innerHTML, dstHtml);
-    });
-  }
-  
-  (0, _libTest2['default'])('diff instructions array', function () {
-    var diffed = (0, _srcDiff2['default'])(div(), div());
-    _libTest2['default'].ok(Array.isArray(diffed));
-  });
-  
-  (0, _libTest2['default'])('diff instruction object', function () {
-    var src = div('<span></span>');
-    var dst = div('<a></a>');
-    var instructions = (0, _srcDiff2['default'])(src, dst);
-    _libTest2['default'].equal(instructions.length, 1, 'instruction length');
-    _libTest2['default'].equal(instructions[0].destination.tagName, 'A', 'destination tagName');
-    _libTest2['default'].equal(instructions[0].source.tagName, 'SPAN', 'source tagName');
-    _libTest2['default'].equal(instructions[0].type, types.REPLACE_CHILD, 'type');
-  });
-  
-  (0, _libTest2['default'])('patching host should not change', function () {
-    var src = div('<span></span>');
-    var dst = div('<a></a>');
-    var instructions = (0, _srcDiff2['default'])(src, dst);
-    (0, _srcPatch2['default'])(instructions);
-    _libTest2['default'].equal(src.tagName, 'DIV');
-  });
-  
-  testPatch('<span></span>', '<a></a>');
-  testPatch('<span></span>', '<span></span><a></a>');
-  testPatch('<span></span>', '<a></a><span></span>');
-  testPatch('<span></span>', '<span></span><a></a><span></span>');
+  exports['default'] = {
+    diff: _diff2['default'],
+    patch: _patch2['default'],
+    types: _types2['default']
+  };
+  module.exports = exports['default'];
   
   return module.exports;
 }).call(this);
