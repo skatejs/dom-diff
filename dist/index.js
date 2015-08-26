@@ -14,11 +14,13 @@ __0ca807667308490ecea534df3b4369b8 = (function () {
   exports.APPEND_CHILD = APPEND_CHILD;
   var INSERT_BEFORE = 1;
   exports.INSERT_BEFORE = INSERT_BEFORE;
-  var REMOVE_CHILD = 2;
+  var MOVE_TO = 2;
+  exports.MOVE_TO = MOVE_TO;
+  var REMOVE_CHILD = 3;
   exports.REMOVE_CHILD = REMOVE_CHILD;
-  var REPLACE_CHILD = 3;
+  var REPLACE_CHILD = 4;
   exports.REPLACE_CHILD = REPLACE_CHILD;
-  var TEXT_CONTENT = 4;
+  var TEXT_CONTENT = 5;
   exports.TEXT_CONTENT = TEXT_CONTENT;
   
   return module.exports;
@@ -47,7 +49,7 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
   var NODE_COMMENT = 8;
   var NODE_ELEMENT = 1;
   var NODE_TEXT = 3;
-  var KEY_SAME_AS_DESTINATION = Symbol();
+  var KEY_NEW_INDEX = Symbol();
   
   function compareNodeElement(src, dst) {
     if (src.tagName !== dst.tagName) {
@@ -69,9 +71,15 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
   
   function isSameNode(src, dst) {
     var dstType = undefined,
-        srcType = undefined;
+        srcType = undefined,
+        ret = undefined;
   
     if (!dst || !src) {
+      return false;
+    }
+  
+    // Check to see if it's already claimed.
+    if (src[KEY_NEW_INDEX] > -1) {
       return false;
     }
   
@@ -80,23 +88,15 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
   
     if (dstType !== srcType) {
       return false;
+    } else if (dstType === NODE_ELEMENT) {
+      ret = compareNodeElement(src, dst);
+    } else if (dstType === NODE_TEXT) {
+      ret = compareNodeText(src, dst);
+    } else if (dstType === NODE_COMMENT) {
+      ret = compareNodeComment(src, dst);
     }
   
-    if (dstType === NODE_ELEMENT) {
-      return compareNodeElement(src, dst);
-    }
-  
-    if (dstType === NODE_TEXT) {
-      return compareNodeText(src, dst);
-    }
-  
-    if (dstType === NODE_COMMENT) {
-      return compareNodeComment(src, dst);
-    }
-  
-    // We don't really care about incurring the cost of compareing anything else
-    // so by returning true we just assume they're the same.
-    return true;
+    return ret !== false;
   }
   
   function indexOfNode(childNodes, child) {
@@ -144,56 +144,83 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
     // Add nodes that don't exist in the source.
     for (var a = 0; a < dstChsLen; a++) {
       var dstCh = dstChs[a];
+      var srcCh = srcChs[a];
+  
+      // If the nodes are the same, we add the current key to it so that we can
+      // ensure it is still there, or moved to there, when it comes time to
+      // ensure postions.
+      if (isSameNode(srcCh, dstCh)) {
+        dstInSrcMap.push(dstCh);
+        srcInDstMap.push(srcCh);
+        srcCh[KEY_NEW_INDEX] = a;
+        continue;
+      }
+  
+      // Now try and find in the source.
       var index = indexOfNode(srcChs, dstCh);
   
-      // If they exist in the source, then mark that source node.
+      // If the destination is in the source, we add the new key to it so that
+      // we can ensure it gets moved to the right spot later.
       if (index > -1) {
         dstInSrcMap.push(dstCh);
         srcInDstMap.push(srcChs[index]);
-        srcChs[index][KEY_SAME_AS_DESTINATION] = true;
+        srcChs[index][KEY_NEW_INDEX] = a;
+        continue;
       }
   
       // If there are same nodes, we take the last node that we found and insert
       // after that one. This ensures destination nodes get placed where they're
       // supposed to be rather than just appended.
-      else if (srcInDstMap.length) {
-          instructions.push({
-            destination: dstCh,
-            source: srcInDstMap[srcInDstMap.length - 1],
-            type: types.INSERT_BEFORE
-          });
-        }
+      if (dstInSrcMap.length) {
+        var srcToInsertAfter = srcInDstMap[srcInDstMap.length - 1];
+        var srcToInsertBefore = srcToInsertAfter.nextSibling;
+        instructions.push({
+          destination: dstCh,
+          source: srcToInsertBefore || src,
+          type: srcToInsertBefore ? types.INSERT_BEFORE : types.APPEND_CHILD
+        });
+        continue;
+      }
   
-        // If the destination node doesn't exist in the source node and there are
-        // no overlaps yet, we simply append.
-        else {
-            instructions.push({
-              destination: dstCh,
-              source: src,
-              type: types.APPEND_CHILD
-            });
-          }
+      // If there are no destination nodes found in the source yet then we
+      // append.
+      instructions.push({
+        destination: dstCh,
+        source: srcChsLen ? srcChs[0] : src,
+        type: srcChsLen ? types.INSERT_BEFORE : types.APPEND_CHILD
+      });
     }
   
     // Remove any nodes in the source that don't exist in the destination.
+    var moves = [];
     for (var a = 0; a < srcChsLen; a++) {
       var srcCh = srcChs[a];
   
-      // If the source is in the destination, keep it but cleanup the property
-      // we added to store some data.
-      if (srcCh[KEY_SAME_AS_DESTINATION]) {
-        delete srcCh[KEY_SAME_AS_DESTINATION];
+      // The node has moved. We record this so that we can append the moves to
+      // the end of the instructions array.
+      if (srcCh[KEY_NEW_INDEX] > -1) {
+        moves.push({
+          destination: srcCh[KEY_NEW_INDEX],
+          source: srcCh,
+          type: types.MOVE_TO
+        });
+        delete srcCh[KEY_NEW_INDEX];
+        continue;
       }
   
       // If the source does not exist in the destination, remove it.
-      else {
-          instructions.push({
-            destination: null,
-            source: srcCh,
-            type: types.REMOVE_CHILD
-          });
-        }
+      instructions.push({
+        destination: null,
+        source: srcCh,
+        type: types.REMOVE_CHILD
+      });
     }
+  
+    // Move instructions must come last to ensure that all attachments and
+    // detachments have been carried out at this level in the tree. This ensures
+    // that the source's length is the same as the destination's length and that
+    // indexes where nodes need to be moved is accurate.
+    instructions = instructions.concat(moves);
   
     // For the nodes that exist in both diff objects, we diff thier trees.
     var dstInSrcMapLen = dstInSrcMap.length;
@@ -234,6 +261,23 @@ __d49832510105705a679155ef252b6786 = (function () {
   };
   patchers[types.INSERT_BEFORE] = function (src, dst) {
     src.parentNode.insertBefore(dst, src);
+  };
+  patchers[types.MOVE_TO] = function (src, dstIndex) {
+    var dst = src.parentNode.childNodes[dstIndex];
+  
+    if (dst === src) {
+      return;
+    }
+  
+    console.log(dstIndex + ': ' + src.parentNode.innerHTML);
+  
+    if (dst) {
+      console.log(src.outerHTML + ' will go before ' + dst.outerHTML);
+      src.parentNode.insertBefore(src, dst);
+    } else {
+      console.log(src.outerHTML + ' will be appended');
+      src.parentNode.appendChild(src);
+    }
   };
   patchers[types.REMOVE_CHILD] = function (src) {
     src.parentNode.removeChild(src);

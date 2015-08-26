@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "babel": "^5.8.21",
-    "chippy": "treshugart/chippy#4963683",
+    "chippy": "treshugart/chippy#ccc80bf",
     "gulp": "^3.9.0",
     "gulp-auto-task": "0.0.1",
     "jshint": "^2.8.0",

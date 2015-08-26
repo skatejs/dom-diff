@@ -9,6 +9,23 @@ patchers[types.APPEND_CHILD] = function (src, dst) {
 patchers[types.INSERT_BEFORE] = function (src, dst) {
   src.parentNode.insertBefore(dst, src);
 };
+patchers[types.MOVE_TO] = function (src, dstIndex) {
+  let dst = src.parentNode.childNodes[dstIndex];
+
+  if (dst === src) {
+    return;
+  }
+
+  console.log(dstIndex + ': ' + src.parentNode.innerHTML);
+
+  if (dst) {
+    console.log(src.outerHTML + ' will go before ' + dst.outerHTML);
+    src.parentNode.insertBefore(src, dst);
+  } else {
+    console.log(src.outerHTML + ' will be appended');
+    src.parentNode.appendChild(src);
+  }
+};
 patchers[types.REMOVE_CHILD] = function (src) {
   src.parentNode.removeChild(src);
 };
