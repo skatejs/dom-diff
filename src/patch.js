@@ -16,13 +16,9 @@ patchers[types.MOVE_TO] = function (src, dstIndex) {
     return;
   }
 
-  console.log(dstIndex + ': ' + src.parentNode.innerHTML);
-
   if (dst) {
-    console.log(src.outerHTML + ' will go before ' + dst.outerHTML);
     src.parentNode.insertBefore(src, dst);
   } else {
-    console.log(src.outerHTML + ' will be appended');
     src.parentNode.appendChild(src);
   }
 };

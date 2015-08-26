@@ -269,13 +269,9 @@ __d49832510105705a679155ef252b6786 = (function () {
       return;
     }
   
-    console.log(dstIndex + ': ' + src.parentNode.innerHTML);
-  
     if (dst) {
-      console.log(src.outerHTML + ' will go before ' + dst.outerHTML);
       src.parentNode.insertBefore(src, dst);
     } else {
-      console.log(src.outerHTML + ' will be appended');
       src.parentNode.appendChild(src);
     }
   };
