@@ -7,6 +7,17 @@ const NODE_ELEMENT = 1;
 const NODE_TEXT = 3;
 const KEY_NEW_INDEX = Symbol();
 
+function compareNodeAttributes (src, dst) {
+  let srcAttrs = src.attrs;
+  let dstAttrs = dst.attrs;
+  let srcAttrsLen = srcAttrs.length;
+  let dstAttrsLen = dstAttrs.length;
+
+  if (srcAttrs) {
+
+  }
+}
+
 function compareNodeElement (src, dst) {
   if (src.tagName !== dst.tagName) {
     return false;
@@ -25,23 +36,23 @@ function compareNodeComment (src, dst) {
   }
 }
 
-function isSameNode (src, dst) {
+function compareNode (src, dst) {
   let dstType, srcType, ret;
 
   if (!dst || !src) {
-    return false;
+    return;
   }
 
   // Check to see if it's already claimed.
   if (src[KEY_NEW_INDEX] > -1) {
-    return false;
+    return;
   }
 
   dstType = dst.nodeType;
   srcType = src.nodeType;
 
   if (dstType !== srcType) {
-    return false;
+    return;
   } else if (dstType === NODE_ELEMENT) {
     ret = compareNodeElement(src, dst);
   } else if (dstType === NODE_TEXT) {
@@ -50,17 +61,36 @@ function isSameNode (src, dst) {
     ret = compareNodeComment(src, dst);
   }
 
-  return ret !== false;
+  // Specific comparisons must actually return false to notify that the node is
+  // not the same. This makes for a simpler internal API where specific
+  // comparisons only have to worry about returning false, or an array
+  // of instructions.
+  if (ret === false) {
+    return ret;
+  }
+
+  if (!ret) {
+    return [];
+  }
+
+  return ret;
 }
 
-function indexOfNode (childNodes, child) {
+function compareNodes (childNodes, child) {
   let childNodesLength = childNodes.length;
   for (let a = 0; a < childNodesLength; a++) {
-    if (isSameNode(childNodes[a], child)) {
-      return a;
+    let instructions = compareNode(childNodes[a], child);
+    if (instructions) {
+      return {
+        index: a,
+        instructions: instructions
+      };
     }
   }
-  return -1;
+  return {
+    index: -1,
+    instructions: null
+  };
 }
 
 export default function diff (src, dst) {
@@ -83,9 +113,12 @@ export default function diff (src, dst) {
   if (dstChsLen === 1 && srcChsLen === 1) {
     let dstCh = dstChs[0];
     let srcCh = srcChs[0];
+    let nodeInstructions = compareNode(srcCh, dstCh);
 
-    if (isSameNode(srcCh, dstCh)) {
-      return [];
+    // If it's the same node then there may be instructions to alter it so we
+    // just return those.
+    if (nodeInstructions) {
+      return nodeInstructions;
     } else {
       return [{
         destination: dstCh,
@@ -99,11 +132,12 @@ export default function diff (src, dst) {
   for (let a = 0; a < dstChsLen; a++) {
     let dstCh = dstChs[a];
     let srcCh = srcChs[a];
+    let nodeInstructions = compareNode(srcCh, dstCh);
 
-    // If the nodes are the same, we add the current key to it so that we can
-    // ensure it is still there, or moved to there, when it comes time to
-    // ensure postions.
-    if (isSameNode(srcCh, dstCh)) {
+    // If there are instructions, then the nodes are the same so concat those
+    // and mark its index so we can ensure it's where it needs to be later.
+    if (nodeInstructions) {
+      instructions = instructions.concat(nodeInstructions);
       dstInSrcMap.push(dstCh);
       srcInDstMap.push(srcCh);
       srcCh[KEY_NEW_INDEX] = a;
@@ -111,14 +145,15 @@ export default function diff (src, dst) {
     }
 
     // Now try and find in the source.
-    let index = indexOfNode(srcChs, dstCh);
+    let dstInSrcChs = compareNodes(srcChs, dstCh);
 
     // If the destination is in the source, we add the new key to it so that
     // we can ensure it gets moved to the right spot later.
-    if (index > -1) {
+    if (dstInSrcChs.index > -1) {
       dstInSrcMap.push(dstCh);
-      srcInDstMap.push(srcChs[index]);
-      srcChs[index][KEY_NEW_INDEX] = a;
+      srcInDstMap.push(srcChs[dstInSrcChs.index]);
+      srcChs[dstInSrcChs.index][KEY_NEW_INDEX] = a;
+      instructions = instructions.concat(dstInSrcChs.instructions);
       continue;
     }
 
@@ -137,7 +172,7 @@ export default function diff (src, dst) {
     }
 
     // If there are no destination nodes found in the source yet then we
-    // append.
+    // prepend.
     instructions.push({
       destination: dstCh,
       source: srcChsLen ? srcChs[0] : src,
@@ -176,7 +211,7 @@ export default function diff (src, dst) {
   // indexes where nodes need to be moved is accurate.
   instructions = instructions.concat(moves);
 
-  // For the nodes that exist in both diff objects, we diff thier trees.
+  // For the nodes that exist in both diff objects, we diff their trees.
   let dstInSrcMapLen = dstInSrcMap.length;
   for (let a = 0; a < dstInSrcMapLen; a++) {
     instructions = instructions.concat(diff(srcInDstMap[a], dstInSrcMap[a]));

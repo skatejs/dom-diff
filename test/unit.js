@@ -1,8 +1,7 @@
 'use strict';
 
 import * as types from '../src/types';
-import diff from '../src/diff';
-import patch from '../src/patch';
+import sd from '../src/index';
 import test from 'tipple';
 
 function elem (name, html) {
@@ -19,7 +18,7 @@ function testPatch (srcHtml, dstHtml, nonDestructiveMap = {}) {
     var dst = div(dstHtml);
     var originalNodes = [].slice.call(src.childNodes);
 
-    patch(diff(src, dst));
+    sd.patch(sd.diff(src, dst));
     test.equal(src.innerHTML, dstHtml);
 
     for (let a in nonDestructiveMap) {
@@ -37,14 +36,14 @@ function testPatch (srcHtml, dstHtml, nonDestructiveMap = {}) {
 }
 
 test('diff instructions array', function () {
-  var diffed = diff(div(), div());
+  var diffed = sd.diff(div(), div());
   test.ok(Array.isArray(diffed));
 });
 
 test('diff instruction object', function () {
   var src = div('<span></span>');
   var dst = div('<a></a>');
-  var instructions = diff(src, dst);
+  var instructions = sd.diff(src, dst);
   test.equal(instructions.length, 1, 'instruction length');
   test.equal(instructions[0].destination.tagName, 'A', 'destination tagName');
   test.equal(instructions[0].source.tagName, 'SPAN', 'source tagName');
@@ -54,17 +53,17 @@ test('diff instruction object', function () {
 test('patching host should not change', function () {
   var src = div('<span></span>');
   var dst = div('<a></a>');
-  var instructions = diff(src, dst);
-  patch(instructions);
+  var instructions = sd.diff(src, dst);
+  sd.patch(instructions);
   test.equal(src.tagName, 'DIV');
 });
 
 test('same elements should not change', function () {
   var src = div('<span></span>');
   var dst = div('<span></span><a></a>');
-  var instructions = diff(src, dst);
+  var instructions = sd.diff(src, dst);
   var srcSpan = src.childNodes[0];
-  patch(instructions);
+  sd.patch(instructions);
   test.equal(src.childNodes[0], srcSpan);
 });
 
@@ -99,4 +98,7 @@ testPatch('<three></three><two></two><remove></remove><three></three><one></one>
   2: null,
   3: 3,
   4: 0
+});
+testPatch('<div class="something"></div>', '<div class="something else"></div>', {
+  0: 0
 });
