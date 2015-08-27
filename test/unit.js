@@ -103,9 +103,9 @@ testPatch('<two></two><one></one><three></three>', '<one></one><two></two><three
   2: 2
 });
 testPatch('<three></three><two></two><three></three><one></one>', '<one></one><two></two><three></three><three></three>', {
-  0: 3,
+  0: 2,
   1: 1,
-  2: 2,
+  2: 3,
   3: 0
 });
 testPatch('<three></three><two></two><remove></remove><three></three><one></one>', '<one></one><two></two><three></three><three></three>', {
@@ -117,6 +117,11 @@ testPatch('<three></three><two></two><remove></remove><three></three><one></one>
 });
 testPatch('<div class="something"></div>', '<div class="something else"></div>', {
   0: 0
+});
+testPatch('<span name="a"></span><span name="b"></span><span name="c"></span>', '<span name="b"></span><span name="c"></span>', {
+  0: null,
+  1: 0,
+  2: 1
 });
 
 test('should descend by default', function () {

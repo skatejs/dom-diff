@@ -49,29 +49,15 @@ export default function diff (opts) {
   // Add nodes that don't exist in the source.
   for (let a = 0; a < dstChsLen; a++) {
     let dstCh = dstChs[a];
-    let srcCh = srcChs[a];
-    let nodeInstructions = compareNode(srcCh, dstCh);
-
-    // If there are instructions, then the nodes are the same so concat those
-    // and mark its index so we can ensure it's where it needs to be later.
-    if (nodeInstructions) {
-      instructions = instructions.concat(nodeInstructions);
-      dstInSrcMap.push(dstCh);
-      srcInDstMap.push(srcCh);
-      srcCh[KEY_NEW_INDEX] = a;
-      continue;
-    }
-
-    // Now try and find in the source.
-    let dstInSrcChs = compareNodes(srcChs, dstCh);
+    let dstChInSrcChs = compareNodes(srcChs, dstCh);
 
     // If the destination is in the source, we add the new key to it so that
     // we can ensure it gets moved to the right spot later.
-    if (dstInSrcChs.index > -1) {
+    if (dstChInSrcChs.index > -1) {
       dstInSrcMap.push(dstCh);
-      srcInDstMap.push(srcChs[dstInSrcChs.index]);
-      srcChs[dstInSrcChs.index][KEY_NEW_INDEX] = a;
-      instructions = instructions.concat(dstInSrcChs.instructions);
+      srcInDstMap.push(srcChs[dstChInSrcChs.index]);
+      srcChs[dstChInSrcChs.index][KEY_NEW_INDEX] = a;
+      instructions = instructions.concat(dstChInSrcChs.instructions);
       continue;
     }
 
