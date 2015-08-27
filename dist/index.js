@@ -300,15 +300,40 @@ __e17d94f59a8d36c59c30dfc91073ce18 = (function () {
   
   exports['default'] = function (childNodes, child) {
     var childNodesLength = childNodes.length;
+    var similarMatch = undefined;
+  
     for (var a = 0; a < childNodesLength; a++) {
       var instructions = (0, _node2['default'])(childNodes[a], child);
-      if (instructions) {
+  
+      // Falsy instructions means no match at all.
+      if (!instructions) {
+        continue;
+      }
+  
+      // Some instructions means partial match. We only record the first match
+      // but continue looking for an exact match.
+      if (!similarMatch && instructions.length) {
+        similarMatch = {
+          index: a,
+          instructions: instructions
+        };
+        continue;
+      }
+  
+      // Instructions array with no instructions means exact match.
+      if (instructions.length === 0) {
         return {
           index: a,
           instructions: instructions
         };
       }
     }
+  
+    // We record
+    if (similarMatch) {
+      return similarMatch;
+    }
+  
     return {
       index: -1,
       instructions: null
@@ -398,29 +423,15 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
     // Add nodes that don't exist in the source.
     for (var a = 0; a < dstChsLen; a++) {
       var dstCh = dstChs[a];
-      var srcCh = srcChs[a];
-      var nodeInstructions = (0, _compareNode2['default'])(srcCh, dstCh);
-  
-      // If there are instructions, then the nodes are the same so concat those
-      // and mark its index so we can ensure it's where it needs to be later.
-      if (nodeInstructions) {
-        instructions = instructions.concat(nodeInstructions);
-        dstInSrcMap.push(dstCh);
-        srcInDstMap.push(srcCh);
-        srcCh[_constants.KEY_NEW_INDEX] = a;
-        continue;
-      }
-  
-      // Now try and find in the source.
-      var dstInSrcChs = (0, _compareNodes2['default'])(srcChs, dstCh);
+      var dstChInSrcChs = (0, _compareNodes2['default'])(srcChs, dstCh);
   
       // If the destination is in the source, we add the new key to it so that
       // we can ensure it gets moved to the right spot later.
-      if (dstInSrcChs.index > -1) {
+      if (dstChInSrcChs.index > -1) {
         dstInSrcMap.push(dstCh);
-        srcInDstMap.push(srcChs[dstInSrcChs.index]);
-        srcChs[dstInSrcChs.index][_constants.KEY_NEW_INDEX] = a;
-        instructions = instructions.concat(dstInSrcChs.instructions);
+        srcInDstMap.push(srcChs[dstChInSrcChs.index]);
+        srcChs[dstChInSrcChs.index][_constants.KEY_NEW_INDEX] = a;
+        instructions = instructions.concat(dstChInSrcChs.instructions);
         continue;
       }
   
