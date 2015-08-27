@@ -18,7 +18,11 @@ function testPatch (srcHtml, dstHtml, nonDestructiveMap = {}) {
     var dst = div(dstHtml);
     var originalNodes = [].slice.call(src.childNodes);
 
-    sd.patch(sd.diff(src, dst));
+    sd.patch(sd.diff({
+      destination: dst,
+      source: src
+    }));
+
     test.equal(src.innerHTML, dstHtml);
 
     for (let a in nonDestructiveMap) {
@@ -36,14 +40,20 @@ function testPatch (srcHtml, dstHtml, nonDestructiveMap = {}) {
 }
 
 test('diff instructions array', function () {
-  var diffed = sd.diff(div(), div());
+  var diffed = sd.diff({
+    destination: div(),
+    source: div()
+  });
   test.ok(Array.isArray(diffed));
 });
 
 test('diff instruction object', function () {
   var src = div('<span></span>');
   var dst = div('<a></a>');
-  var instructions = sd.diff(src, dst);
+  var instructions = sd.diff({
+    destination: dst,
+    source: src
+  });
   test.equal(instructions.length, 1, 'instruction length');
   test.equal(instructions[0].destination.tagName, 'A', 'destination tagName');
   test.equal(instructions[0].source.tagName, 'SPAN', 'source tagName');
@@ -53,7 +63,10 @@ test('diff instruction object', function () {
 test('patching host should not change', function () {
   var src = div('<span></span>');
   var dst = div('<a></a>');
-  var instructions = sd.diff(src, dst);
+  var instructions = sd.diff({
+    destination: dst,
+    source: src
+  });
   sd.patch(instructions);
   test.equal(src.tagName, 'DIV');
 });
@@ -61,7 +74,10 @@ test('patching host should not change', function () {
 test('same elements should not change', function () {
   var src = div('<span></span>');
   var dst = div('<span></span><a></a>');
-  var instructions = sd.diff(src, dst);
+  var instructions = sd.diff({
+    destination: dst,
+    source: src
+  });
   var srcSpan = src.childNodes[0];
   sd.patch(instructions);
   test.equal(src.childNodes[0], srcSpan);

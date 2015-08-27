@@ -1,140 +1,16 @@
 'use strict';
 
 import * as types from './types';
+import { KEY_NEW_INDEX } from './constants';
+import compareNode from './compare/node';
+import compareNodes from './compare/nodes';
 
-const NODE_COMMENT = 8;
-const NODE_ELEMENT = 1;
-const NODE_TEXT = 3;
-const KEY_NEW_INDEX = Symbol();
-
-function compareNodeAttributes (src, dst) {
-  let srcAttrs = src.attributes;
-  let dstAttrs = dst.attributes;
-  let srcAttrsLen = (srcAttrs || 0) && srcAttrs.length;
-  let dstAttrsLen = (dstAttrs || 0) && dstAttrs.length;
+export default function diff (opts) {
+  let dst = opts.destination;
+  let src = opts.source;
   let instructions = [];
 
-  // Merge attributes that exist in source with destination's.
-  for (let a = 0; a < srcAttrsLen; a++) {
-    let srcAttr = srcAttrs[a];
-    let dstAttr = dstAttrs[srcAttr.name];
-
-    if (!dstAttr) {
-      instructions.push({
-        data: {name: srcAttr.name},
-        destination: dst,
-        source: src,
-        type: types.REMOVE_ATTRIBUTE,
-      });
-    } else if (srcAttr.value !== dstAttr.value) {
-      instructions.push({
-        data: {name: srcAttr.name},
-        destination: dst,
-        source: src,
-        type: types.SET_ATTRIBUTE
-      });
-    }
-  }
-
-  // We only need to worry about setting attributes that don't already exist
-  // in the source.
-  for (let a = 0; a < dstAttrsLen; a++) {
-    let dstAttr = dstAttrs[a];
-    let srcAttr = srcAttrs[dstAttr.name];
-
-    if (!srcAttr) {
-      instructions.push({
-        data: {name: dstAttr.name},
-        destination: dst,
-        source: src,
-        type: types.SET_ATTRIBUTE
-      });
-    }
-  }
-
-  return instructions;
-}
-
-function compareNodeElement (src, dst) {
-  if (src.tagName !== dst.tagName) {
-    return false;
-  }
-  return compareNodeAttributes(src, dst);
-}
-
-function compareNodeText (src, dst) {
-  if (src.textContent !== dst.textContent) {
-    return false;
-  }
-}
-
-function compareNodeComment (src, dst) {
-  if (src.textContent !== dst.textContent) {
-    return false;
-  }
-}
-
-function compareNode (src, dst) {
-  let dstType, srcType, ret;
-
-  if (!dst || !src) {
-    return;
-  }
-
-  // Check to see if it's already claimed.
-  if (src[KEY_NEW_INDEX] > -1) {
-    return;
-  }
-
-  dstType = dst.nodeType;
-  srcType = src.nodeType;
-
-  if (dstType !== srcType) {
-    return;
-  } else if (dstType === NODE_ELEMENT) {
-    ret = compareNodeElement(src, dst);
-  } else if (dstType === NODE_TEXT) {
-    ret = compareNodeText(src, dst);
-  } else if (dstType === NODE_COMMENT) {
-    ret = compareNodeComment(src, dst);
-  }
-
-  // Specific comparisons must actually return false to notify that the node is
-  // not the same. This makes for a simpler internal API where specific
-  // comparisons only have to worry about returning false, or an array
-  // of instructions.
-  if (ret === false) {
-    return ret;
-  }
-
-  if (!ret) {
-    return [];
-  }
-
-  return ret;
-}
-
-function compareNodes (childNodes, child) {
-  let childNodesLength = childNodes.length;
-  for (let a = 0; a < childNodesLength; a++) {
-    let instructions = compareNode(childNodes[a], child);
-    if (instructions) {
-      return {
-        index: a,
-        instructions: instructions
-      };
-    }
-  }
-  return {
-    index: -1,
-    instructions: null
-  };
-}
-
-export default function diff (src, dst) {
-  let instructions = [];
-
-  if (!dst) {
+  if (!src || !dst) {
     return [];
   }
 
