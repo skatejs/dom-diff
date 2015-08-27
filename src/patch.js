@@ -22,18 +22,24 @@ patchers[types.MOVE_TO] = function (src, dstIndex) {
     src.parentNode.appendChild(src);
   }
 };
+patchers[types.REMOVE_ATTRIBUTE] = function (src, dst, data) {
+  src.removeAttribute(data.name);
+};
 patchers[types.REMOVE_CHILD] = function (src) {
   src.parentNode.removeChild(src);
 };
 patchers[types.REPLACE_CHILD] = function (src, dst) {
   src.parentNode.replaceChild(dst, src);
 };
+patchers[types.SET_ATTRIBUTE] = function (src, dst, data) {
+  src.setAttribute(data.name, dst.getAttribute(data.name));
+};
 patchers[types.TEXT_CONTENT] = function (src, dst) {
   src.textContent = dst.textContent;
 };
 
 function patch (instruction) {
-  patchers[instruction.type](instruction.source, instruction.destination);
+  patchers[instruction.type](instruction.source, instruction.destination, instruction.data);
 }
 
 export default function (instructions) {

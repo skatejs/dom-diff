@@ -8,20 +8,59 @@ const NODE_TEXT = 3;
 const KEY_NEW_INDEX = Symbol();
 
 function compareNodeAttributes (src, dst) {
-  let srcAttrs = src.attrs;
-  let dstAttrs = dst.attrs;
-  let srcAttrsLen = srcAttrs.length;
-  let dstAttrsLen = dstAttrs.length;
+  let srcAttrs = src.attributes;
+  let dstAttrs = dst.attributes;
+  let srcAttrsLen = (srcAttrs || 0) && srcAttrs.length;
+  let dstAttrsLen = (dstAttrs || 0) && dstAttrs.length;
+  let instructions = [];
 
-  if (srcAttrs) {
+  // Merge attributes that exist in source with destination's.
+  for (let a = 0; a < srcAttrsLen; a++) {
+    let srcAttr = srcAttrs[a];
+    let dstAttr = dstAttrs[srcAttr.name];
 
+    if (!dstAttr) {
+      instructions.push({
+        data: {name: srcAttr.name},
+        destination: dst,
+        source: src,
+        type: types.REMOVE_ATTRIBUTE,
+      });
+    } else if (srcAttr.value !== dstAttr.value) {
+      console.log(srcAttr.name);
+      instructions.push({
+        data: {name: srcAttr.name},
+        destination: dst,
+        source: src,
+        type: types.SET_ATTRIBUTE
+      });
+    }
   }
+
+  // We only need to worry about setting attributes that don't already exist
+  // in the source.
+  for (let a = 0; a < dstAttrsLen; a++) {
+    let dstAttr = dstAttrs[a];
+    let srcAttr = srcAttrs[dstAttr.name];
+
+    if (!srcAttr) {
+      instructions.push({
+        data: {name: dstAttr.name},
+        destination: dst,
+        source: src,
+        type: types.SET_ATTRIBUTE
+      });
+    }
+  }
+
+  return instructions;
 }
 
 function compareNodeElement (src, dst) {
   if (src.tagName !== dst.tagName) {
     return false;
   }
+  return compareNodeAttributes(src, dst);
 }
 
 function compareNodeText (src, dst) {
