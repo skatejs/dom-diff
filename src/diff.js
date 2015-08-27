@@ -27,7 +27,6 @@ function compareNodeAttributes (src, dst) {
         type: types.REMOVE_ATTRIBUTE,
       });
     } else if (srcAttr.value !== dstAttr.value) {
-      console.log(srcAttr.name);
       instructions.push({
         data: {name: srcAttr.name},
         destination: dst,
