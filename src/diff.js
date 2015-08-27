@@ -6,6 +6,10 @@ import compareNode from './compare/node';
 import compareNodes from './compare/nodes';
 
 export default function diff (opts) {
+  if (opts.descend === undefined) {
+    opts.descend = () => true;
+  }
+
   let dst = opts.destination;
   let src = opts.source;
   let instructions = [];
@@ -32,7 +36,7 @@ export default function diff (opts) {
     // If it's the same node then there may be instructions to alter it so we
     // just return those.
     if (nodeInstructions) {
-      return nodeInstructions;
+      instructions = instructions.concat(nodeInstructions);
     } else {
       return [{
         destination: dstCh,
@@ -128,7 +132,14 @@ export default function diff (opts) {
   // For the nodes that exist in both diff objects, we diff their trees.
   let dstInSrcMapLen = dstInSrcMap.length;
   for (let a = 0; a < dstInSrcMapLen; a++) {
-    instructions = instructions.concat(diff(srcInDstMap[a], dstInSrcMap[a]));
+    let dstDescent = dstInSrcMap[a];
+    let srcDescent = srcInDstMap[a];
+    if (opts.descend(srcDescent, dstDescent)) {
+      instructions = instructions.concat(diff({
+        destination: dstDescent,
+        source: srcDescent
+      }));
+    }
   }
 
   return instructions;

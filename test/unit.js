@@ -118,3 +118,30 @@ testPatch('<three></three><two></two><remove></remove><three></three><one></one>
 testPatch('<div class="something"></div>', '<div class="something else"></div>', {
   0: 0
 });
+
+test('should descend by default', function () {
+  let src = div('<div stop><span></span></div>');
+  let dst = div('<div stop><a></a></div>');
+  let oldDiv = src.childNodes[0];
+  let newA = dst.childNodes[0].childNodes[0];
+  sd.merge({
+    destination: dst,
+    source: src
+  });
+  test.equal(src.childNodes[0], oldDiv);
+  test.equal(src.childNodes[0].childNodes[0], newA);
+});
+
+test('should allow user to prevent descending (useful for web components to control their own trees)', function () {
+  let src = div('<div stop><span></span></div>');
+  let dst = div('<div stop><a></a></div>');
+  let oldDiv = src.childNodes[0];
+  let oldSpan = oldDiv.childNodes[0];
+  sd.merge({
+    descend: src => !src.hasAttribute('stop'),
+    destination: dst,
+    source: src
+  });
+  test.equal(src.childNodes[0], oldDiv);
+  test.equal(src.childNodes[0].childNodes[0], oldSpan);
+});
