@@ -1,10 +1,7 @@
-'use strict';
-
 import compareAttributes from './attributes';
 
 export default function (src, dst) {
-  if (src.tagName !== dst.tagName) {
-    return false;
+  if (src.tagName === dst.tagName) {
+    return compareAttributes(src, dst);
   }
-  return compareAttributes(src, dst);
 }

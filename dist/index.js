@@ -5,33 +5,67 @@ __0ca807667308490ecea534df3b4369b8 = (function () {
   };
   var exports = module.exports;
   
-  'use strict';
+  "use strict";
   
-  Object.defineProperty(exports, '__esModule', {
+  Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var APPEND_CHILD = 0;
+  var APPEND_CHILD = 1;
   exports.APPEND_CHILD = APPEND_CHILD;
-  var INSERT_BEFORE = 1;
-  exports.INSERT_BEFORE = INSERT_BEFORE;
-  var MOVE_TO = 2;
-  exports.MOVE_TO = MOVE_TO;
-  var REMOVE_CHILD = 3;
+  var REMOVE_CHILD = 2;
   exports.REMOVE_CHILD = REMOVE_CHILD;
-  var REMOVE_ATTRIBUTE = 4;
+  var REMOVE_ATTRIBUTE = 3;
   exports.REMOVE_ATTRIBUTE = REMOVE_ATTRIBUTE;
-  var REPLACE_CHILD = 5;
-  exports.REPLACE_CHILD = REPLACE_CHILD;
-  var SET_ATTRIBUTE = 6;
+  var SET_ATTRIBUTE = 4;
   exports.SET_ATTRIBUTE = SET_ATTRIBUTE;
-  var TEXT_CONTENT = 7;
+  var TEXT_CONTENT = 5;
   exports.TEXT_CONTENT = TEXT_CONTENT;
   
   return module.exports;
 }).call(this);
 
-// src/constants.js
-__adcb32fd9f3d922c16eb43f5efa9df76 = (function () {
+// node_modules/lodash/lang/isObject.js
+__d090a5391b68448883c553fd31d2eed1 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  /**
+   * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+   * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+   *
+   * @static
+   * @memberOf _
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+   * @example
+   *
+   * _.isObject({});
+   * // => true
+   *
+   * _.isObject([1, 2, 3]);
+   * // => true
+   *
+   * _.isObject(1);
+   * // => false
+   */
+  
+  function isObject(value) {
+    // Avoid a V8 JIT bug in Chrome 19-20.
+    // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+    var type = typeof value;
+    return !!value && (type == 'object' || type == 'function');
+  }
+  
+  module.exports = isObject;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/lang/isFunction.js
+__519f213cf9d0a872f49e7a136e7e120b = (function () {
   var module = {
     exports: {}
   };
@@ -39,11 +73,1006 @@ __adcb32fd9f3d922c16eb43f5efa9df76 = (function () {
   
   'use strict';
   
-  Object.defineProperty(exports, '__esModule', {
-    value: true
+  var isObject = __d090a5391b68448883c553fd31d2eed1;
+  
+  /** `Object#toString` result references. */
+  var funcTag = '[object Function]';
+  
+  /** Used for native method references. */
+  var objectProto = Object.prototype;
+  
+  /**
+   * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+   * of values.
+   */
+  var objToString = objectProto.toString;
+  
+  /**
+   * Checks if `value` is classified as a `Function` object.
+   *
+   * @static
+   * @memberOf _
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+   * @example
+   *
+   * _.isFunction(_);
+   * // => true
+   *
+   * _.isFunction(/abc/);
+   * // => false
+   */
+  function isFunction(value) {
+    // The use of `Object#toString` avoids issues with the `typeof` operator
+    // in older versions of Chrome and Safari which return 'function' for regexes
+    // and Safari 8 which returns 'object' for typed array constructors.
+    return isObject(value) && objToString.call(value) == funcTag;
+  }
+  
+  module.exports = isFunction;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/isObjectLike.js
+__da56e4b03597c36fe0d4caa10e88f389 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  /**
+   * Checks if `value` is object-like.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+   */
+  
+  function isObjectLike(value) {
+    return !!value && typeof value == 'object';
+  }
+  
+  module.exports = isObjectLike;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/lang/isNative.js
+__3aaa2a29f37013fd67778745f0091d04 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var isFunction = __519f213cf9d0a872f49e7a136e7e120b,
+      isObjectLike = __da56e4b03597c36fe0d4caa10e88f389;
+  
+  /** Used to detect host constructors (Safari > 5). */
+  var reIsHostCtor = /^\[object .+?Constructor\]$/;
+  
+  /** Used for native method references. */
+  var objectProto = Object.prototype;
+  
+  /** Used to resolve the decompiled source of functions. */
+  var fnToString = Function.prototype.toString;
+  
+  /** Used to check objects for own properties. */
+  var hasOwnProperty = objectProto.hasOwnProperty;
+  
+  /** Used to detect if a method is native. */
+  var reIsNative = RegExp('^' + fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&').replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
+  
+  /**
+   * Checks if `value` is a native function.
+   *
+   * @static
+   * @memberOf _
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+   * @example
+   *
+   * _.isNative(Array.prototype.push);
+   * // => true
+   *
+   * _.isNative(_);
+   * // => false
+   */
+  function isNative(value) {
+    if (value == null) {
+      return false;
+    }
+    if (isFunction(value)) {
+      return reIsNative.test(fnToString.call(value));
+    }
+    return isObjectLike(value) && reIsHostCtor.test(value);
+  }
+  
+  module.exports = isNative;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/getNative.js
+__14028a82ad68b5a9ac859f06dade363c = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var isNative = __3aaa2a29f37013fd67778745f0091d04;
+  
+  /**
+   * Gets the native function at `key` of `object`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @param {string} key The key of the method to get.
+   * @returns {*} Returns the function if it's native, else `undefined`.
+   */
+  function getNative(object, key) {
+    var value = object == null ? undefined : object[key];
+    return isNative(value) ? value : undefined;
+  }
+  
+  module.exports = getNative;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/baseProperty.js
+__91971f86812a4715464b46467809f075 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  /**
+   * The base implementation of `_.property` without support for deep paths.
+   *
+   * @private
+   * @param {string} key The key of the property to get.
+   * @returns {Function} Returns the new function.
+   */
+  
+  function baseProperty(key) {
+    return function (object) {
+      return object == null ? undefined : object[key];
+    };
+  }
+  
+  module.exports = baseProperty;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/getLength.js
+__b56aac530afc3e35148300bd1bceeeac = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var baseProperty = __91971f86812a4715464b46467809f075;
+  
+  /**
+   * Gets the "length" property value of `object`.
+   *
+   * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+   * that affects Safari on at least iOS 8.1-8.3 ARM64.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {*} Returns the "length" value.
+   */
+  var getLength = baseProperty('length');
+  
+  module.exports = getLength;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/isLength.js
+__1da05cc76c1107ac2eb0c2539439024e = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  /**
+   * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+   * of an array-like value.
+   */
+  
+  var MAX_SAFE_INTEGER = 9007199254740991;
+  
+  /**
+   * Checks if `value` is a valid array-like length.
+   *
+   * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+   */
+  function isLength(value) {
+    return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+  }
+  
+  module.exports = isLength;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/isArrayLike.js
+__6c39cae38e01b1fafa042d873d07c352 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var getLength = __b56aac530afc3e35148300bd1bceeeac,
+      isLength = __1da05cc76c1107ac2eb0c2539439024e;
+  
+  /**
+   * Checks if `value` is array-like.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+   */
+  function isArrayLike(value) {
+    return value != null && isLength(getLength(value));
+  }
+  
+  module.exports = isArrayLike;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/lang/isArguments.js
+__682bbd774109234b665c8e2940ccc277 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var isArrayLike = __6c39cae38e01b1fafa042d873d07c352,
+      isObjectLike = __da56e4b03597c36fe0d4caa10e88f389;
+  
+  /** Used for native method references. */
+  var objectProto = Object.prototype;
+  
+  /** Used to check objects for own properties. */
+  var hasOwnProperty = objectProto.hasOwnProperty;
+  
+  /** Native method references. */
+  var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+  
+  /**
+   * Checks if `value` is classified as an `arguments` object.
+   *
+   * @static
+   * @memberOf _
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+   * @example
+   *
+   * _.isArguments(function() { return arguments; }());
+   * // => true
+   *
+   * _.isArguments([1, 2, 3]);
+   * // => false
+   */
+  function isArguments(value) {
+      return isObjectLike(value) && isArrayLike(value) && hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
+  }
+  
+  module.exports = isArguments;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/lang/isArray.js
+__9efce1efdbad971f8c6281cbd2e9dd68 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var getNative = __14028a82ad68b5a9ac859f06dade363c,
+      isLength = __1da05cc76c1107ac2eb0c2539439024e,
+      isObjectLike = __da56e4b03597c36fe0d4caa10e88f389;
+  
+  /** `Object#toString` result references. */
+  var arrayTag = '[object Array]';
+  
+  /** Used for native method references. */
+  var objectProto = Object.prototype;
+  
+  /**
+   * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+   * of values.
+   */
+  var objToString = objectProto.toString;
+  
+  /* Native method references for those with the same name as other `lodash` methods. */
+  var nativeIsArray = getNative(Array, 'isArray');
+  
+  /**
+   * Checks if `value` is classified as an `Array` object.
+   *
+   * @static
+   * @memberOf _
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+   * @example
+   *
+   * _.isArray([1, 2, 3]);
+   * // => true
+   *
+   * _.isArray(function() { return arguments; }());
+   * // => false
+   */
+  var isArray = nativeIsArray || function (value) {
+    return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
+  };
+  
+  module.exports = isArray;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/isIndex.js
+__6c18b20dde1aff73d15d122ec97ee1cc = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  /** Used to detect unsigned integer values. */
+  
+  var reIsUint = /^\d+$/;
+  
+  /**
+   * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+   * of an array-like value.
+   */
+  var MAX_SAFE_INTEGER = 9007199254740991;
+  
+  /**
+   * Checks if `value` is a valid array-like index.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+   * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+   */
+  function isIndex(value, length) {
+    value = typeof value == 'number' || reIsUint.test(value) ? +value : -1;
+    length = length == null ? MAX_SAFE_INTEGER : length;
+    return value > -1 && value % 1 == 0 && value < length;
+  }
+  
+  module.exports = isIndex;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/object/keysIn.js
+__e4daadeb98f93522d9689667d66a87a2 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var isArguments = __682bbd774109234b665c8e2940ccc277,
+      isArray = __9efce1efdbad971f8c6281cbd2e9dd68,
+      isIndex = __6c18b20dde1aff73d15d122ec97ee1cc,
+      isLength = __1da05cc76c1107ac2eb0c2539439024e,
+      isObject = __d090a5391b68448883c553fd31d2eed1;
+  
+  /** Used for native method references. */
+  var objectProto = Object.prototype;
+  
+  /** Used to check objects for own properties. */
+  var hasOwnProperty = objectProto.hasOwnProperty;
+  
+  /**
+   * Creates an array of the own and inherited enumerable property names of `object`.
+   *
+   * **Note:** Non-object values are coerced to objects.
+   *
+   * @static
+   * @memberOf _
+   * @category Object
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of property names.
+   * @example
+   *
+   * function Foo() {
+   *   this.a = 1;
+   *   this.b = 2;
+   * }
+   *
+   * Foo.prototype.c = 3;
+   *
+   * _.keysIn(new Foo);
+   * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+   */
+  function keysIn(object) {
+    if (object == null) {
+      return [];
+    }
+    if (!isObject(object)) {
+      object = Object(object);
+    }
+    var length = object.length;
+    length = length && isLength(length) && (isArray(object) || isArguments(object)) && length || 0;
+  
+    var Ctor = object.constructor,
+        index = -1,
+        isProto = typeof Ctor == 'function' && Ctor.prototype === object,
+        result = Array(length),
+        skipIndexes = length > 0;
+  
+    while (++index < length) {
+      result[index] = index + '';
+    }
+    for (var key in object) {
+      if (!(skipIndexes && isIndex(key, length)) && !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
+        result.push(key);
+      }
+    }
+    return result;
+  }
+  
+  module.exports = keysIn;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/shimKeys.js
+__705a73cd49757d79277922ac6959adcc = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var isArguments = __682bbd774109234b665c8e2940ccc277,
+      isArray = __9efce1efdbad971f8c6281cbd2e9dd68,
+      isIndex = __6c18b20dde1aff73d15d122ec97ee1cc,
+      isLength = __1da05cc76c1107ac2eb0c2539439024e,
+      keysIn = __e4daadeb98f93522d9689667d66a87a2;
+  
+  /** Used for native method references. */
+  var objectProto = Object.prototype;
+  
+  /** Used to check objects for own properties. */
+  var hasOwnProperty = objectProto.hasOwnProperty;
+  
+  /**
+   * A fallback implementation of `Object.keys` which creates an array of the
+   * own enumerable property names of `object`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of property names.
+   */
+  function shimKeys(object) {
+    var props = keysIn(object),
+        propsLength = props.length,
+        length = propsLength && object.length;
+  
+    var allowIndexes = !!length && isLength(length) && (isArray(object) || isArguments(object));
+  
+    var index = -1,
+        result = [];
+  
+    while (++index < propsLength) {
+      var key = props[index];
+      if (allowIndexes && isIndex(key, length) || hasOwnProperty.call(object, key)) {
+        result.push(key);
+      }
+    }
+    return result;
+  }
+  
+  module.exports = shimKeys;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/object/keys.js
+__97286f444f6ad80ab2a6598e06c63841 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var getNative = __14028a82ad68b5a9ac859f06dade363c,
+      isArrayLike = __6c39cae38e01b1fafa042d873d07c352,
+      isObject = __d090a5391b68448883c553fd31d2eed1,
+      shimKeys = __705a73cd49757d79277922ac6959adcc;
+  
+  /* Native method references for those with the same name as other `lodash` methods. */
+  var nativeKeys = getNative(Object, 'keys');
+  
+  /**
+   * Creates an array of the own enumerable property names of `object`.
+   *
+   * **Note:** Non-object values are coerced to objects. See the
+   * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
+   * for more details.
+   *
+   * @static
+   * @memberOf _
+   * @category Object
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of property names.
+   * @example
+   *
+   * function Foo() {
+   *   this.a = 1;
+   *   this.b = 2;
+   * }
+   *
+   * Foo.prototype.c = 3;
+   *
+   * _.keys(new Foo);
+   * // => ['a', 'b'] (iteration order is not guaranteed)
+   *
+   * _.keys('hi');
+   * // => ['0', '1']
+   */
+  var keys = !nativeKeys ? shimKeys : function (object) {
+    var Ctor = object == null ? undefined : object.constructor;
+    if (typeof Ctor == 'function' && Ctor.prototype === object || typeof object != 'function' && isArrayLike(object)) {
+      return shimKeys(object);
+    }
+    return isObject(object) ? nativeKeys(object) : [];
+  };
+  
+  module.exports = keys;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/assignWith.js
+__72a66ffb401836dc5bb915c75e4b220a = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var keys = __97286f444f6ad80ab2a6598e06c63841;
+  
+  /**
+   * A specialized version of `_.assign` for customizing assigned values without
+   * support for argument juggling, multiple sources, and `this` binding `customizer`
+   * functions.
+   *
+   * @private
+   * @param {Object} object The destination object.
+   * @param {Object} source The source object.
+   * @param {Function} customizer The function to customize assigned values.
+   * @returns {Object} Returns `object`.
+   */
+  function assignWith(object, source, customizer) {
+    var index = -1,
+        props = keys(source),
+        length = props.length;
+  
+    while (++index < length) {
+      var key = props[index],
+          value = object[key],
+          result = customizer(value, source[key], key, object, source);
+  
+      if ((result === result ? result !== value : value === value) || value === undefined && !(key in object)) {
+        object[key] = result;
+      }
+    }
+    return object;
+  }
+  
+  module.exports = assignWith;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/baseCopy.js
+__1d232492f7d7270978b2d9ff7b92da19 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  /**
+   * Copies properties of `source` to `object`.
+   *
+   * @private
+   * @param {Object} source The object to copy properties from.
+   * @param {Array} props The property names to copy.
+   * @param {Object} [object={}] The object to copy properties to.
+   * @returns {Object} Returns `object`.
+   */
+  
+  function baseCopy(source, props, object) {
+    object || (object = {});
+  
+    var index = -1,
+        length = props.length;
+  
+    while (++index < length) {
+      var key = props[index];
+      object[key] = source[key];
+    }
+    return object;
+  }
+  
+  module.exports = baseCopy;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/baseAssign.js
+__00863adb38fee3e6cecf4e9681205cc0 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var baseCopy = __1d232492f7d7270978b2d9ff7b92da19,
+      keys = __97286f444f6ad80ab2a6598e06c63841;
+  
+  /**
+   * The base implementation of `_.assign` without support for argument juggling,
+   * multiple sources, and `customizer` functions.
+   *
+   * @private
+   * @param {Object} object The destination object.
+   * @param {Object} source The source object.
+   * @returns {Object} Returns `object`.
+   */
+  function baseAssign(object, source) {
+      return source == null ? object : baseCopy(source, keys(source), object);
+  }
+  
+  module.exports = baseAssign;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/utility/identity.js
+__463b6229e4a1040a96a11ff85d06378d = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  /**
+   * This method returns the first argument provided to it.
+   *
+   * @static
+   * @memberOf _
+   * @category Utility
+   * @param {*} value Any value.
+   * @returns {*} Returns `value`.
+   * @example
+   *
+   * var object = { 'user': 'fred' };
+   *
+   * _.identity(object) === object;
+   * // => true
+   */
+  
+  function identity(value) {
+    return value;
+  }
+  
+  module.exports = identity;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/bindCallback.js
+__47a732ea2bcf20acef137635018e6308 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var identity = __463b6229e4a1040a96a11ff85d06378d;
+  
+  /**
+   * A specialized version of `baseCallback` which only supports `this` binding
+   * and specifying the number of arguments to provide to `func`.
+   *
+   * @private
+   * @param {Function} func The function to bind.
+   * @param {*} thisArg The `this` binding of `func`.
+   * @param {number} [argCount] The number of arguments to provide to `func`.
+   * @returns {Function} Returns the callback.
+   */
+  function bindCallback(func, thisArg, argCount) {
+    if (typeof func != 'function') {
+      return identity;
+    }
+    if (thisArg === undefined) {
+      return func;
+    }
+    switch (argCount) {
+      case 1:
+        return function (value) {
+          return func.call(thisArg, value);
+        };
+      case 3:
+        return function (value, index, collection) {
+          return func.call(thisArg, value, index, collection);
+        };
+      case 4:
+        return function (accumulator, value, index, collection) {
+          return func.call(thisArg, accumulator, value, index, collection);
+        };
+      case 5:
+        return function (value, other, key, object, source) {
+          return func.call(thisArg, value, other, key, object, source);
+        };
+    }
+    return function () {
+      return func.apply(thisArg, arguments);
+    };
+  }
+  
+  module.exports = bindCallback;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/isIterateeCall.js
+__1fa6eb753b2f2b24c4bd14485a9e9b8f = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var isArrayLike = __6c39cae38e01b1fafa042d873d07c352,
+      isIndex = __6c18b20dde1aff73d15d122ec97ee1cc,
+      isObject = __d090a5391b68448883c553fd31d2eed1;
+  
+  /**
+   * Checks if the provided arguments are from an iteratee call.
+   *
+   * @private
+   * @param {*} value The potential iteratee value argument.
+   * @param {*} index The potential iteratee index or key argument.
+   * @param {*} object The potential iteratee object argument.
+   * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
+   */
+  function isIterateeCall(value, index, object) {
+    if (!isObject(object)) {
+      return false;
+    }
+    var type = typeof index;
+    if (type == 'number' ? isArrayLike(object) && isIndex(index, object.length) : type == 'string' && index in object) {
+      var other = object[index];
+      return value === value ? value === other : other !== other;
+    }
+    return false;
+  }
+  
+  module.exports = isIterateeCall;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/function/restParam.js
+__0d5e12b83bfbc7a7086effb638f2bccb = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  /** Used as the `TypeError` message for "Functions" methods. */
+  
+  var FUNC_ERROR_TEXT = 'Expected a function';
+  
+  /* Native method references for those with the same name as other `lodash` methods. */
+  var nativeMax = Math.max;
+  
+  /**
+   * Creates a function that invokes `func` with the `this` binding of the
+   * created function and arguments from `start` and beyond provided as an array.
+   *
+   * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/Web/JavaScript/Reference/Functions/rest_parameters).
+   *
+   * @static
+   * @memberOf _
+   * @category Function
+   * @param {Function} func The function to apply a rest parameter to.
+   * @param {number} [start=func.length-1] The start position of the rest parameter.
+   * @returns {Function} Returns the new function.
+   * @example
+   *
+   * var say = _.restParam(function(what, names) {
+   *   return what + ' ' + _.initial(names).join(', ') +
+   *     (_.size(names) > 1 ? ', & ' : '') + _.last(names);
+   * });
+   *
+   * say('hello', 'fred', 'barney', 'pebbles');
+   * // => 'hello fred, barney, & pebbles'
+   */
+  function restParam(func, start) {
+    if (typeof func != 'function') {
+      throw new TypeError(FUNC_ERROR_TEXT);
+    }
+    start = nativeMax(start === undefined ? func.length - 1 : +start || 0, 0);
+    return function () {
+      var args = arguments,
+          index = -1,
+          length = nativeMax(args.length - start, 0),
+          rest = Array(length);
+  
+      while (++index < length) {
+        rest[index] = args[start + index];
+      }
+      switch (start) {
+        case 0:
+          return func.call(this, rest);
+        case 1:
+          return func.call(this, args[0], rest);
+        case 2:
+          return func.call(this, args[0], args[1], rest);
+      }
+      var otherArgs = Array(start + 1);
+      index = -1;
+      while (++index < start) {
+        otherArgs[index] = args[index];
+      }
+      otherArgs[start] = rest;
+      return func.apply(this, otherArgs);
+    };
+  }
+  
+  module.exports = restParam;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/internal/createAssigner.js
+__968682ca547de6f4a9a9b20fae17ede9 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var bindCallback = __47a732ea2bcf20acef137635018e6308,
+      isIterateeCall = __1fa6eb753b2f2b24c4bd14485a9e9b8f,
+      restParam = __0d5e12b83bfbc7a7086effb638f2bccb;
+  
+  /**
+   * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
+   *
+   * @private
+   * @param {Function} assigner The function to assign values.
+   * @returns {Function} Returns the new assigner function.
+   */
+  function createAssigner(assigner) {
+    return restParam(function (object, sources) {
+      var index = -1,
+          length = object == null ? 0 : sources.length,
+          customizer = length > 2 ? sources[length - 2] : undefined,
+          guard = length > 2 ? sources[2] : undefined,
+          thisArg = length > 1 ? sources[length - 1] : undefined;
+  
+      if (typeof customizer == 'function') {
+        customizer = bindCallback(customizer, thisArg, 5);
+        length -= 2;
+      } else {
+        customizer = typeof thisArg == 'function' ? thisArg : undefined;
+        length -= customizer ? 1 : 0;
+      }
+      if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+        customizer = length < 3 ? undefined : customizer;
+        length = 1;
+      }
+      while (++index < length) {
+        var source = sources[index];
+        if (source) {
+          assigner(object, source, customizer);
+        }
+      }
+      return object;
+    });
+  }
+  
+  module.exports = createAssigner;
+  
+  return module.exports;
+}).call(this);
+
+// node_modules/lodash/object/assign.js
+__00454a526be169c249acfe9f6e666c5d = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  var assignWith = __72a66ffb401836dc5bb915c75e4b220a,
+      baseAssign = __00863adb38fee3e6cecf4e9681205cc0,
+      createAssigner = __968682ca547de6f4a9a9b20fae17ede9;
+  
+  /**
+   * Assigns own enumerable properties of source object(s) to the destination
+   * object. Subsequent sources overwrite property assignments of previous sources.
+   * If `customizer` is provided it's invoked to produce the assigned values.
+   * The `customizer` is bound to `thisArg` and invoked with five arguments:
+   * (objectValue, sourceValue, key, object, source).
+   *
+   * **Note:** This method mutates `object` and is based on
+   * [`Object.assign`](http://ecma-international.org/ecma-262/6.0/#sec-object.assign).
+   *
+   * @static
+   * @memberOf _
+   * @alias extend
+   * @category Object
+   * @param {Object} object The destination object.
+   * @param {...Object} [sources] The source objects.
+   * @param {Function} [customizer] The function to customize assigned values.
+   * @param {*} [thisArg] The `this` binding of `customizer`.
+   * @returns {Object} Returns `object`.
+   * @example
+   *
+   * _.assign({ 'user': 'barney' }, { 'age': 40 }, { 'user': 'fred' });
+   * // => { 'user': 'fred', 'age': 40 }
+   *
+   * // using a customizer callback
+   * var defaults = _.partialRight(_.assign, function(value, other) {
+   *   return _.isUndefined(value) ? other : value;
+   * });
+   *
+   * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
+   * // => { 'user': 'barney', 'age': 36 }
+   */
+  var assign = createAssigner(function (object, source, customizer) {
+      return customizer ? assignWith(object, source, customizer) : baseAssign(object, source);
   });
-  var KEY_NEW_INDEX = Symbol();
-  exports.KEY_NEW_INDEX = KEY_NEW_INDEX;
+  
+  module.exports = assign;
   
   return module.exports;
 }).call(this);
@@ -140,10 +1169,9 @@ __8a4ddda1ca8be7b0c056814a3966d1ca = (function () {
   var _attributes2 = _interopRequireDefault(_attributes);
   
   exports['default'] = function (src, dst) {
-    if (src.tagName !== dst.tagName) {
-      return false;
+    if (src.tagName === dst.tagName) {
+      return (0, _attributes2['default'])(src, dst);
     }
-    return (0, _attributes2['default'])(src, dst);
   };
   
   module.exports = exports['default'];
@@ -164,9 +1192,19 @@ __6be3dfb2c966cc1cf98fbc28ab388768 = (function () {
     value: true
   });
   
+  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+  
+  var _types = __0ca807667308490ecea534df3b4369b8;
+  
+  var types = _interopRequireWildcard(_types);
+  
   exports['default'] = function (src, dst) {
     if (src.textContent !== dst.textContent) {
-      return false;
+      return [{
+        destination: dst,
+        source: src,
+        type: types.TEXT_CONTENT
+      }];
     }
   };
   
@@ -182,19 +1220,15 @@ __b61b794da4779d6fe0fb5684b9f98c70 = (function () {
   };
   var exports = module.exports;
   
-  'use strict';
+  "use strict";
   
-  Object.defineProperty(exports, '__esModule', {
+  Object.defineProperty(exports, "__esModule", {
     value: true
   });
   
-  exports['default'] = function (src, dst) {
-    if (src.textContent !== dst.textContent) {
-      return false;
-    }
-  };
+  exports["default"] = function (src, dst) {};
   
-  module.exports = exports['default'];
+  module.exports = exports["default"];
   
   return module.exports;
 }).call(this);
@@ -213,8 +1247,6 @@ __d1a542bf52dea3e669dda0475c050479 = (function () {
   });
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-  
-  var _constants = __adcb32fd9f3d922c16eb43f5efa9df76;
   
   var _element = __8a4ddda1ca8be7b0c056814a3966d1ca;
   
@@ -241,11 +1273,6 @@ __d1a542bf52dea3e669dda0475c050479 = (function () {
       return;
     }
   
-    // Check to see if it's already claimed.
-    if (src[_constants.KEY_NEW_INDEX] > -1) {
-      return;
-    }
-  
     dstType = dst.nodeType;
     srcType = src.nodeType;
   
@@ -259,85 +1286,7 @@ __d1a542bf52dea3e669dda0475c050479 = (function () {
       ret = (0, _comment2['default'])(src, dst);
     }
   
-    // Specific comparisons must actually return false to notify that the node is
-    // not the same. This makes for a simpler internal API where specific
-    // comparisons only have to worry about returning false, or an array
-    // of instructions.
-    if (ret === false) {
-      return ret;
-    }
-  
-    if (!ret) {
-      return [];
-    }
-  
     return ret;
-  };
-  
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
-
-// src/compare/nodes.js
-__e17d94f59a8d36c59c30dfc91073ce18 = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  'use strict';
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-  
-  var _node = __d1a542bf52dea3e669dda0475c050479;
-  
-  var _node2 = _interopRequireDefault(_node);
-  
-  exports['default'] = function (childNodes, child) {
-    var childNodesLength = childNodes.length;
-    var similarMatch = undefined;
-  
-    for (var a = 0; a < childNodesLength; a++) {
-      var instructions = (0, _node2['default'])(childNodes[a], child);
-  
-      // Falsy instructions means no match at all.
-      if (!instructions) {
-        continue;
-      }
-  
-      // Some instructions means partial match. We only record the first match
-      // but continue looking for an exact match.
-      if (!similarMatch && instructions.length) {
-        similarMatch = {
-          index: a,
-          instructions: instructions
-        };
-        continue;
-      }
-  
-      // Instructions array with no instructions means exact match.
-      if (instructions.length === 0) {
-        return {
-          index: a,
-          instructions: instructions
-        };
-      }
-    }
-  
-    // We record
-    if (similarMatch) {
-      return similarMatch;
-    }
-  
-    return {
-      index: -1,
-      instructions: null
-    };
   };
   
   module.exports = exports['default'];
@@ -367,15 +1316,13 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
   
   var types = _interopRequireWildcard(_types);
   
-  var _constants = __adcb32fd9f3d922c16eb43f5efa9df76;
+  var _lodashObjectAssign = __00454a526be169c249acfe9f6e666c5d;
+  
+  var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
   
   var _compareNode = __d1a542bf52dea3e669dda0475c050479;
   
   var _compareNode2 = _interopRequireDefault(_compareNode);
-  
-  var _compareNodes = __e17d94f59a8d36c59c30dfc91073ce18;
-  
-  var _compareNodes2 = _interopRequireDefault(_compareNodes);
   
   function diff(opts) {
     if (opts.descend === undefined) {
@@ -392,113 +1339,54 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
       return [];
     }
   
-    var dstChs = dst.childNodes;
-    var dstChsLen = dstChs.length;
-    var dstInSrcMap = [];
-    var srcChs = src.childNodes;
-    var srcChsLen = srcChs.length;
-    var srcInDstMap = [];
+    var less = undefined;
+    var more = undefined;
   
-    // If there's only one child in both source and destination, we can check to
-    // see if they're the same, or replace the source with the destination if not
-    // and simply return from here without doing any further operations.
-    if (dstChsLen === 1 && srcChsLen === 1) {
-      var dstCh = dstChs[0];
-      var srcCh = srcChs[0];
-      var nodeInstructions = (0, _compareNode2['default'])(srcCh, dstCh);
+    if (dst.childNodes.length < src.childNodes.length) {
+      less = dst;
+      more = src;
+    } else {
+      less = src;
+      more = dst;
+    }
   
-      // If it's the same node then there may be instructions to alter it so we
-      // just return those.
+    var moreStartIndex = 0;
+  
+    // Diff the node with less items against the node with more items.
+    for (var a = 0; a < less.childNodes.length; a++) {
+      var curLess = less.childNodes[a];
+      var curMore = more.childNodes[a];
+      var curDst = less === dst ? less.childNodes[a] : more.childNodes[a];
+      var curSrc = more === src ? more.childNodes[a] : less.childNodes[a];
+      var nodeInstructions = (0, _compareNode2['default'])(curSrc, curDst);
+  
       if (nodeInstructions) {
         instructions = instructions.concat(nodeInstructions);
-      } else {
-        return [{
-          destination: dstCh,
-          source: srcCh,
-          type: types.REPLACE_CHILD
-        }];
+        if (opts.descend(curSrc, curDst)) {
+          instructions = instructions.concat(diff((0, _lodashObjectAssign2['default'])(opts, {
+            destination: curDst,
+            source: curSrc
+          })));
+        }
       }
+  
+      ++moreStartIndex;
     }
   
-    // Add nodes that don't exist in the source.
-    for (var a = 0; a < dstChsLen; a++) {
-      var dstCh = dstChs[a];
-      var dstChInSrcChs = (0, _compareNodes2['default'])(srcChs, dstCh);
-  
-      // If the destination is in the source, we add the new key to it so that
-      // we can ensure it gets moved to the right spot later.
-      if (dstChInSrcChs.index > -1) {
-        dstInSrcMap.push(dstCh);
-        srcInDstMap.push(srcChs[dstChInSrcChs.index]);
-        srcChs[dstChInSrcChs.index][_constants.KEY_NEW_INDEX] = a;
-        instructions = instructions.concat(dstChInSrcChs.instructions);
-        continue;
-      }
-  
-      // If there are same nodes, we take the last node that we found and insert
-      // after that one. This ensures destination nodes get placed where they're
-      // supposed to be rather than just appended.
-      if (dstInSrcMap.length) {
-        var srcToInsertAfter = srcInDstMap[srcInDstMap.length - 1];
-        var srcToInsertBefore = srcToInsertAfter.nextSibling;
+    // Add / remove extra items.
+    for (var a = moreStartIndex; a < more.childNodes.length; a++) {
+      if (more === dst) {
         instructions.push({
-          destination: dstCh,
-          source: srcToInsertBefore || src,
-          type: srcToInsertBefore ? types.INSERT_BEFORE : types.APPEND_CHILD
+          destination: more.childNodes[a],
+          source: less,
+          type: types.APPEND_CHILD
         });
-        continue;
-      }
-  
-      // If there are no destination nodes found in the source yet then we
-      // prepend.
-      instructions.push({
-        destination: dstCh,
-        source: srcChsLen ? srcChs[0] : src,
-        type: srcChsLen ? types.INSERT_BEFORE : types.APPEND_CHILD
-      });
-    }
-  
-    // Remove any nodes in the source that don't exist in the destination.
-    var moves = [];
-    for (var a = 0; a < srcChsLen; a++) {
-      var srcCh = srcChs[a];
-  
-      // The node has moved. We record this so that we can append the moves to
-      // the end of the instructions array.
-      if (srcCh[_constants.KEY_NEW_INDEX] > -1) {
-        moves.push({
-          destination: srcCh[_constants.KEY_NEW_INDEX],
-          source: srcCh,
-          type: types.MOVE_TO
+      } else {
+        instructions.push({
+          destination: more.childNodes[a],
+          source: more,
+          type: types.REMOVE_CHILD
         });
-        delete srcCh[_constants.KEY_NEW_INDEX];
-        continue;
-      }
-  
-      // If the source does not exist in the destination, remove it.
-      instructions.push({
-        destination: null,
-        source: srcCh,
-        type: types.REMOVE_CHILD
-      });
-    }
-  
-    // Move instructions must come last to ensure that all attachments and
-    // detachments have been carried out at this level in the tree. This ensures
-    // that the source's length is the same as the destination's length and that
-    // indexes where nodes need to be moved is accurate.
-    instructions = instructions.concat(moves);
-  
-    // For the nodes that exist in both diff objects, we diff their trees.
-    var dstInSrcMapLen = dstInSrcMap.length;
-    for (var a = 0; a < dstInSrcMapLen; a++) {
-      var dstDescent = dstInSrcMap[a];
-      var srcDescent = srcInDstMap[a];
-      if (opts.descend(srcDescent, dstDescent)) {
-        instructions = instructions.concat(diff({
-          destination: dstDescent,
-          source: srcDescent
-        }));
       }
     }
   
@@ -517,71 +1405,17 @@ __3ed6aa44bf4d6b9365bed745b80029cf = (function () {
   };
   var exports = module.exports;
   
-  'use strict';
+  "use strict";
   
-  Object.defineProperty(exports, '__esModule', {
+  Object.defineProperty(exports, "__esModule", {
     value: true
   });
   
-  exports['default'] = function (src, dst) {
+  exports["default"] = function (src, dst) {
     src.appendChild(dst);
   };
   
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
-
-// src/patch/insert-before.js
-__7b296fa3be589da51b3b5ca50b276cc1 = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  'use strict';
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  
-  exports['default'] = function (src, dst) {
-    src.parentNode.insertBefore(dst, src);
-  };
-  
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
-
-// src/patch/move-to.js
-__b3a28d67943501566807f7a8f644e43e = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  'use strict';
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  
-  exports['default'] = function (src, dstIndex) {
-    var dst = src.parentNode.childNodes[dstIndex];
-  
-    if (dst === src) {
-      return;
-    }
-  
-    if (dst) {
-      src.parentNode.insertBefore(src, dst);
-    } else {
-      src.parentNode.appendChild(src);
-    }
-  };
-  
-  module.exports = exports['default'];
+  module.exports = exports["default"];
   
   return module.exports;
 }).call(this);
@@ -593,17 +1427,17 @@ __9bbe6d2e49edcd9d91aac0c352f01bb0 = (function () {
   };
   var exports = module.exports;
   
-  'use strict';
+  "use strict";
   
-  Object.defineProperty(exports, '__esModule', {
+  Object.defineProperty(exports, "__esModule", {
     value: true
   });
   
-  exports['default'] = function (src, dst, data) {
+  exports["default"] = function (src, dst, data) {
     src.removeAttribute(data.name);
   };
   
-  module.exports = exports['default'];
+  module.exports = exports["default"];
   
   return module.exports;
 }).call(this);
@@ -615,39 +1449,17 @@ __b306d2b34b0fbb399cbb13b5dc7dd96a = (function () {
   };
   var exports = module.exports;
   
-  'use strict';
+  "use strict";
   
-  Object.defineProperty(exports, '__esModule', {
+  Object.defineProperty(exports, "__esModule", {
     value: true
   });
   
-  exports['default'] = function (src) {
-    src.parentNode.removeChild(src);
+  exports["default"] = function (src, dst) {
+    src.removeChild(dst);
   };
   
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
-
-// src/patch/replace-child.js
-__36e2ac600d355b297d4888bed8e557b1 = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  'use strict';
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  
-  exports['default'] = function (src, dst) {
-    src.parentNode.replaceChild(dst, src);
-  };
-  
-  module.exports = exports['default'];
+  module.exports = exports["default"];
   
   return module.exports;
 }).call(this);
@@ -659,17 +1471,17 @@ __3a0f75dfacfe0f1a25269b7ec38195ba = (function () {
   };
   var exports = module.exports;
   
-  'use strict';
+  "use strict";
   
-  Object.defineProperty(exports, '__esModule', {
+  Object.defineProperty(exports, "__esModule", {
     value: true
   });
   
-  exports['default'] = function (src, dst, data) {
+  exports["default"] = function (src, dst, data) {
     src.setAttribute(data.name, dst.getAttribute(data.name));
   };
   
-  module.exports = exports['default'];
+  module.exports = exports["default"];
   
   return module.exports;
 }).call(this);
@@ -681,17 +1493,17 @@ __2ecd35541218022de8f33fe72ae13c79 = (function () {
   };
   var exports = module.exports;
   
-  'use strict';
+  "use strict";
   
-  Object.defineProperty(exports, '__esModule', {
+  Object.defineProperty(exports, "__esModule", {
     value: true
   });
   
-  exports['default'] = function (src, dst) {
+  exports["default"] = function (src, dst) {
     src.textContent = dst.textContent;
   };
   
-  module.exports = exports['default'];
+  module.exports = exports["default"];
   
   return module.exports;
 }).call(this);
@@ -721,14 +1533,6 @@ __d49832510105705a679155ef252b6786 = (function () {
   
   var _patchAppendChild2 = _interopRequireDefault(_patchAppendChild);
   
-  var _patchInsertBefore = __7b296fa3be589da51b3b5ca50b276cc1;
-  
-  var _patchInsertBefore2 = _interopRequireDefault(_patchInsertBefore);
-  
-  var _patchMoveTo = __b3a28d67943501566807f7a8f644e43e;
-  
-  var _patchMoveTo2 = _interopRequireDefault(_patchMoveTo);
-  
   var _patchRemoveAttribute = __9bbe6d2e49edcd9d91aac0c352f01bb0;
   
   var _patchRemoveAttribute2 = _interopRequireDefault(_patchRemoveAttribute);
@@ -736,10 +1540,6 @@ __d49832510105705a679155ef252b6786 = (function () {
   var _patchRemoveChild = __b306d2b34b0fbb399cbb13b5dc7dd96a;
   
   var _patchRemoveChild2 = _interopRequireDefault(_patchRemoveChild);
-  
-  var _patchReplaceChild = __36e2ac600d355b297d4888bed8e557b1;
-  
-  var _patchReplaceChild2 = _interopRequireDefault(_patchReplaceChild);
   
   var _patchSetAttribute = __3a0f75dfacfe0f1a25269b7ec38195ba;
   
@@ -751,11 +1551,8 @@ __d49832510105705a679155ef252b6786 = (function () {
   
   var patchers = {};
   patchers[types.APPEND_CHILD] = _patchAppendChild2['default'];
-  patchers[types.INSERT_BEFORE] = _patchInsertBefore2['default'];
-  patchers[types.MOVE_TO] = _patchMoveTo2['default'];
   patchers[types.REMOVE_ATTRIBUTE] = _patchRemoveAttribute2['default'];
   patchers[types.REMOVE_CHILD] = _patchRemoveChild2['default'];
-  patchers[types.REPLACE_CHILD] = _patchReplaceChild2['default'];
   patchers[types.SET_ATTRIBUTE] = _patchSetAttribute2['default'];
   patchers[types.TEXT_CONTENT] = _patchTextContent2['default'];
   
