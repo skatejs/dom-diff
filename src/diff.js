@@ -36,6 +36,10 @@ export default function diff (opts) {
     let curSrc = more === src ? more.childNodes[a] : less.childNodes[a];
     let nodeInstructions = compareNode(curSrc, curDst);
 
+    // If there are instructions (even an empty array) it means the node can be
+    // diffed and doesn't have to be replaced. If the instructions are falsy
+    // it means that the nodes are not similar (cannot be changed) and must be
+    // replaced instead.
     if (nodeInstructions) {
       instructions = instructions.concat(nodeInstructions);
       if (opts.descend(curSrc, curDst)) {
@@ -44,6 +48,12 @@ export default function diff (opts) {
           source: curSrc
         })));
       }
+    } else {
+      instructions.push({
+        destination: curDst,
+        source: curSrc,
+        type: types.REPLACE_CHILD
+      });
     }
 
     ++moreStartIndex;
