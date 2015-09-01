@@ -27,11 +27,11 @@ console.log(instructions);
 Would log:
 
 ```js
-{
-  source: HTMLSpanElement,
-  destination: HTMLDivElement,
-  type: skateDomDiff.types.REPLACE_CHILD
-}
+[{
+  source: [object HTMLSpanElement],
+  destination: [object HTMLDivElement],
+  type: [number skateDomDiff.types.REPLACE_CHILD]
+}]
 ```
 
 You can then take the instructions and `patch()` the source node.
