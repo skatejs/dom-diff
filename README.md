@@ -1,6 +1,6 @@
 # Dom Diff
 
-Skate's DOM Diff is library that will diff real dom nodes using a simple algorithm designed to be balanced between performance and accuracy. It uses a similar algorithm that React uses and makes similar assumptions.
+Skate's DOM Diff is a library that will diff real dom nodes using a simple algorithm designed to be balanced between performance and accuracy. It uses a similar algorithm that React uses and makes similar assumptions.
 
 ## Usage
 
