@@ -14,11 +14,11 @@ fragment1.appendChild(document.createElement('span'));
 fragment2.appendChild(document.createElement('div'));
 
 var instructions = skateDomDiff.diff({
-  // The fragment that you want the source to look like.
-  destination: fragment2,
-
   // The fragment that you want to make look like the destination.
-  source: fragment1
+  source: fragment1,
+
+  // The fragment that you want the source to look like.
+  destination: fragment2
 });
 
 console.log(instructions);
@@ -28,8 +28,25 @@ Would log:
 
 ```js
 {
-  destination: HTMLDivElement,
   source: HTMLSpanElement,
+  destination: HTMLDivElement,
   type: skateDomDiff.types.REPLACE_CHILD
 }
+```
+
+You can then take the instructions and `patch()` the source node.
+
+```js
+skateDomDiff.patch(instructions);
+```
+
+You don't need to pass in the source node because references are kept in the instructions.
+
+If you want to do this all in one go, use `merge()`.
+
+```js
+skateDomDiff.merge({
+  source: fragment1,
+  destination: fragment2
+});
 ```
