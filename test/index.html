@@ -12,22 +12,19 @@
   .total {
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid #acacac;
-    font-size: 2em;
     padding: 10px 20px;
     position: absolute;
     z-index: 1;
   }
-  .total button {
-    cursor: pointer;
-    font-size: 1em;
-  }
   .total input {
     background: transparent;
     border: 1px solid #acacac;
-    font-size: 1em;
-    margin: 10px;
-    padding: 10px;
-    width: 100px;
+  }
+  .total button, .total input {
+    cursor: pointer;
+  }
+  .total input[type="number"]:focus {
+    cursor: text;
   }
   .block {
     cursor: pointer;
@@ -48,16 +45,8 @@
 
   skate('x-differ', {
     events: {
-      'click [name="toggle-merge"]': function () {
-        this.merge = !this.merge;
-      },
-      'click [name="toggle-pause"]': function () {
-        this.paused = !this.paused;
-      },
-      'click .block': function () {
-        if (this.paused) {
-          this._render();
-        }
+      'change [name="smash"]': function (e) {
+        this.smash = e.delegateTarget.checked;
       },
       'change [name="threshold"]': function (e) {
         this.threshold = e.delegateTarget.value;
@@ -67,23 +56,31 @@
       },
       'change [name="y"]': function (e) {
         this.y = e.delegateTarget.value;
+      },
+      'click [name="toggle-pause"]': function () {
+        this.paused = !this.paused;
+      },
+      'click x-differ': function () {
+        if (this.paused) {
+          this._render();
+        }
       }
     },
     properties: {
-      merge: {
+      paused: {
+        attr: true,
+        type: Boolean,
+        set: function () {
+          this._render();
+        }
+      },
+      smash: {
         attr: true,
         type: Boolean,
         set: function () {
           if (this.paused) {
             this._render();
           }
-        }
-      },
-      paused: {
-        attr: true,
-        type: Boolean,
-        set: function () {
-          this._render();
         }
       },
       threshold: {
@@ -167,14 +164,13 @@
         div.innerHTML = '' +
           '<div class="total">' +
             '<p>' +
-              '<input name="x" type="number" value="' + this.x + '">' +
-              'x' +
-              '<input name="y" type="number" value="' + this.y + '">' +
+              '<input name="x" type="number" value="' + this.x + '"> x <input name="y" type="number" value="' + this.y + '">' +
               'tiles (' + this._total + ')' +
             '</p>' +
-            '<p><input name="threshold" type="number" value="' + this.threshold + '">% threshold</p>' +
+            '<p><input name="threshold" type="number" value="' + this.threshold + '"> % threshold</p>' +
             '<p>' +
               '<button name="toggle-pause" type="button">' + (this.paused ? 'Resume' : 'Pause') + '</button>' +
+              '<input name="smash" type="checkbox"' + (this.smash ? ' checked' : '') + '> Hulk smash! (do not diff, slam innerHTML)' +
             '</p>' +
             '<p>' +
               fps + ' fps' +
@@ -185,13 +181,10 @@
           '</div>'
         ;
 
-        if (this.merge) {
-          skateDomDiff.merge({
-            destination: div,
-            source: this
-          });
+        if (this.smash) {
+          this.innerHTML = div.innerHTML;
         } else {
-          skateDomDiff.diff({
+          skateDomDiff.merge({
             destination: div,
             source: this
           });
