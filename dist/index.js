@@ -1317,18 +1317,18 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
     var dstChsLen = dstChs.length;
   
     // Diff the node with less items against the node with more items.
-    for (var a = 0; a < srcChsLen; a++) {
+    for (var a = 0; a < dstChsLen; a++) {
       var curSrc = srcChs[a];
       var curDst = dstChs[a];
       var nodeInstructions = (0, _compareNode2['default'])(curSrc, curDst);
   
       // If there is no matching destination node it means we need to remove the
       // current source node from the source.
-      if (!curDst) {
+      if (!curSrc) {
         instructions.push({
-          destination: curSrc,
+          destination: dstChs[a],
           source: src,
-          type: types.REMOVE_CHILD
+          type: types.APPEND_CHILD
         });
         continue;
       }
@@ -1354,12 +1354,12 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
       }
     }
   
-    if (srcChsLen < dstChsLen) {
-      for (var a = srcChsLen; a < dstChsLen; a++) {
+    if (dstChsLen < srcChsLen) {
+      for (var a = dstChsLen; a < srcChsLen; a++) {
         instructions.push({
-          destination: dstChs[a],
+          destination: srcChs[a],
           source: src,
-          type: types.APPEND_CHILD
+          type: types.REMOVE_CHILD
         });
       }
     }

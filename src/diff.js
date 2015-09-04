@@ -21,18 +21,18 @@ export default function diff (opts) {
   let dstChsLen = dstChs.length;
 
   // Diff the node with less items against the node with more items.
-  for (let a = 0; a < srcChsLen; a++) {
+  for (let a = 0; a < dstChsLen; a++) {
     let curSrc = srcChs[a];
     let curDst = dstChs[a];
     let nodeInstructions = compareNode(curSrc, curDst);
 
     // If there is no matching destination node it means we need to remove the
     // current source node from the source.
-    if (!curDst) {
+    if (!curSrc) {
       instructions.push({
-        destination: curSrc,
+        destination: dstChs[a],
         source: src,
-        type: types.REMOVE_CHILD
+        type: types.APPEND_CHILD
       });
       continue;
     }
@@ -58,12 +58,12 @@ export default function diff (opts) {
     }
   }
 
-  if (srcChsLen < dstChsLen) {
-    for (let a = srcChsLen; a < dstChsLen; a++) {
+  if (dstChsLen < srcChsLen) {
+    for (let a = dstChsLen; a < srcChsLen; a++) {
       instructions.push({
-        destination: dstChs[a],
+        destination: srcChs[a],
         source: src,
-        type: types.APPEND_CHILD
+        type: types.REMOVE_CHILD
       });
     }
   }
