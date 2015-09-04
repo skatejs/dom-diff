@@ -7,34 +7,35 @@ export default function diff (opts) {
     opts.descend = () => true;
   }
 
-  let dst = opts.destination;
   let src = opts.source;
+  let dst = opts.destination;
   let instructions = [];
 
   if (!src || !dst) {
     return [];
   }
 
-  let less;
-  let more;
-
-  if (dst.childNodes.length < src.childNodes.length) {
-    less = dst;
-    more = src;
-  } else {
-    less = src;
-    more = dst;
-  }
-
-  let moreStartIndex = 0;
+  let srcChs = src.childNodes;
+  let dstChs = dst.childNodes;
+  let srcChsLen = srcChs.length;
+  let dstChsLen = dstChs.length;
 
   // Diff the node with less items against the node with more items.
-  for (let a = 0; a < less.childNodes.length; a++) {
-    let curLess = less.childNodes[a];
-    let curMore = more.childNodes[a];
-    let curDst = less === dst ? less.childNodes[a] : more.childNodes[a];
-    let curSrc = more === src ? more.childNodes[a] : less.childNodes[a];
+  for (let a = 0; a < srcChsLen; a++) {
+    let curSrc = srcChs[a];
+    let curDst = dstChs[a];
     let nodeInstructions = compareNode(curSrc, curDst);
+
+    // If there is no matching destination node it means we need to remove the
+    // current source node from the source.
+    if (!curDst) {
+      instructions.push({
+        destination: curSrc,
+        source: src,
+        type: types.REMOVE_CHILD
+      });
+      continue;
+    }
 
     // If there are instructions (even an empty array) it means the node can be
     // diffed and doesn't have to be replaced. If the instructions are falsy
@@ -55,23 +56,14 @@ export default function diff (opts) {
         type: types.REPLACE_CHILD
       });
     }
-
-    ++moreStartIndex;
   }
 
-  // Add / remove extra items.
-  for (let a = moreStartIndex; a < more.childNodes.length; a++) {
-    if (more === dst) {
+  if (srcChsLen < dstChsLen) {
+    for (let a = srcChsLen; a < dstChsLen; a++) {
       instructions.push({
-        destination: more.childNodes[a],
-        source: less,
+        destination: dstChs[a],
+        source: src,
         type: types.APPEND_CHILD
-      });
-    } else {
-      instructions.push({
-        destination: more.childNodes[a],
-        source: more,
-        type: types.REMOVE_CHILD
       });
     }
   }

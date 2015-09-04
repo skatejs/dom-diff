@@ -1303,34 +1303,35 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
       };
     }
   
-    var dst = opts.destination;
     var src = opts.source;
+    var dst = opts.destination;
     var instructions = [];
   
     if (!src || !dst) {
       return [];
     }
   
-    var less = undefined;
-    var more = undefined;
-  
-    if (dst.childNodes.length < src.childNodes.length) {
-      less = dst;
-      more = src;
-    } else {
-      less = src;
-      more = dst;
-    }
-  
-    var moreStartIndex = 0;
+    var srcChs = src.childNodes;
+    var dstChs = dst.childNodes;
+    var srcChsLen = srcChs.length;
+    var dstChsLen = dstChs.length;
   
     // Diff the node with less items against the node with more items.
-    for (var a = 0; a < less.childNodes.length; a++) {
-      var curLess = less.childNodes[a];
-      var curMore = more.childNodes[a];
-      var curDst = less === dst ? less.childNodes[a] : more.childNodes[a];
-      var curSrc = more === src ? more.childNodes[a] : less.childNodes[a];
+    for (var a = 0; a < srcChsLen; a++) {
+      var curSrc = srcChs[a];
+      var curDst = dstChs[a];
       var nodeInstructions = (0, _compareNode2['default'])(curSrc, curDst);
+  
+      // If there is no matching destination node it means we need to remove the
+      // current source node from the source.
+      if (!curDst) {
+        instructions.push({
+          destination: curSrc,
+          source: src,
+          type: types.REMOVE_CHILD
+        });
+        continue;
+      }
   
       // If there are instructions (even an empty array) it means the node can be
       // diffed and doesn't have to be replaced. If the instructions are falsy
@@ -1351,23 +1352,14 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
           type: types.REPLACE_CHILD
         });
       }
-  
-      ++moreStartIndex;
     }
   
-    // Add / remove extra items.
-    for (var a = moreStartIndex; a < more.childNodes.length; a++) {
-      if (more === dst) {
+    if (srcChsLen < dstChsLen) {
+      for (var a = srcChsLen; a < dstChsLen; a++) {
         instructions.push({
-          destination: more.childNodes[a],
-          source: less,
+          destination: dstChs[a],
+          source: src,
           type: types.APPEND_CHILD
-        });
-      } else {
-        instructions.push({
-          destination: more.childNodes[a],
-          source: more,
-          type: types.REMOVE_CHILD
         });
       }
     }
