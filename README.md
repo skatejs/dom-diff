@@ -1,6 +1,6 @@
 # Dom Diff
 
-Skate's DOM Diff is library that will diff real dom nodes using a simple algorithm designed to be balanced between performance and accuracy. It uses a similar algorithm that React uses and makes similar assumptions.
+Skate's DOM Diff is a library that will diff real dom nodes using a simple algorithm designed to be balanced between performance and accuracy. It uses a similar algorithm that React uses and makes similar assumptions.
 
 ## Usage
 
@@ -27,11 +27,11 @@ console.log(instructions);
 Would log:
 
 ```js
-{
-  source: HTMLSpanElement,
-  destination: HTMLDivElement,
-  type: skateDomDiff.types.REPLACE_CHILD
-}
+[{
+  source: [object HTMLSpanElement],
+  destination: [object HTMLDivElement],
+  type: [number skateDomDiff.types.REPLACE_CHILD]
+}]
 ```
 
 You can then take the instructions and `patch()` the source node.
