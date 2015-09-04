@@ -17,7 +17,7 @@ export default function (src, dst) {
         data: {name: srcAttr.name},
         destination: dst,
         source: src,
-        type: types.REMOVE_ATTRIBUTE,
+        type: types.REMOVE_ATTRIBUTE
       });
     } else if (srcAttr.value !== dstAttr.value) {
       instructions.push({
