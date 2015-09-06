@@ -1,6 +1,5 @@
-var gulp = require('gulp');
-var gulpClean = require('gulp-clean');
+var del = require('del');
 
 module.exports = function () {
-  return gulp.src('dist').pipe(gulpClean());
+  return del(['dist', 'lib']);
 };

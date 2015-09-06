@@ -26,5 +26,5 @@ export default function (src, dst) {
     ret = compareComment(src, dst);
   }
 
-  return ret;
+  return ret || [];
 }

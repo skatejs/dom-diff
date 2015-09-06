@@ -1259,7 +1259,7 @@ __d1a542bf52dea3e669dda0475c050479 = (function () {
       ret = (0, _comment2['default'])(src, dst);
     }
   
-    return ret;
+    return ret || [];
   };
   
   module.exports = exports['default'];
