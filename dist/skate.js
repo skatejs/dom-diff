@@ -1259,7 +1259,7 @@ __d1a542bf52dea3e669dda0475c050479 = (function () {
       ret = (0, _comment2['default'])(src, dst);
     }
   
-    return ret || [];
+    return ret;
   };
   
   module.exports = exports['default'];
@@ -1316,7 +1316,6 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
     var srcChsLen = srcChs.length;
     var dstChsLen = dstChs.length;
   
-    // Diff the node with less items against the node with more items.
     for (var a = 0; a < dstChsLen; a++) {
       var curSrc = srcChs[a];
       var curDst = dstChs[a];
@@ -1625,13 +1624,32 @@ __d0534c9e7312e01df51511bab04ed9e4 = (function () {
   
   var _types2 = _interopRequireDefault(_types);
   
-  exports['default'] = window.skateDomDiff = {
+  exports['default'] = {
     diff: _diff2['default'],
     merge: _merge2['default'],
     patch: _patch2['default'],
     types: _types2['default']
   };
   module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+// src/global.js
+__a072583ef3bdddb0fc56ec2a2194ea95 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _index = __d0534c9e7312e01df51511bab04ed9e4;
+  
+  var _index2 = _interopRequireDefault(_index);
+  
+  window.skateDomDiff = _index2['default'];
   
   return module.exports;
 }).call(this);
