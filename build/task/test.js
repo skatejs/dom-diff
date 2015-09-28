@@ -1,4 +1,4 @@
-var assign = require('lodash/object/assign');
+var assign = require('object-assign');
 var galv = require('galvatron');
 var gulp = require('gulp');
 var gulpBabel = require('gulp-babel');

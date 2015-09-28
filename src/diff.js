@@ -1,5 +1,5 @@
 import * as types from './types';
-import assign from 'lodash/object/assign';
+import assign from 'object-assign';
 import compareNode from './compare/node';
 
 export default function diff (opts) {
