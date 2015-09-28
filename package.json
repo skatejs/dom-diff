@@ -1,5 +1,5 @@
 {
-  "name": "dom-diff",
+  "name": "skatejs-dom-diff",
   "version": "0.0.0",
   "description": "Library for efficiently diffing and patching DOM fragments.",
   "main": "lib/index.js",
