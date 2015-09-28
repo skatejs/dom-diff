@@ -20,7 +20,6 @@ export default function diff (opts) {
   let srcChsLen = srcChs.length;
   let dstChsLen = dstChs.length;
 
-  // Diff the node with less items against the node with more items.
   for (let a = 0; a < dstChsLen; a++) {
     let curSrc = srcChs[a];
     let curDst = dstChs[a];
