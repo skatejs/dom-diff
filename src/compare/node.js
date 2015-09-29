@@ -19,12 +19,10 @@ export default function (src, dst) {
   if (dstType !== srcType) {
     return;
   } else if (dstType === NODE_ELEMENT) {
-    ret = compareElement(src, dst);
+    return compareElement(src, dst);
   } else if (dstType === NODE_TEXT) {
-    ret = compareText(src, dst);
+    return compareText(src, dst);
   } else if (dstType === NODE_COMMENT) {
-    ret = compareComment(src, dst);
+    return compareComment(src, dst);
   }
-
-  return ret;
 }

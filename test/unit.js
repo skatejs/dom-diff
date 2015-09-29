@@ -2,7 +2,7 @@ import * as types from '../src/types';
 import sd from '../src/index';
 
 function elem (name, html) {
-  var el = document.createElement(name);
+  let el = document.createElement(name);
   el.innerHTML = html;
   return el;
 }
@@ -11,7 +11,7 @@ let div = elem.bind(null, 'div');
 
 describe('diff', function () {
   it('instructions array', function () {
-    var diffed = sd.diff({
+    let diffed = sd.diff({
       destination: div(),
       source: div()
     });
@@ -19,9 +19,9 @@ describe('diff', function () {
   });
 
   it('instruction object', function () {
-    var src = div('<span></span>');
-    var dst = div('<a></a>');
-    var instructions = sd.diff({
+    let src = div('<span></span>');
+    let dst = div('<a></a>');
+    let instructions = sd.diff({
       destination: dst,
       source: src
     });
@@ -58,14 +58,14 @@ describe('diff', function () {
       assert.equal(src.childNodes[0], oldDiv);
       assert.equal(src.childNodes[0].childNodes[0], oldSpan);
     });
-  })
+  });
 });
 
 describe('patch', function () {
   it('host should not change', function () {
-    var src = div('<span></span>');
-    var dst = div('<a></a>');
-    var instructions = sd.diff({
+    let src = div('<span></span>');
+    let dst = div('<a></a>');
+    let instructions = sd.diff({
       destination: dst,
       source: src
     });
@@ -74,27 +74,35 @@ describe('patch', function () {
   });
 
   it('same elements should not change', function () {
-    var src = div('<span></span>');
-    var dst = div('<span></span><a></a>');
-    var instructions = sd.diff({
+    let src = div('<span></span>');
+    let dst = div('<span></span><a></a>');
+    let instructions = sd.diff({
       destination: dst,
       source: src
     });
-    var srcSpan = src.childNodes[0];
+    let srcSpan = src.childNodes[0];
     sd.patch(instructions);
     assert.equal(src.childNodes[0], srcSpan);
   });
 
   it('only compares items at the same index', function () {
-    var src = div('<span></span>');
-    var dst = div('<a></a><span></span>');
-    var instructions = sd.diff({
+    let src = div('<span></span>');
+    let dst = div('<a></a><span></span>');
+    let instructions = sd.diff({
       destination: dst,
       source: src
     });
-    var srcSpan = src.childNodes[0];
+    let srcSpan = src.childNodes[0];
     sd.patch(instructions);
     assert.notEqual(src.childNodes[0], srcSpan);
     assert.notEqual(src.childNodes[1], srcSpan);
+  });
+
+  it('should not patch equal text nodes', function () {
+    let src = div('text');
+    let dst = div('text');
+    let text = src.childNodes[0];
+    sd.merge({ source: src, destination: dst });
+    assert.equal(text, src.childNodes[0]);
   });
 });

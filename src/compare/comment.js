@@ -1,3 +1,2 @@
-export default function (src, dst) {
-
-}
+import text from './text';
+export default text;
