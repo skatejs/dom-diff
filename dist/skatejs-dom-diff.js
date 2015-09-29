@@ -193,13 +193,15 @@ __6be3dfb2c966cc1cf98fbc28ab388768 = (function () {
   var types = _interopRequireWildcard(_types);
   
   exports['default'] = function (src, dst) {
-    if (src.textContent !== dst.textContent) {
-      return [{
-        destination: dst,
-        source: src,
-        type: types.TEXT_CONTENT
-      }];
+    if (src.textContent === dst.textContent) {
+      return [];
     }
+  
+    return [{
+      destination: dst,
+      source: src,
+      type: types.TEXT_CONTENT
+    }];
   };
   
   module.exports = exports['default'];
@@ -213,15 +215,20 @@ __b61b794da4779d6fe0fb5684b9f98c70 = (function () {
   };
   var exports = module.exports;
   
-  "use strict";
+  'use strict';
   
-  Object.defineProperty(exports, "__esModule", {
+  Object.defineProperty(exports, '__esModule', {
     value: true
   });
   
-  exports["default"] = function (src, dst) {};
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  module.exports = exports["default"];
+  var _text = __6be3dfb2c966cc1cf98fbc28ab388768;
+  
+  var _text2 = _interopRequireDefault(_text);
+  
+  exports['default'] = _text2['default'];
+  module.exports = exports['default'];
   
   return module.exports;
 }).call(this);
@@ -271,14 +278,12 @@ __d1a542bf52dea3e669dda0475c050479 = (function () {
     if (dstType !== srcType) {
       return;
     } else if (dstType === NODE_ELEMENT) {
-      ret = (0, _element2['default'])(src, dst);
+      return (0, _element2['default'])(src, dst);
     } else if (dstType === NODE_TEXT) {
-      ret = (0, _text2['default'])(src, dst);
+      return (0, _text2['default'])(src, dst);
     } else if (dstType === NODE_COMMENT) {
-      ret = (0, _comment2['default'])(src, dst);
+      return (0, _comment2['default'])(src, dst);
     }
-  
-    return ret;
   };
   
   module.exports = exports['default'];
