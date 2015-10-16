@@ -13,7 +13,7 @@
   "devDependencies": {
     "benchmark": "1.0.0",
     "del": "2.0.2",
-    "eslint": "1.5.1",
+    "eslint": "1.7.1",
     "galvatron": "treshugart/galvatron#5b7c948",
     "gulp": "3.9.0",
     "gulp-auto-task": "treshugart/gulp-auto-task#460b425",
