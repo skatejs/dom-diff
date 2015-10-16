@@ -347,12 +347,6 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
       var curSrc = srcChs[a];
       var curDst = dstChs[a];
   
-      if (opts.ignore(curSrc, curDst)) {
-        continue;
-      }
-  
-      var nodeInstructions = (0, _compareNode2['default'])(curSrc, curDst);
-  
       // If there is no matching destination node it means we need to remove the
       // current source node from the source.
       if (!curSrc) {
@@ -363,6 +357,12 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
         });
         continue;
       }
+  
+      if (opts.ignore(curSrc, curDst)) {
+        continue;
+      }
+  
+      var nodeInstructions = (0, _compareNode2['default'])(curSrc, curDst);
   
       // If there are instructions (even an empty array) it means the node can be
       // diffed and doesn't have to be replaced. If the instructions are falsy

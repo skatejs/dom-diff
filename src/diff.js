@@ -25,12 +25,6 @@ export default function diff (opts) {
     let curSrc = srcChs[a];
     let curDst = dstChs[a];
 
-    if (opts.ignore(curSrc, curDst)) {
-      continue;
-    }
-
-    let nodeInstructions = compareNode(curSrc, curDst);
-
     // If there is no matching destination node it means we need to remove the
     // current source node from the source.
     if (!curSrc) {
@@ -41,6 +35,12 @@ export default function diff (opts) {
       });
       continue;
     }
+
+    if (opts.ignore(curSrc, curDst)) {
+      continue;
+    }
+
+    let nodeInstructions = compareNode(curSrc, curDst);
 
     // If there are instructions (even an empty array) it means the node can be
     // diffed and doesn't have to be replaced. If the instructions are falsy
