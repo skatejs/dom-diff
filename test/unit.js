@@ -47,7 +47,7 @@ describe('diff', function () {
 
     it('user bypass', function () {
       let src = div('<div stop><span></span></div>');
-      let dst = div('<div stop><a></a></div>');
+      let dst = div('<div><a></a></div>');
       let oldDiv = src.childNodes[0];
       let oldSpan = oldDiv.childNodes[0];
       sd.merge({
@@ -57,6 +57,29 @@ describe('diff', function () {
       });
       assert.equal(src.childNodes[0], oldDiv);
       assert.equal(src.childNodes[0].childNodes[0], oldSpan);
+    });
+  });
+
+  describe('ignore', function () {
+    it('off by default', function () {
+      let src = div('<div ignore></div>');
+      let dst = div('<div some-attr></div>');
+      sd.merge({
+        source: src,
+        destination: dst
+      });
+      assert.equal(src.childNodes[0].hasAttribute('some-attr'), true);
+    });
+
+    it('user bypass', function () {
+      let src = div('<div ignore></div>');
+      let dst = div('<div some-attr></div>');
+      sd.merge({
+        ignore: src => src.hasAttribute('ignore'),
+        source: src,
+        destination: dst
+      });
+      assert.equal(src.childNodes[0].hasAttribute('some-attr'), false);
     });
   });
 });

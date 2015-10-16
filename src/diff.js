@@ -3,9 +3,10 @@ import assign from 'object-assign';
 import compareNode from './compare/node';
 
 export default function diff (opts) {
-  if (opts.descend === undefined) {
-    opts.descend = () => true;
-  }
+  opts = assign({
+    descend: () => true,
+    ignore: () => false
+  }, opts);
 
   let src = opts.source;
   let dst = opts.destination;
@@ -23,6 +24,11 @@ export default function diff (opts) {
   for (let a = 0; a < dstChsLen; a++) {
     let curSrc = srcChs[a];
     let curDst = dstChs[a];
+
+    if (opts.ignore(curSrc, curDst)) {
+      continue;
+    }
+
     let nodeInstructions = compareNode(curSrc, curDst);
 
     // If there is no matching destination node it means we need to remove the
