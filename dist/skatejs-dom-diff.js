@@ -321,11 +321,14 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
   var _compareNode2 = _interopRequireDefault(_compareNode);
   
   function diff(opts) {
-    if (opts.descend === undefined) {
-      opts.descend = function () {
+    opts = (0, _objectAssign2['default'])({
+      descend: function descend() {
         return true;
-      };
-    }
+      },
+      ignore: function ignore() {
+        return false;
+      }
+    }, opts);
   
     var src = opts.source;
     var dst = opts.destination;
@@ -343,6 +346,11 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
     for (var a = 0; a < dstChsLen; a++) {
       var curSrc = srcChs[a];
       var curDst = dstChs[a];
+  
+      if (opts.ignore(curSrc, curDst)) {
+        continue;
+      }
+  
       var nodeInstructions = (0, _compareNode2['default'])(curSrc, curDst);
   
       // If there is no matching destination node it means we need to remove the
