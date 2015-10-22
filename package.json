@@ -23,7 +23,7 @@
     "gulp-karma": "0.0.4",
     "gulp-rename": "1.2.2",
     "gulp-uglify": "1.4.1",
-    "karma": "0.13.10",
+    "karma": "0.13.13",
     "karma-chrome-launcher": "0.2.0",
     "karma-firefox-launcher": "0.1.6",
     "karma-mocha": "0.2.0",
