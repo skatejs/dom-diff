@@ -7,9 +7,7 @@
     "doc": "docs",
     "test": "test"
   },
-  "dependencies": {
-    "object-assign": "4.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "eslint": "1.5.1",
     "skatejs-build": "skatejs/build#15656c8"
