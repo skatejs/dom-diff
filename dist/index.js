@@ -25,55 +25,6 @@
   
   return module.exports;
 }).call(this);
-// node_modules/object-assign/index.js
-(typeof window === 'undefined' ? global : window).__5b5233f7d04c59f0f45fe5fa7d6cb57c = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  /* eslint-disable no-unused-vars */
-  var hasOwnProperty = Object.prototype.hasOwnProperty;
-  var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-  
-  function toObject(val) {
-  	if (val === null || val === undefined) {
-  		throw new TypeError('Object.assign cannot be called with null or undefined');
-  	}
-  
-  	return Object(val);
-  }
-  
-  module.exports = Object.assign || function (target, source) {
-  	var from;
-  	var to = toObject(target);
-  	var symbols;
-  
-  	for (var s = 1; s < arguments.length; s++) {
-  		from = Object(arguments[s]);
-  
-  		for (var key in from) {
-  			if (hasOwnProperty.call(from, key)) {
-  				to[key] = from[key];
-  			}
-  		}
-  
-  		if (Object.getOwnPropertySymbols) {
-  			symbols = Object.getOwnPropertySymbols(from);
-  			for (var i = 0; i < symbols.length; i++) {
-  				if (propIsEnumerable.call(from, symbols[i])) {
-  					to[symbols[i]] = from[symbols[i]];
-  				}
-  			}
-  		}
-  	}
-  
-  	return to;
-  };
-  
-  
-  return module.exports;
-}).call(this);
 // src/compare/attributes.js
 (typeof window === 'undefined' ? global : window).__bad2e851182eb57480d47d0d1303f9cd = (function () {
   var module = {
@@ -313,23 +264,12 @@
   
   var types = _interopRequireWildcard(_types);
   
-  var _objectAssign = __5b5233f7d04c59f0f45fe5fa7d6cb57c;
-  
-  var _objectAssign2 = _interopRequireDefault(_objectAssign);
-  
   var _compareNode = __d1a542bf52dea3e669dda0475c050479;
   
   var _compareNode2 = _interopRequireDefault(_compareNode);
   
-  function diff(opts) {
-    opts = (0, _objectAssign2['default'])({
-      descend: function descend() {
-        return true;
-      },
-      ignore: function ignore() {
-        return false;
-      }
-    }, opts);
+  function diff() {
+    var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
   
     var src = opts.source;
     var dst = opts.destination;
@@ -359,7 +299,7 @@
         continue;
       }
   
-      if (opts.ignore(curSrc, curDst)) {
+      if (opts.ignore && opts.ignore(curSrc, curDst)) {
         continue;
       }
   
@@ -371,11 +311,11 @@
       // replaced instead.
       if (nodeInstructions) {
         instructions = instructions.concat(nodeInstructions);
-        if (opts.descend(curSrc, curDst)) {
-          instructions = instructions.concat(diff((0, _objectAssign2['default'])(opts, {
-            destination: curDst,
-            source: curSrc
-          })));
+        if (!opts.descend || opts.descend(curSrc, curDst)) {
+          var newOpts = opts;
+          newOpts.destination = curDst;
+          newOpts.source = curSrc;
+          instructions = instructions.concat(diff(newOpts));
         }
       } else {
         instructions.push({
