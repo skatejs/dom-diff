@@ -1,5 +1,5 @@
 // src/types.js
-__0ca807667308490ecea534df3b4369b8 = (function () {
+(typeof window === 'undefined' ? global : window).__0ca807667308490ecea534df3b4369b8 = (function () {
   var module = {
     exports: {}
   };
@@ -26,7 +26,7 @@ __0ca807667308490ecea534df3b4369b8 = (function () {
   return module.exports;
 }).call(this);
 // node_modules/object-assign/index.js
-__5b5233f7d04c59f0f45fe5fa7d6cb57c = (function () {
+(typeof window === 'undefined' ? global : window).__5b5233f7d04c59f0f45fe5fa7d6cb57c = (function () {
   var module = {
     exports: {}
   };
@@ -71,10 +71,11 @@ __5b5233f7d04c59f0f45fe5fa7d6cb57c = (function () {
   	return to;
   };
   
+  
   return module.exports;
 }).call(this);
 // src/compare/attributes.js
-__bad2e851182eb57480d47d0d1303f9cd = (function () {
+(typeof window === 'undefined' ? global : window).__bad2e851182eb57480d47d0d1303f9cd = (function () {
   var module = {
     exports: {}
   };
@@ -145,7 +146,7 @@ __bad2e851182eb57480d47d0d1303f9cd = (function () {
   return module.exports;
 }).call(this);
 // src/compare/element.js
-__8a4ddda1ca8be7b0c056814a3966d1ca = (function () {
+(typeof window === 'undefined' ? global : window).__8a4ddda1ca8be7b0c056814a3966d1ca = (function () {
   var module = {
     exports: {}
   };
@@ -174,7 +175,7 @@ __8a4ddda1ca8be7b0c056814a3966d1ca = (function () {
   return module.exports;
 }).call(this);
 // src/compare/text.js
-__6be3dfb2c966cc1cf98fbc28ab388768 = (function () {
+(typeof window === 'undefined' ? global : window).__6be3dfb2c966cc1cf98fbc28ab388768 = (function () {
   var module = {
     exports: {}
   };
@@ -209,7 +210,7 @@ __6be3dfb2c966cc1cf98fbc28ab388768 = (function () {
   return module.exports;
 }).call(this);
 // src/compare/comment.js
-__b61b794da4779d6fe0fb5684b9f98c70 = (function () {
+(typeof window === 'undefined' ? global : window).__b61b794da4779d6fe0fb5684b9f98c70 = (function () {
   var module = {
     exports: {}
   };
@@ -233,7 +234,7 @@ __b61b794da4779d6fe0fb5684b9f98c70 = (function () {
   return module.exports;
 }).call(this);
 // src/compare/node.js
-__d1a542bf52dea3e669dda0475c050479 = (function () {
+(typeof window === 'undefined' ? global : window).__d1a542bf52dea3e669dda0475c050479 = (function () {
   var module = {
     exports: {}
   };
@@ -291,7 +292,7 @@ __d1a542bf52dea3e669dda0475c050479 = (function () {
   return module.exports;
 }).call(this);
 // src/diff.js
-__22dce1b31df73fb8f06bda10d9498f07 = (function () {
+(typeof window === 'undefined' ? global : window).__22dce1b31df73fb8f06bda10d9498f07 = (function () {
   var module = {
     exports: {}
   };
@@ -403,7 +404,7 @@ __22dce1b31df73fb8f06bda10d9498f07 = (function () {
   return module.exports;
 }).call(this);
 // src/patch/append-child.js
-__3ed6aa44bf4d6b9365bed745b80029cf = (function () {
+(typeof window === 'undefined' ? global : window).__3ed6aa44bf4d6b9365bed745b80029cf = (function () {
   var module = {
     exports: {}
   };
@@ -424,7 +425,7 @@ __3ed6aa44bf4d6b9365bed745b80029cf = (function () {
   return module.exports;
 }).call(this);
 // src/patch/remove-attribute.js
-__9bbe6d2e49edcd9d91aac0c352f01bb0 = (function () {
+(typeof window === 'undefined' ? global : window).__9bbe6d2e49edcd9d91aac0c352f01bb0 = (function () {
   var module = {
     exports: {}
   };
@@ -445,7 +446,7 @@ __9bbe6d2e49edcd9d91aac0c352f01bb0 = (function () {
   return module.exports;
 }).call(this);
 // src/patch/remove-child.js
-__b306d2b34b0fbb399cbb13b5dc7dd96a = (function () {
+(typeof window === 'undefined' ? global : window).__b306d2b34b0fbb399cbb13b5dc7dd96a = (function () {
   var module = {
     exports: {}
   };
@@ -466,7 +467,7 @@ __b306d2b34b0fbb399cbb13b5dc7dd96a = (function () {
   return module.exports;
 }).call(this);
 // src/patch/replace-child.js
-__36e2ac600d355b297d4888bed8e557b1 = (function () {
+(typeof window === 'undefined' ? global : window).__36e2ac600d355b297d4888bed8e557b1 = (function () {
   var module = {
     exports: {}
   };
@@ -487,7 +488,7 @@ __36e2ac600d355b297d4888bed8e557b1 = (function () {
   return module.exports;
 }).call(this);
 // src/patch/set-attribute.js
-__3a0f75dfacfe0f1a25269b7ec38195ba = (function () {
+(typeof window === 'undefined' ? global : window).__3a0f75dfacfe0f1a25269b7ec38195ba = (function () {
   var module = {
     exports: {}
   };
@@ -508,7 +509,7 @@ __3a0f75dfacfe0f1a25269b7ec38195ba = (function () {
   return module.exports;
 }).call(this);
 // src/patch/text-content.js
-__2ecd35541218022de8f33fe72ae13c79 = (function () {
+(typeof window === 'undefined' ? global : window).__2ecd35541218022de8f33fe72ae13c79 = (function () {
   var module = {
     exports: {}
   };
@@ -529,7 +530,7 @@ __2ecd35541218022de8f33fe72ae13c79 = (function () {
   return module.exports;
 }).call(this);
 // src/patch.js
-__d49832510105705a679155ef252b6786 = (function () {
+(typeof window === 'undefined' ? global : window).__d49832510105705a679155ef252b6786 = (function () {
   var module = {
     exports: {}
   };
@@ -594,7 +595,7 @@ __d49832510105705a679155ef252b6786 = (function () {
   return module.exports;
 }).call(this);
 // src/merge.js
-__397f1a21725eb3fd4fbf51ee69fe1006 = (function () {
+(typeof window === 'undefined' ? global : window).__397f1a21725eb3fd4fbf51ee69fe1006 = (function () {
   var module = {
     exports: {}
   };
@@ -626,7 +627,7 @@ __397f1a21725eb3fd4fbf51ee69fe1006 = (function () {
   return module.exports;
 }).call(this);
 // src/index.js
-__d0534c9e7312e01df51511bab04ed9e4 = (function () {
+(typeof window === 'undefined' ? global : window).__d0534c9e7312e01df51511bab04ed9e4 = (function () {
   var module = {
     exports: {}
   };
@@ -667,7 +668,7 @@ __d0534c9e7312e01df51511bab04ed9e4 = (function () {
   return module.exports;
 }).call(this);
 // src/global.js
-__a072583ef3bdddb0fc56ec2a2194ea95 = (function () {
+(typeof window === 'undefined' ? global : window).__a072583ef3bdddb0fc56ec2a2194ea95 = (function () {
   var module = {
     exports: {}
   };
