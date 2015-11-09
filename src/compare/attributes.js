@@ -7,6 +7,11 @@ export default function (src, dst) {
   let dstAttrsLen = (dstAttrs || 0) && dstAttrs.length;
   let instructions = [];
 
+  // Bail early if possible.
+  if (!srcAttrsLen || !dstAttrsLen) {
+    return instructions;
+  }
+
   // Merge attributes that exist in source with destination's.
   for (let a = 0; a < srcAttrsLen; a++) {
     let srcAttr = srcAttrs[a];
