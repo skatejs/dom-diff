@@ -1,13 +1,7 @@
 import * as types from './types';
-import assign from 'object-assign';
 import compareNode from './compare/node';
 
-export default function diff (opts) {
-  opts = assign({
-    descend: () => true,
-    ignore: () => false
-  }, opts);
-
+export default function diff (opts = {}) {
   let src = opts.source;
   let dst = opts.destination;
   let instructions = [];
@@ -36,7 +30,7 @@ export default function diff (opts) {
       continue;
     }
 
-    if (opts.ignore(curSrc, curDst)) {
+    if (opts.ignore && opts.ignore(curSrc, curDst)) {
       continue;
     }
 
@@ -48,11 +42,11 @@ export default function diff (opts) {
     // replaced instead.
     if (nodeInstructions) {
       instructions = instructions.concat(nodeInstructions);
-      if (opts.descend(curSrc, curDst)) {
-        instructions = instructions.concat(diff(assign(opts, {
-          destination: curDst,
-          source: curSrc
-        })));
+      if (!opts.descend || opts.descend(curSrc, curDst)) {
+        const newOpts = opts;
+        newOpts.destination = curDst;
+        newOpts.source = curSrc;
+        instructions = instructions.concat(diff(newOpts));
       }
     } else {
       instructions.push({
