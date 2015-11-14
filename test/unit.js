@@ -33,7 +33,7 @@ describe('diff', function () {
 
   describe('descend', function () {
     it('on by default', function () {
-      let src = div('<div stop><span></span></div>');
+      let src = div('<div><span></span></div>');
       let dst = div('<div><a></a></div>');
       let oldDiv = src.childNodes[0];
       let newA = dst.childNodes[0].childNodes[0];

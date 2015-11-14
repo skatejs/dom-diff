@@ -1,7 +1,7 @@
 import * as types from './types';
 import compareNode from './compare/node';
 
-function diff (opts = defaultOptions) {
+function diff (opts = {}) {
   let src = opts.source;
   let dst = opts.destination;
   let instructions = [];
@@ -12,8 +12,8 @@ function diff (opts = defaultOptions) {
 
   let srcChs = src.childNodes;
   let dstChs = dst.childNodes;
-  let srcChsLen = srcChs.length;
-  let dstChsLen = dstChs.length;
+  let srcChsLen = srcChs ? srcChs.length : 0;
+  let dstChsLen = dstChs ? dstChs.length : 0;
 
   for (let a = 0; a < dstChsLen; a++) {
     let curSrc = srcChs[a];
@@ -42,7 +42,7 @@ function diff (opts = defaultOptions) {
     // replaced instead.
     if (nodeInstructions) {
       instructions = instructions.concat(nodeInstructions);
-      if (!curSrc.__DO_NOT_DESCEND && (!opts.descend || opts.descend(curSrc, curDst))) {
+      if ((!opts.descend && !curSrc.__DO_NOT_DESCEND) || (opts.descend && opts.descend(curSrc, curDst))) {
         const newOpts = opts;
         newOpts.destination = curDst;
         newOpts.source = curSrc;
