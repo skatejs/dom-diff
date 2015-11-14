@@ -34,7 +34,7 @@ describe('diff', function () {
   describe('descend', function () {
     it('on by default', function () {
       let src = div('<div stop><span></span></div>');
-      let dst = div('<div stop><a></a></div>');
+      let dst = div('<div><a></a></div>');
       let oldDiv = src.childNodes[0];
       let newA = dst.childNodes[0].childNodes[0];
       sd.merge({
@@ -43,6 +43,28 @@ describe('diff', function () {
       });
       assert.equal(src.childNodes[0], oldDiv);
       assert.equal(src.childNodes[0].childNodes[0], newA);
+    });
+
+    it('should not descend into trees that have already been diffed by default', function () {
+      let src = div('<div><span></span></div>');
+      let dst = div('<div><a></a></div>');
+      let oldDiv = src.childNodes[0];
+      let oldSpan = oldDiv.childNodes[0];
+
+      // Diff the old element so that the merge knows that it's been diffed.
+      sd.diff({
+        destination: document.createElement('div'),
+        source: oldDiv
+      });
+
+      // Merge after diffing the span.
+      sd.merge({
+        destination: dst,
+        source: src
+      });
+
+      assert.equal(src.childNodes[0], oldDiv);
+      assert.equal(src.childNodes[0].childNodes[0], oldSpan);
     });
 
     it('user bypass', function () {
