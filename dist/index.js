@@ -259,6 +259,7 @@
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
+  exports['default'] = diff;
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
@@ -273,7 +274,7 @@
   var _compareNode2 = _interopRequireDefault(_compareNode);
   
   function diff() {
-    var opts = arguments.length <= 0 || arguments[0] === undefined ? defaultOptions : arguments[0];
+    var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
   
     var src = opts.source;
     var dst = opts.destination;
@@ -285,8 +286,8 @@
   
     var srcChs = src.childNodes;
     var dstChs = dst.childNodes;
-    var srcChsLen = srcChs.length;
-    var dstChsLen = dstChs.length;
+    var srcChsLen = srcChs ? srcChs.length : 0;
+    var dstChsLen = dstChs ? dstChs.length : 0;
   
     for (var a = 0; a < dstChsLen; a++) {
       var curSrc = srcChs[a];
@@ -315,7 +316,7 @@
       // replaced instead.
       if (nodeInstructions) {
         instructions = instructions.concat(nodeInstructions);
-        if (!curSrc.__DO_NOT_DESCEND && (!opts.descend || opts.descend(curSrc, curDst))) {
+        if (!opts.descend || opts.descend(curSrc, curDst)) {
           var newOpts = opts;
           newOpts.destination = curDst;
           newOpts.source = curSrc;
@@ -342,12 +343,6 @@
   
     return instructions;
   }
-  
-  exports['default'] = function (opts) {
-    // We don't descend into any root nodes that have already been diffed.
-    opts.source.__DO_NOT_DESCEND = true;
-    return diff(opts);
-  };
   
   module.exports = exports['default'];
   
