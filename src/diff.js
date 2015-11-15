@@ -1,7 +1,7 @@
 import * as types from './types';
 import compareNode from './compare/node';
 
-function diff (opts = {}) {
+export default function diff (opts = {}) {
   let src = opts.source;
   let dst = opts.destination;
   let instructions = [];
@@ -42,7 +42,7 @@ function diff (opts = {}) {
     // replaced instead.
     if (nodeInstructions) {
       instructions = instructions.concat(nodeInstructions);
-      if ((!opts.descend && !curSrc.__DO_NOT_DESCEND) || (opts.descend && opts.descend(curSrc, curDst))) {
+      if (!opts.descend || opts.descend(curSrc, curDst)) {
         const newOpts = opts;
         newOpts.destination = curDst;
         newOpts.source = curSrc;
@@ -68,10 +68,4 @@ function diff (opts = {}) {
   }
 
   return instructions;
-}
-
-export default function (opts) {
-  // We don't descend into any root nodes that have already been diffed.
-  opts.source.__DO_NOT_DESCEND = true;
-  return diff(opts);
 }
