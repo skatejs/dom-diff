@@ -52,7 +52,7 @@
     var instructions = [];
   
     // Bail early if possible.
-    if (!srcAttrsLen || !dstAttrsLen) {
+    if (!srcAttrsLen && !dstAttrsLen) {
       return instructions;
     }
   
@@ -70,7 +70,7 @@
         });
       } else if (srcAttr.value !== dstAttr.value) {
         instructions.push({
-          data: { name: srcAttr.name },
+          data: { name: srcAttr.name, value: dstAttr.value },
           destination: dst,
           source: src,
           type: types.SET_ATTRIBUTE
@@ -86,7 +86,7 @@
   
       if (!srcAttr) {
         instructions.push({
-          data: { name: dstAttr.name },
+          data: { name: dstAttr.name, value: dstAttr.value },
           destination: dst,
           source: src,
           type: types.SET_ATTRIBUTE
@@ -222,8 +222,7 @@
   
   exports['default'] = function (src, dst) {
     var dstType = undefined,
-        srcType = undefined,
-        ret = undefined;
+        srcType = undefined;
   
     if (!dst || !src) {
       return;
@@ -302,10 +301,11 @@
           type: types.APPEND_CHILD
         });
         continue;
-      }
-  
-      if (opts.ignore && opts.ignore(curSrc, curDst)) {
-        continue;
+      } else {
+        // Ensure the real node is carried over even if the destination isn't used.
+        // This is used in the render() function to keep track of the real node
+        // that corresponds to a virtual node if a virtual tree is being used.
+        curDst.__realNode = curSrc.__realNode;
       }
   
       var nodeInstructions = (0, _compareNode2['default'])(curSrc, curDst);
@@ -348,8 +348,84 @@
   
   return module.exports;
 }).call(this);
-// src/patch/append-child.js
-(typeof window === 'undefined' ? global : window).__3ed6aa44bf4d6b9365bed745b80029cf = (function () {
+// src/vdom/dom.js
+(typeof window === 'undefined' ? global : window).__c672b2ab009d1b5af8a22c830a9d5ab6 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  exports['default'] = render;
+  function createElement(el) {
+    var realNode = document.createElement(el.tagName);
+  
+    if (el.attributes) {
+      for (var a = 0; a < el.attributes.length; a++) {
+        var attr = el.attributes[a];
+        var _name = attr.name;
+        var value = attr.value;
+  
+        if (!value) {
+          continue;
+        }
+  
+        if (_name === 'content') {
+          if (Array.isArray(value)) {
+            value.forEach(function (ch) {
+              return realNode.appendChild(render(ch));
+            });
+          } else {
+            realNode.appendChild(render(value));
+          }
+        } else {
+          realNode.setAttribute(_name, value);
+        }
+      }
+    }
+  
+    if (el.childNodes) {
+      var frag = document.createDocumentFragment();
+  
+      for (var a = 0; a < el.childNodes.length; a++) {
+        var ch = el.childNodes[a];
+        if (ch) {
+          frag.appendChild(render(ch));
+        }
+      }
+  
+      if (realNode.hasOwnProperty('content')) {
+        realNode.content = frag;
+      } else {
+        realNode.appendChild(frag);
+      }
+    }
+  
+    return realNode;
+  }
+  
+  function createText(el) {
+    return document.createTextNode(el.textContent);
+  }
+  
+  function render(el) {
+    if (el instanceof Node) {
+      return el;
+    }
+    var realNode = el.tagName ? createElement(el) : createText(el);
+    return el.__realNode = realNode;
+  }
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+// src/util/real-node.js
+(typeof window === 'undefined' ? global : window).__5867064010dd8ce98a03e6d693c0b368 = (function () {
   var module = {
     exports: {}
   };
@@ -361,11 +437,42 @@
     value: true
   });
   
-  exports["default"] = function (src, dst) {
-    src.appendChild(dst);
+  exports["default"] = function (node) {
+    return node instanceof Node ? node : node.__realNode;
   };
   
   module.exports = exports["default"];
+  
+  return module.exports;
+}).call(this);
+// src/patch/append-child.js
+(typeof window === 'undefined' ? global : window).__3ed6aa44bf4d6b9365bed745b80029cf = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _vdomDom = __c672b2ab009d1b5af8a22c830a9d5ab6;
+  
+  var _vdomDom2 = _interopRequireDefault(_vdomDom);
+  
+  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  
+  var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
+  
+  exports['default'] = function (src, dst) {
+    (0, _utilRealNode2['default'])(src).appendChild((0, _vdomDom2['default'])(dst));
+  };
+  
+  module.exports = exports['default'];
   
   return module.exports;
 }).call(this);
@@ -376,17 +483,23 @@
   };
   var exports = module.exports;
   
-  "use strict";
+  'use strict';
   
-  Object.defineProperty(exports, "__esModule", {
+  Object.defineProperty(exports, '__esModule', {
     value: true
   });
   
-  exports["default"] = function (src, dst, data) {
-    src.removeAttribute(data.name);
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  
+  var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
+  
+  exports['default'] = function (src, dst, data) {
+    (0, _utilRealNode2['default'])(src).removeAttribute(data.name);
   };
   
-  module.exports = exports["default"];
+  module.exports = exports['default'];
   
   return module.exports;
 }).call(this);
@@ -397,17 +510,23 @@
   };
   var exports = module.exports;
   
-  "use strict";
+  'use strict';
   
-  Object.defineProperty(exports, "__esModule", {
+  Object.defineProperty(exports, '__esModule', {
     value: true
   });
   
-  exports["default"] = function (src, dst) {
-    src.removeChild(dst);
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  
+  var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
+  
+  exports['default'] = function (src, dst) {
+    (0, _utilRealNode2['default'])(src).removeChild((0, _utilRealNode2['default'])(dst));
   };
   
-  module.exports = exports["default"];
+  module.exports = exports['default'];
   
   return module.exports;
 }).call(this);
@@ -418,17 +537,28 @@
   };
   var exports = module.exports;
   
-  "use strict";
+  'use strict';
   
-  Object.defineProperty(exports, "__esModule", {
+  Object.defineProperty(exports, '__esModule', {
     value: true
   });
   
-  exports["default"] = function (src, dst) {
-    src.parentNode.replaceChild(dst, src);
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _vdomDom = __c672b2ab009d1b5af8a22c830a9d5ab6;
+  
+  var _vdomDom2 = _interopRequireDefault(_vdomDom);
+  
+  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  
+  var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
+  
+  exports['default'] = function (src, dst) {
+    var realNodeSrc = (0, _utilRealNode2['default'])(src);
+    realNodeSrc.parentNode.replaceChild((0, _vdomDom2['default'])(dst), realNodeSrc);
   };
   
-  module.exports = exports["default"];
+  module.exports = exports['default'];
   
   return module.exports;
 }).call(this);
@@ -439,17 +569,23 @@
   };
   var exports = module.exports;
   
-  "use strict";
+  'use strict';
   
-  Object.defineProperty(exports, "__esModule", {
+  Object.defineProperty(exports, '__esModule', {
     value: true
   });
   
-  exports["default"] = function (src, dst, data) {
-    src.setAttribute(data.name, dst.getAttribute(data.name));
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  
+  var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
+  
+  exports['default'] = function (src, dst, data) {
+    (0, _utilRealNode2['default'])(src).setAttribute(data.name, data.value);
   };
   
-  module.exports = exports["default"];
+  module.exports = exports['default'];
   
   return module.exports;
 }).call(this);
@@ -460,17 +596,27 @@
   };
   var exports = module.exports;
   
-  "use strict";
+  'use strict';
   
-  Object.defineProperty(exports, "__esModule", {
+  Object.defineProperty(exports, '__esModule', {
     value: true
   });
   
-  exports["default"] = function (src, dst) {
-    src.textContent = dst.textContent;
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _vdomDom = __c672b2ab009d1b5af8a22c830a9d5ab6;
+  
+  var _vdomDom2 = _interopRequireDefault(_vdomDom);
+  
+  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  
+  var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
+  
+  exports['default'] = function (src, dst) {
+    (0, _utilRealNode2['default'])(src).textContent = (0, _vdomDom2['default'])(dst).textContent;
   };
   
-  module.exports = exports["default"];
+  module.exports = exports['default'];
   
   return module.exports;
 }).call(this);
@@ -563,10 +709,277 @@
   var _patch2 = _interopRequireDefault(_patch);
   
   exports['default'] = function (opts) {
-    (0, _patch2['default'])((0, _diff2['default'])(opts));
-    return opts.source;
+    var inst = (0, _diff2['default'])(opts);
+    (0, _patch2['default'])(inst);
+    return inst;
   };
   
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+// node_modules/debounce/node_modules/date-now/index.js
+(typeof window === 'undefined' ? global : window).__c3d4e0e7b418c842df64e110c955bd8a = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  module.exports = Date.now || now
+  
+  function now() {
+      return new Date().getTime()
+  }
+  
+  
+  return module.exports;
+}).call(this);
+// node_modules/debounce/index.js
+(typeof window === 'undefined' ? global : window).__dadb6219ed96ac3e489af33dc5f39e75 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  
+  /**
+   * Module dependencies.
+   */
+  
+  var now = __c3d4e0e7b418c842df64e110c955bd8a;
+  
+  /**
+   * Returns a function, that, as long as it continues to be invoked, will not
+   * be triggered. The function will be called after it stops being called for
+   * N milliseconds. If `immediate` is passed, trigger the function on the
+   * leading edge, instead of the trailing.
+   *
+   * @source underscore.js
+   * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
+   * @param {Function} function to wrap
+   * @param {Number} timeout in ms (`100`)
+   * @param {Boolean} whether to execute at the beginning (`false`)
+   * @api public
+   */
+  
+  module.exports = function debounce(func, wait, immediate){
+    var timeout, args, context, timestamp, result;
+    if (null == wait) wait = 100;
+  
+    function later() {
+      var last = now() - timestamp;
+  
+      if (last < wait && last > 0) {
+        timeout = setTimeout(later, wait - last);
+      } else {
+        timeout = null;
+        if (!immediate) {
+          result = func.apply(context, args);
+          if (!timeout) context = args = null;
+        }
+      }
+    };
+  
+    return function debounced() {
+      context = this;
+      args = arguments;
+      timestamp = now();
+      var callNow = immediate && !timeout;
+      if (!timeout) timeout = setTimeout(later, wait);
+      if (callNow) {
+        result = func.apply(context, args);
+        context = args = null;
+      }
+  
+      return result;
+    };
+  };
+  
+  
+  return module.exports;
+}).call(this);
+// src/vdom/text.js
+(typeof window === 'undefined' ? global : window).__a6dacf85b92d2d194c29d40bfdfc8927 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  "use strict";
+  
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports["default"] = createTextNode;
+  
+  function createTextNode(item) {
+    return {
+      nodeType: 3,
+      textContent: item
+    };
+  }
+  
+  module.exports = exports["default"];
+  
+  return module.exports;
+}).call(this);
+// src/vdom/element.js
+(typeof window === 'undefined' ? global : window).__90cd00536bcb3b42d1659021f5337f5f = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _text = __a6dacf85b92d2d194c29d40bfdfc8927;
+  
+  var _text2 = _interopRequireDefault(_text);
+  
+  function ensureAttributes(obj) {
+    var map = {};
+    var index = 0;
+    for (var a in obj) {
+      map[index++] = map[a] = {
+        name: a,
+        value: obj[a]
+      };
+    }
+    map.length = index;
+    return map;
+  }
+  
+  function ensureNodes(arr) {
+    var out = [];
+    arr.filter(Boolean).forEach(function (item) {
+      if (Array.isArray(item)) {
+        out = out.concat(ensureNodes(item));
+      } else if (typeof item === 'object') {
+        out.push(item);
+      } else {
+        out.push((0, _text2['default'])(item));
+      }
+    });
+    return out;
+  }
+  
+  function ensureTagName(name) {
+    return (typeof name === 'function' ? name.id || name.name : name).toUpperCase();
+  }
+  
+  exports['default'] = function (name) {
+    var props = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  
+    for (var _len = arguments.length, chren = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+      chren[_key - 2] = arguments[_key];
+    }
+  
+    return {
+      tagName: ensureTagName(name),
+      nodeType: 1,
+      attributes: ensureAttributes(props),
+      childNodes: ensureNodes(chren)
+    };
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+// src/render.js
+(typeof window === 'undefined' ? global : window).__7716f1488710dcad35ac89f2ee13769f = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _debounce = __dadb6219ed96ac3e489af33dc5f39e75;
+  
+  var _debounce2 = _interopRequireDefault(_debounce);
+  
+  var _vdomElement = __90cd00536bcb3b42d1659021f5337f5f;
+  
+  var _vdomElement2 = _interopRequireDefault(_vdomElement);
+  
+  var _vdomDom = __c672b2ab009d1b5af8a22c830a9d5ab6;
+  
+  var _vdomDom2 = _interopRequireDefault(_vdomDom);
+  
+  var _merge = __397f1a21725eb3fd4fbf51ee69fe1006;
+  
+  var _merge2 = _interopRequireDefault(_merge);
+  
+  exports['default'] = function (render) {
+    return function (elem) {
+      if (!elem.__debouncedRender) {
+        elem.__debouncedRender = (0, _debounce2['default'])(function (elem) {
+          var newTree = render(elem, { createElement: _vdomElement2['default'] });
+          if (elem.__oldTree) {
+            (0, _merge2['default'])({
+              destination: newTree,
+              source: elem.__oldTree
+            });
+          } else {
+            while (elem.firstChild) elem.firstChild.remove();
+            elem.appendChild((0, _vdomDom2['default'])(newTree));
+          }
+          elem.__oldTree = newTree;
+        });
+      }
+      elem.__debouncedRender(elem);
+    };
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+// src/vdom/index.js
+(typeof window === 'undefined' ? global : window).__1642ccd4766a5b54382caa2ba439f592 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _dom = __c672b2ab009d1b5af8a22c830a9d5ab6;
+  
+  var _dom2 = _interopRequireDefault(_dom);
+  
+  var _element = __90cd00536bcb3b42d1659021f5337f5f;
+  
+  var _element2 = _interopRequireDefault(_element);
+  
+  var _text = __a6dacf85b92d2d194c29d40bfdfc8927;
+  
+  var _text2 = _interopRequireDefault(_text);
+  
+  exports['default'] = {
+    dom: _dom2['default'],
+    element: _element2['default'],
+    text: _text2['default']
+  };
   module.exports = exports['default'];
   
   return module.exports;
@@ -598,15 +1011,25 @@
   
   var _patch2 = _interopRequireDefault(_patch);
   
+  var _render = __7716f1488710dcad35ac89f2ee13769f;
+  
+  var _render2 = _interopRequireDefault(_render);
+  
   var _types = __0ca807667308490ecea534df3b4369b8;
   
   var _types2 = _interopRequireDefault(_types);
+  
+  var _vdom = __1642ccd4766a5b54382caa2ba439f592;
+  
+  var _vdom2 = _interopRequireDefault(_vdom);
   
   exports['default'] = {
     diff: _diff2['default'],
     merge: _merge2['default'],
     patch: _patch2['default'],
-    types: _types2['default']
+    render: _render2['default'],
+    types: _types2['default'],
+    vdom: _vdom2['default']
   };
   module.exports = exports['default'];
   
