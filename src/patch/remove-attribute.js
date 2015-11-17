@@ -1,3 +1,5 @@
+import realNode from '../util/real-node';
+
 export default function (src, dst, data) {
-  src.removeAttribute(data.name);
+  realNode(src).removeAttribute(data.name);
 }

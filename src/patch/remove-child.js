@@ -1,3 +1,5 @@
+import realNode from '../util/real-node';
+
 export default function (src, dst) {
-  src.removeChild(dst);
+  realNode(src).removeChild(realNode(dst));
 }

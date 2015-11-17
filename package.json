@@ -7,7 +7,6 @@
     "doc": "docs",
     "test": "test"
   },
-  "dependencies": {},
   "devDependencies": {
     "eslint": "1.5.1",
     "skatejs-build": "skatejs/build#224c00e"
@@ -32,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/skatejs/dom-diff/issues"
   },
-  "homepage": "https://github.com/skatejs/dom-diff#readme"
+  "homepage": "https://github.com/skatejs/dom-diff#readme",
+  "dependencies": {
+    "debounce": "^1.0.0"
+  }
 }

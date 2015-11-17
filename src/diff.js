@@ -28,10 +28,11 @@ export default function diff (opts = {}) {
         type: types.APPEND_CHILD
       });
       continue;
-    }
-
-    if (opts.ignore && opts.ignore(curSrc, curDst)) {
-      continue;
+    } else {
+      // Ensure the real node is carried over even if the destination isn't used.
+      // This is used in the render() function to keep track of the real node
+      // that corresponds to a virtual node if a virtual tree is being used.
+      curDst.__realNode = curSrc.__realNode;
     }
 
     let nodeInstructions = compareNode(curSrc, curDst);

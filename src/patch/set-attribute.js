@@ -1,3 +1,5 @@
+import realNode from '../util/real-node';
+
 export default function (src, dst, data) {
-  src.setAttribute(data.name, dst.getAttribute(data.name));
+  realNode(src).setAttribute(data.name, data.value);
 }
