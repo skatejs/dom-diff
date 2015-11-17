@@ -7,7 +7,7 @@ const NODE_ELEMENT = 1;
 const NODE_TEXT = 3;
 
 export default function (src, dst) {
-  let dstType, srcType, ret;
+  let dstType, srcType;
 
   if (!dst || !src) {
     return;

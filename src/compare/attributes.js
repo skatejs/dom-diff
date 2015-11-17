@@ -8,7 +8,7 @@ export default function (src, dst) {
   let instructions = [];
 
   // Bail early if possible.
-  if (!srcAttrsLen || !dstAttrsLen) {
+  if (!srcAttrsLen && !dstAttrsLen) {
     return instructions;
   }
 
@@ -19,14 +19,14 @@ export default function (src, dst) {
 
     if (!dstAttr) {
       instructions.push({
-        data: {name: srcAttr.name},
+        data: { name: srcAttr.name },
         destination: dst,
         source: src,
         type: types.REMOVE_ATTRIBUTE
       });
     } else if (srcAttr.value !== dstAttr.value) {
       instructions.push({
-        data: {name: srcAttr.name},
+        data: { name: srcAttr.name, value: dstAttr.value },
         destination: dst,
         source: src,
         type: types.SET_ATTRIBUTE
@@ -42,7 +42,7 @@ export default function (src, dst) {
 
     if (!srcAttr) {
       instructions.push({
-        data: {name: dstAttr.name},
+        data: { name: dstAttr.name, value: dstAttr.value },
         destination: dst,
         source: src,
         type: types.SET_ATTRIBUTE

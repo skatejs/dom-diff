@@ -15,7 +15,11 @@ patchers[types.SET_ATTRIBUTE] = setAttribute;
 patchers[types.TEXT_CONTENT] = textContent;
 
 function patch (instruction) {
-  patchers[instruction.type](instruction.source, instruction.destination, instruction.data);
+  patchers[instruction.type](
+    instruction.source,
+    instruction.destination,
+    instruction.data
+  );
 }
 
 export default function (instructions) {
