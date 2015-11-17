@@ -1,7 +1,7 @@
 import debounce from 'debounce';
 import createElement from './vdom/element';
-import dom from './vdom/dom';
 import merge from './merge';
+import mount from './vdom/mount';
 
 export default function (render) {
   return function (elem) {
@@ -14,8 +14,7 @@ export default function (render) {
             source: elem.__oldTree
           });
         } else {
-          while (elem.firstChild) elem.firstChild.remove();
-          elem.appendChild(dom(newTree));
+          mount(elem, newTree);
         }
         elem.__oldTree = newTree;
       });
