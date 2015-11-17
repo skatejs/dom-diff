@@ -2,6 +2,20 @@
 
 Skate's DOM Diff is a library can diff and patch both real and virtual DOMs trees.
 
+## Installing
+
+```sh
+npm install skatejs-dom-diff
+```
+
+## Including
+
+You can use any module format. UMD is in `lib`, ES6 is in `src` and the global `skateDomDiff` is exported from `dist`. The `package.json` points to `lib` so you're probably safe just doing something like:
+
+```js
+const dss = require('skatejs-dom-diff');
+```
+
 ## Usage
 
 It will diff the trees of two nodes, excluding the root nodes themselves.
@@ -87,7 +101,7 @@ const text = {
 There is a built-in function for creating virtual elements:
 
 ```js
-const el = skateDomDiff.vdom.element;
+import el from 'skatejs-dom-diff/vdom/element';
 
 el('div', null,
   'Hello, ',
