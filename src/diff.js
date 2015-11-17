@@ -42,13 +42,10 @@ export default function diff (opts = {}) {
     // it means that the nodes are not similar (cannot be changed) and must be
     // replaced instead.
     if (nodeInstructions) {
-      instructions = instructions.concat(nodeInstructions);
-      if (!opts.descend || opts.descend(curSrc, curDst)) {
-        const newOpts = opts;
-        newOpts.destination = curDst;
-        newOpts.source = curSrc;
-        instructions = instructions.concat(diff(newOpts));
-      }
+      const newOpts = opts;
+      newOpts.destination = curDst;
+      newOpts.source = curSrc;
+      instructions = instructions.concat(nodeInstructions, diff(newOpts));
     } else {
       instructions.push({
         destination: curDst,

@@ -30,58 +30,6 @@ describe('diff', function () {
     assert.equal(instructions[0].source.tagName, 'SPAN', 'source tagName');
     assert.equal(instructions[0].type, types.REPLACE_CHILD, 'type');
   });
-
-  describe('descend', function () {
-    it('on by default', function () {
-      let src = div('<div><span></span></div>');
-      let dst = div('<div><a></a></div>');
-      let oldDiv = src.childNodes[0];
-      let newA = dst.childNodes[0].childNodes[0];
-      sd.merge({
-        destination: dst,
-        source: src
-      });
-      assert.equal(src.childNodes[0], oldDiv);
-      assert.equal(src.childNodes[0].childNodes[0], newA);
-    });
-
-    it('user bypass', function () {
-      let src = div('<div stop><span></span></div>');
-      let dst = div('<div><a></a></div>');
-      let oldDiv = src.childNodes[0];
-      let oldSpan = oldDiv.childNodes[0];
-      sd.merge({
-        descend: src => !src.hasAttribute('stop'),
-        destination: dst,
-        source: src
-      });
-      assert.equal(src.childNodes[0], oldDiv);
-      assert.equal(src.childNodes[0].childNodes[0], oldSpan);
-    });
-  });
-
-  describe('ignore', function () {
-    it('off by default', function () {
-      let src = div('<div ignore></div>');
-      let dst = div('<div some-attr></div>');
-      sd.merge({
-        source: src,
-        destination: dst
-      });
-      assert.equal(src.childNodes[0].hasAttribute('some-attr'), true);
-    });
-
-    it('user bypass', function () {
-      let src = div('<div ignore></div>');
-      let dst = div('<div some-attr></div>');
-      sd.merge({
-        ignore: src => src.hasAttribute('ignore'),
-        source: src,
-        destination: dst
-      });
-      assert.equal(src.childNodes[0].hasAttribute('some-attr'), false);
-    });
-  });
 });
 
 describe('patch', function () {
