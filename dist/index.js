@@ -889,6 +889,34 @@
   
   return module.exports;
 }).call(this);
+// src/vdom/mount.js
+(typeof window === 'undefined' ? global : window).__64984ff90aff8eb27308803984d99dfd = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _dom = __c672b2ab009d1b5af8a22c830a9d5ab6;
+  
+  var _dom2 = _interopRequireDefault(_dom);
+  
+  exports['default'] = function (elem, tree) {
+    while (elem.firstChild) elem.firstChild.remove();
+    elem.appendChild((0, _dom2['default'])(tree));
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
 // src/render.js
 (typeof window === 'undefined' ? global : window).__7716f1488710dcad35ac89f2ee13769f = (function () {
   var module = {
@@ -912,13 +940,13 @@
   
   var _vdomElement2 = _interopRequireDefault(_vdomElement);
   
-  var _vdomDom = __c672b2ab009d1b5af8a22c830a9d5ab6;
-  
-  var _vdomDom2 = _interopRequireDefault(_vdomDom);
-  
   var _merge = __397f1a21725eb3fd4fbf51ee69fe1006;
   
   var _merge2 = _interopRequireDefault(_merge);
+  
+  var _vdomMount = __64984ff90aff8eb27308803984d99dfd;
+  
+  var _vdomMount2 = _interopRequireDefault(_vdomMount);
   
   exports['default'] = function (render) {
     return function (elem) {
@@ -931,8 +959,7 @@
               source: elem.__oldTree
             });
           } else {
-            while (elem.firstChild) elem.firstChild.remove();
-            elem.appendChild((0, _vdomDom2['default'])(newTree));
+            (0, _vdomMount2['default'])(elem, newTree);
           }
           elem.__oldTree = newTree;
         });
