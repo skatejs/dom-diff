@@ -5,6 +5,7 @@ import mount from './vdom/mount';
 
 export default function (render) {
   return function (elem) {
+    elem = elem || this;
     if (!elem.__debouncedRender) {
       elem.__debouncedRender = debounce(function (elem) {
         const newTree = render(elem, { createElement });
