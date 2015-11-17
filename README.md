@@ -13,7 +13,7 @@ npm install skatejs-dom-diff
 You can use any module format. UMD is in `lib`, ES6 is in `src` and the global `skateDomDiff` is exported from `dist`. The `package.json` points to `lib` so you're probably safe just doing something like:
 
 ```js
-const dss = require('skatejs-dom-diff');
+import skateDomDiff from 'skatejs-dom-diff';
 ```
 
 ## Usage
