@@ -950,6 +950,7 @@
   
   exports['default'] = function (render) {
     return function (elem) {
+      elem = elem || this;
       if (!elem.__debouncedRender) {
         elem.__debouncedRender = (0, _debounce2['default'])(function (elem) {
           var newTree = render(elem, { createElement: _vdomElement2['default'] });
