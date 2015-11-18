@@ -89,7 +89,7 @@ describe('patch', function () {
 });
 
 describe('render', function () {
-  it('should do initial mount', function () {
+  it('should initially render and re-render', function () {
     const root = document.createElement('div');
     const render = sd.render(function (root) {
       return sd.vdom.element('div', null, sd.vdom.element('span', null, root.test));

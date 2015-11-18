@@ -12,14 +12,15 @@ export default function (render) {
       throw new Error('No node provided to diff renderer as either the first argument or the context.');
     }
 
-    const newTree = render(elem, { createElement });
+    // Create a new element to house the new tree since we diff fragments.
+    const newTree = createElement('div', null, render(elem, { createElement }));
     if (elem.__oldTree) {
       merge({
         destination: newTree,
         source: elem.__oldTree
       });
     } else {
-      mount(elem, newTree);
+      mount(elem, newTree.childNodes[0]);
     }
     elem.__oldTree = newTree;
   };

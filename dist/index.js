@@ -601,16 +601,12 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _vdomDom = __c672b2ab009d1b5af8a22c830a9d5ab6;
-  
-  var _vdomDom2 = _interopRequireDefault(_vdomDom);
-  
   var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
   
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
   exports['default'] = function (src, dst) {
-    (0, _utilRealNode2['default'])(src).textContent = (0, _vdomDom2['default'])(dst).textContent;
+    (0, _utilRealNode2['default'])(src).textContent = dst.textContent;
   };
   
   module.exports = exports['default'];
@@ -874,14 +870,15 @@
         throw new Error('No node provided to diff renderer as either the first argument or the context.');
       }
   
-      var newTree = render(elem, { createElement: _vdomElement2['default'] });
+      // Create a new element to house the new tree since we diff fragments.
+      var newTree = (0, _vdomElement2['default'])('div', null, render(elem, { createElement: _vdomElement2['default'] }));
       if (elem.__oldTree) {
         (0, _merge2['default'])({
           destination: newTree,
           source: elem.__oldTree
         });
       } else {
-        (0, _vdomMount2['default'])(elem, newTree);
+        (0, _vdomMount2['default'])(elem, newTree.childNodes[0]);
       }
       elem.__oldTree = newTree;
     };
