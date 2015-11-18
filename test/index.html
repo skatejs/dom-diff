@@ -37,101 +37,53 @@
     background-color: grey;
   }
 </style>
-<script src="https://cdn.rawgit.com/skatejs/skatejs/115d951/dist/skatejs.min.js"></script>
+<script src="https://cdn.rawgit.com/skatejs/skatejs/0.14.1/dist/index.js"></script>
 <script src="../dist/index.js"></script>
 <script>
   var windowX = window.innerWidth;
   var windowY = window.innerHeight;
+  var dd = window.skateDomDiff;
+  var el = dd.vdom.element;
+  var render = skateDomDiff.render(function (elem) {
+    var total = elem.x * elem.y;
+    var x = Math.floor(windowX / elem.x);
+    var y = Math.floor(windowY / elem.y);
+    var cont = el('div', { class: 'container' });
+
+    if (!total) {
+      return el('div');
+    }
+
+    for (var a = 0; a < total; a++) {
+      var rand = Math.random() > (elem.threshold / 100);
+      cont.childNodes.push(
+        el('div', {
+          class: 'block ' + (rand ? 'active' : ''),
+          style: 'width: ' + x + 'px; height: ' + y + 'px'
+        })
+      );
+    }
+
+    return cont;
+  });
 
   skate('x-differ', {
-    events: {
-      'change [name="smash"]': function (e) {
-        this.smash = e.delegateTarget.checked;
-      },
-      'change [name="threshold"]': function (e) {
-        this.threshold = e.delegateTarget.value;
-      },
-      'change [name="x"]': function (e) {
-        this.x = e.delegateTarget.value;
-      },
-      'change [name="y"]': function (e) {
-        this.y = e.delegateTarget.value;
-      },
-      'click [name="toggle-pause"]': function () {
-        this.paused = !this.paused;
-      },
-      'click x-differ': function () {
-        if (this.paused) {
-          this._render();
-        }
-      }
-    },
     properties: {
-      paused: {
-        attr: true,
-        type: Boolean,
-        set: function () {
-          this._render();
-        }
-      },
-      smash: {
-        attr: true,
-        type: Boolean,
-        set: function () {
-          if (this.paused) {
-            this._render();
-          }
-        }
-      },
-      threshold: {
-        attr: true,
-        init: 90,
-        type: Number,
-        set: function () {
-          if (this.paused) {
-            this._render();
-          }
-        }
-      },
-      x: {
-        attr: true,
-        init: 50,
-        type: Number,
-        set: function (value) {
-          this._total = value * this.y;
-          this._blockX = Math.floor(windowX / value);
-          this._blockY = Math.floor(windowY / this.y);
-
-          if (this.paused) {
-            this._render();
-          }
-        }
-      },
-      y: {
-        attr: true,
-        init: 50,
-        type: Number,
-        set: function (value) {
-          this._total = this.x * value;
-          this._blockX = Math.floor(windowX / this.x);
-          this._blockY = Math.floor(windowY / value);
-
-          if (this.paused) {
-            this._render();
-          }
-        }
-      }
+      threshold: skate.properties.number({
+        attribute: true,
+        default: 90
+      }),
+      x: skate.properties.number({
+        attribute: true,
+        default: 10
+      }),
+      y: skate.properties.number({
+        attribute: true,
+        default: 10
+      })
     },
     prototype: {
-      _blocks: function () {
-        var html = ''
-        for (var a = 0; a < this._total; a++) {
-          var rand = Math.random() > (this.threshold / 100);
-          html += '<div class="block ' + (rand ? 'active' : '') + '" style="width: ' + this._blockX + 'px; height: ' + this._blockY + 'px"></div>';
-        }
-        return html;
-      },
-      _fps: function () {
+      fps: function () {
         var delta;
 
         if (!this._lastCalledTime) {
@@ -148,59 +100,26 @@
         }
 
         delta = (new Date().getTime() - (this._lastCalledTime - 1)) / 1000;
-    		this._lastCalledTime = new Date().getTime();
+        this._lastCalledTime = new Date().getTime();
 
         this._fpsArr.push(Math.ceil((1 / delta)));
 
-    		return Math.round(this._fpsArr.reduce(function (prev, curr) {
+        return Math.round(this._fpsArr.reduce(function (prev, curr) {
           return prev + curr;
         }) / this._fpsArr.length);
-      },
-      _render: function () {
-        var that = this;
-        var div = document.createElement('div');
-        var fps = this._fps();
-
-        div.innerHTML = '' +
-          '<div class="total">' +
-            '<p>' +
-              '<input name="x" type="number" value="' + this.x + '"> x <input name="y" type="number" value="' + this.y + '">' +
-              'tiles (' + this._total + ')' +
-            '</p>' +
-            '<p><input name="threshold" type="number" value="' + this.threshold + '"> % threshold</p>' +
-            '<p>' +
-              '<button name="toggle-pause" type="button">' + (this.paused ? 'Resume' : 'Pause') + '</button>' +
-              '<input name="smash" type="checkbox"' + (this.smash ? ' checked' : '') + '> Hulk smash! (do not diff, slam innerHTML)' +
-            '</p>' +
-            '<p>' +
-              fps + ' fps' +
-            '</p>' +
-          '</div>' +
-          '<div class="container">' +
-            this._blocks() +
-          '</div>'
-        ;
-
-        if (this.smash) {
-          this.innerHTML = div.innerHTML;
-        } else {
-          skateDomDiff.merge({
-            destination: div,
-            source: this
-          });
-        }
-
-        window.requestAnimationFrame(function () {
-          if (!that.paused) {
-            that._render();
-          }
-        });
       }
     },
-    template: function () {
-      this.merge = true;
-      this.paused = true;
-    }
+    attached: function (elem) {
+      elem.interval = setInterval(function () {
+        document.getElementById('fps').textContent = elem.fps();
+        render(elem);
+      });
+    },
+    detached: function (elem) {
+      clearInterval(elem.interval);
+    },
+    render: render
   });
 </script>
-<x-differ></x-differ>
+<div id="fps" style="position: absolute"></div>
+<x-differ x="300" y="400" threshold="100"></x-differ>
