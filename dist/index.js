@@ -948,6 +948,8 @@
   
   var _vdomMount2 = _interopRequireDefault(_vdomMount);
   
+  var Node = window.Node;
+  
   exports['default'] = function (render) {
     return function (elem) {
       elem = elem instanceof Node ? elem : this;

@@ -3,6 +3,8 @@ import createElement from './vdom/element';
 import merge from './merge';
 import mount from './vdom/mount';
 
+const { Node } = window;
+
 export default function (render) {
   return function (elem) {
     elem = elem instanceof Node ? elem : this;
