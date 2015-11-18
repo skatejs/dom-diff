@@ -17,6 +17,8 @@ function createElement (el) {
         } else {
           realNode.appendChild(render(value));
         }
+      } else if (name.indexOf('on') === 0) {
+        realNode.addEventListener(name.substring(2).toLowerCase(), value);
       } else {
         realNode.setAttribute(name, value);
       }

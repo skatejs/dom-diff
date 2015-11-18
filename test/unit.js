@@ -76,4 +76,29 @@ describe('patch', function () {
     sd.merge({ source: src, destination: dst });
     assert.equal(text, src.childNodes[0]);
   });
+
+  it('should patch on subsequent runs', function () {
+    let src = div('test 1');
+
+    sd.merge({ source: src, destination: div('test 2') });
+    assert.equal(src.textContent, 'test 2');
+
+    sd.merge({ source: src, destination: div('test 3') });
+    assert.equal(src.textContent, 'test 3');
+  });
+});
+
+describe('render', function () {
+  it('should initially render and re-render', function () {
+    const root = document.createElement('div');
+    const render = sd.render(function (root) {
+      return sd.vdom.element('div', null, sd.vdom.element('span', null, root.test));
+    });
+
+    ['test 1', 'test 1', 'test 2', 'test 2'].forEach(function (test) {
+      root.test = test;
+      render(root);
+      assert.equal(root.innerHTML, `<div><span>${test}</span></div>`);
+    });
+  });
 });

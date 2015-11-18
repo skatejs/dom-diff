@@ -601,16 +601,12 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _vdomDom = __c672b2ab009d1b5af8a22c830a9d5ab6;
-  
-  var _vdomDom2 = _interopRequireDefault(_vdomDom);
-  
   var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
   
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
   exports['default'] = function (src, dst) {
-    (0, _utilRealNode2['default'])(src).textContent = (0, _vdomDom2['default'])(dst).textContent;
+    (0, _utilRealNode2['default'])(src).textContent = dst.textContent;
   };
   
   module.exports = exports['default'];
@@ -712,86 +708,6 @@
   };
   
   module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
-// node_modules/debounce/node_modules/date-now/index.js
-(typeof window === 'undefined' ? global : window).__c3d4e0e7b418c842df64e110c955bd8a = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  module.exports = Date.now || now
-  
-  function now() {
-      return new Date().getTime()
-  }
-  
-  
-  return module.exports;
-}).call(this);
-// node_modules/debounce/index.js
-(typeof window === 'undefined' ? global : window).__dadb6219ed96ac3e489af33dc5f39e75 = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  
-  /**
-   * Module dependencies.
-   */
-  
-  var now = __c3d4e0e7b418c842df64e110c955bd8a;
-  
-  /**
-   * Returns a function, that, as long as it continues to be invoked, will not
-   * be triggered. The function will be called after it stops being called for
-   * N milliseconds. If `immediate` is passed, trigger the function on the
-   * leading edge, instead of the trailing.
-   *
-   * @source underscore.js
-   * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
-   * @param {Function} function to wrap
-   * @param {Number} timeout in ms (`100`)
-   * @param {Boolean} whether to execute at the beginning (`false`)
-   * @api public
-   */
-  
-  module.exports = function debounce(func, wait, immediate){
-    var timeout, args, context, timestamp, result;
-    if (null == wait) wait = 100;
-  
-    function later() {
-      var last = now() - timestamp;
-  
-      if (last < wait && last > 0) {
-        timeout = setTimeout(later, wait - last);
-      } else {
-        timeout = null;
-        if (!immediate) {
-          result = func.apply(context, args);
-          if (!timeout) context = args = null;
-        }
-      }
-    };
-  
-    return function debounced() {
-      context = this;
-      args = arguments;
-      timestamp = now();
-      var callNow = immediate && !timeout;
-      if (!timeout) timeout = setTimeout(later, wait);
-      if (callNow) {
-        result = func.apply(context, args);
-        context = args = null;
-      }
-  
-      return result;
-    };
-  };
-  
   
   return module.exports;
 }).call(this);
@@ -932,10 +848,6 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _debounce = __dadb6219ed96ac3e489af33dc5f39e75;
-  
-  var _debounce2 = _interopRequireDefault(_debounce);
-  
   var _vdomElement = __90cd00536bcb3b42d1659021f5337f5f;
   
   var _vdomElement2 = _interopRequireDefault(_vdomElement);
@@ -948,23 +860,27 @@
   
   var _vdomMount2 = _interopRequireDefault(_vdomMount);
   
+  var Node = window.Node;
+  
   exports['default'] = function (render) {
     return function (elem) {
-      if (!elem.__debouncedRender) {
-        elem.__debouncedRender = (0, _debounce2['default'])(function (elem) {
-          var newTree = render(elem, { createElement: _vdomElement2['default'] });
-          if (elem.__oldTree) {
-            (0, _merge2['default'])({
-              destination: newTree,
-              source: elem.__oldTree
-            });
-          } else {
-            (0, _vdomMount2['default'])(elem, newTree);
-          }
-          elem.__oldTree = newTree;
-        });
+      elem = elem instanceof Node ? elem : this;
+  
+      if (!elem instanceof Node) {
+        throw new Error('No node provided to diff renderer as either the first argument or the context.');
       }
-      elem.__debouncedRender(elem);
+  
+      // Create a new element to house the new tree since we diff fragments.
+      var newTree = (0, _vdomElement2['default'])('div', null, render(elem, { createElement: _vdomElement2['default'] }));
+      if (elem.__oldTree) {
+        (0, _merge2['default'])({
+          destination: newTree,
+          source: elem.__oldTree
+        });
+      } else {
+        (0, _vdomMount2['default'])(elem, newTree.childNodes[0]);
+      }
+      elem.__oldTree = newTree;
     };
   };
   
@@ -995,6 +911,10 @@
   
   var _element2 = _interopRequireDefault(_element);
   
+  var _mount = __64984ff90aff8eb27308803984d99dfd;
+  
+  var _mount2 = _interopRequireDefault(_mount);
+  
   var _text = __a6dacf85b92d2d194c29d40bfdfc8927;
   
   var _text2 = _interopRequireDefault(_text);
@@ -1002,6 +922,7 @@
   exports['default'] = {
     dom: _dom2['default'],
     element: _element2['default'],
+    mount: _mount2['default'],
     text: _text2['default']
   };
   module.exports = exports['default'];
