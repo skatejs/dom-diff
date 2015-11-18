@@ -5,7 +5,12 @@ import mount from './vdom/mount';
 
 export default function (render) {
   return function (elem) {
-    elem = elem || this;
+    elem = elem instanceof Node ? elem : this;
+
+    if (!elem instanceof Node) {
+      throw new Error('No node provided to diff renderer as either the first argument or the context.');
+    }
+
     if (!elem.__debouncedRender) {
       elem.__debouncedRender = debounce(function (elem) {
         const newTree = render(elem, { createElement });

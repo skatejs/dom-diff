@@ -950,7 +950,12 @@
   
   exports['default'] = function (render) {
     return function (elem) {
-      elem = elem || this;
+      elem = elem instanceof Node ? elem : this;
+  
+      if (!elem instanceof Node) {
+        throw new Error('No node provided to diff renderer as either the first argument or the context.');
+      }
+  
       if (!elem.__debouncedRender) {
         elem.__debouncedRender = (0, _debounce2['default'])(function (elem) {
           var newTree = render(elem, { createElement: _vdomElement2['default'] });
