@@ -1003,6 +1003,10 @@
   
   var _element2 = _interopRequireDefault(_element);
   
+  var _mount = __64984ff90aff8eb27308803984d99dfd;
+  
+  var _mount2 = _interopRequireDefault(_mount);
+  
   var _text = __a6dacf85b92d2d194c29d40bfdfc8927;
   
   var _text2 = _interopRequireDefault(_text);
@@ -1010,6 +1014,7 @@
   exports['default'] = {
     dom: _dom2['default'],
     element: _element2['default'],
+    mount: _mount2['default'],
     text: _text2['default']
   };
   module.exports = exports['default'];
