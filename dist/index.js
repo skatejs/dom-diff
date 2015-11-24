@@ -379,6 +379,8 @@
           } else {
             realNode.appendChild(render(value));
           }
+        } else if (_name.indexOf('on') === 0) {
+          realNode.addEventListener(_name.substring(2).toLowerCase(), value);
         } else {
           realNode.setAttribute(_name, value);
         }
@@ -520,7 +522,8 @@
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
   exports['default'] = function (src, dst) {
-    (0, _utilRealNode2['default'])(src).removeChild((0, _utilRealNode2['default'])(dst));
+    var realDst = (0, _utilRealNode2['default'])(dst);
+    realDst.parentNode.removeChild(realDst);
   };
   
   module.exports = exports['default'];

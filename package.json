@@ -9,7 +9,8 @@
   },
   "devDependencies": {
     "eslint": "1.5.1",
-    "skatejs-build": "skatejs/build#224c00e"
+    "gulp": "gulpjs/gulp#3311fca",
+    "skatejs-build": "skatejs/build#f7654af"
   },
   "scripts": {
     "build": "gulp build",
