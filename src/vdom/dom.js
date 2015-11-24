@@ -1,3 +1,8 @@
+function shouldBeProp (value) {
+  const type = typeof value;
+  return type === 'function' || type === 'object';
+}
+
 function createElement (el) {
   const realNode = document.createElement(el.tagName);
 
@@ -19,6 +24,8 @@ function createElement (el) {
         }
       } else if (name.indexOf('on') === 0) {
         realNode.addEventListener(name.substring(2).toLowerCase(), value);
+      } else if (shouldBeProp(value)) {
+        realNode[name] = value;
       } else {
         realNode.setAttribute(name, value);
       }
