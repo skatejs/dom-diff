@@ -358,6 +358,11 @@
     value: true
   });
   exports['default'] = render;
+  function shouldBeProp(value) {
+    var type = typeof value;
+    return type === 'function' || type === 'object';
+  }
+  
   function createElement(el) {
     var realNode = document.createElement(el.tagName);
   
@@ -381,6 +386,8 @@
           }
         } else if (_name.indexOf('on') === 0) {
           realNode.addEventListener(_name.substring(2).toLowerCase(), value);
+        } else if (shouldBeProp(value)) {
+          realNode[_name] = value;
         } else {
           realNode.setAttribute(_name, value);
         }
@@ -555,7 +562,7 @@
   
   exports['default'] = function (src, dst) {
     var realNodeSrc = (0, _utilRealNode2['default'])(src);
-    realNodeSrc.parentNode.replaceChild((0, _vdomDom2['default'])(dst), realNodeSrc);
+    realNodeSrc.parentNode && realNodeSrc.parentNode.replaceChild((0, _vdomDom2['default'])(dst), realNodeSrc);
   };
   
   module.exports = exports['default'];
