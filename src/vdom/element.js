@@ -4,9 +4,16 @@ function ensureAttributes (obj) {
   const map = {};
   let index = 0;
   for (let a in obj) {
+    const val = obj[a];
+
+    // Take boolean attributes into account.
+    if (val === false) {
+      continue;
+    }
+
     map[index++] = map[a] = {
       name: a,
-      value: obj[a]
+      value: val
     };
   }
   map.length = index;
