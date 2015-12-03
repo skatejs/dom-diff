@@ -1,0 +1,27 @@
+{
+  "name": "skatejs-dom-diff",
+  "description": "Library for efficiently diffing and patching DOM fragments.",
+  "main": "dist/index.js",
+  "authors": [
+    "Trey Shugart <treshugart@gmail.com> (treshugart.github.io)"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "dom",
+    "diff"
+  ],
+  "homepage": "https://github.com/skatejs/dom-diff",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
