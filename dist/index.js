@@ -946,6 +946,23 @@
   
   return module.exports;
 }).call(this);
+// src/api/version.js
+(typeof window === 'undefined' ? global : window).__f0f794673c5d3a1e236a581ba84d8321 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  exports['default'] = '0.1.0';
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
 // src/index.js
 (typeof window === 'undefined' ? global : window).__d0534c9e7312e01df51511bab04ed9e4 = (function () {
   var module = {
@@ -985,13 +1002,18 @@
   
   var _vdom2 = _interopRequireDefault(_vdom);
   
+  var _apiVersion = __f0f794673c5d3a1e236a581ba84d8321;
+  
+  var _apiVersion2 = _interopRequireDefault(_apiVersion);
+  
   exports['default'] = {
     diff: _diff2['default'],
     merge: _merge2['default'],
     patch: _patch2['default'],
     render: _render2['default'],
     types: _types2['default'],
-    vdom: _vdom2['default']
+    vdom: _vdom2['default'],
+    version: _apiVersion2['default']
   };
   module.exports = exports['default'];
   
