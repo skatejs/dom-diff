@@ -1,5 +1,9 @@
 import realNode from '../util/real-node';
 
 export default function (src, dst, data) {
-  realNode(src).setAttribute(data.name, data.value);
+  const node = realNode(src);
+  node.setAttribute(data.name, data.value);
+  if (data.name === 'checked') {
+    node.checked = true;
+  }
 }
