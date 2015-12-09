@@ -6,8 +6,8 @@ function ensureAttributes (obj) {
   for (let a in obj) {
     const val = obj[a];
 
-    // Take boolean attributes into account.
-    if (val === false) {
+    // Take boolean attributes into account and don't set undefined values.
+    if (val === false || typeof val === 'undefined') {
       continue;
     }
 
