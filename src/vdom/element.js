@@ -1,7 +1,8 @@
 import createTextNode from './text';
 
-function separateAttrsAndProps (obj) {
+function separateData (obj) {
   const attrs = {};
+  const events = {};
   const props = {};
   let attrIdx = 0;
 
@@ -10,13 +11,15 @@ function separateAttrsAndProps (obj) {
 
     if (typeof value === 'string') {
       attrs[attrIdx++] = attrs[name] = { name, value };
+    } else if (name.indexOf('on') === 0) {
+      events[name.substring(2)] = value;
     } else {
       props[name] = value;
     }
   }
 
   attrs.length = attrIdx;
-  return { attrs, props };
+  return { attrs, events, props };
 }
 
 function ensureNodes (arr) {
@@ -38,12 +41,13 @@ function ensureTagName (name) {
 }
 
 export default function (name, attrs = {}, ...chren) {
-  const attrsAndProps = separateAttrsAndProps(attrs);
+  const data = separateData(attrs);
   return {
     nodeType: 1,
     tagName: ensureTagName(name),
-    attributes: attrsAndProps.attrs,
-    properties: attrsAndProps.props,
+    attributes: data.attrs,
+    events: data.events,
+    properties: data.props,
     childNodes: ensureNodes(chren)
   };
 }
