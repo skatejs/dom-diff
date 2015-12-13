@@ -1,8 +1,3 @@
-function shouldBeProp (value) {
-  const type = typeof value;
-  return type === 'function' || type === 'object';
-}
-
 function createElement (el) {
   const realNode = document.createElement(el.tagName);
 
@@ -11,11 +6,15 @@ function createElement (el) {
       const attr = el.attributes[a];
       const name = attr.name;
       const value = attr.value;
-
-      if (!value) {
-        continue;
+      if (value) {
+        realNode.setAttribute(name, value);
       }
+    }
+  }
 
+  if (el.properties) {
+    for (name in el.properties) {
+      const value = el.properties[name];
       if (name === 'content') {
         if (Array.isArray(value)) {
           value.forEach(ch => realNode.appendChild(render(ch)));
@@ -24,10 +23,8 @@ function createElement (el) {
         }
       } else if (name.indexOf('on') === 0) {
         realNode.addEventListener(name.substring(2).toLowerCase(), value);
-      } else if (shouldBeProp(value)) {
+      } else if (value) {
         realNode[name] = value;
-      } else {
-        realNode.setAttribute(name, value);
       }
     }
   }

@@ -4,14 +4,16 @@ import removeAttribute from './patch/remove-attribute';
 import removeChild from './patch/remove-child';
 import replaceChild from './patch/replace-child';
 import setAttribute from './patch/set-attribute';
+import setProperty from './patch/set-property';
 import textContent from './patch/text-content';
 
-let patchers = {};
+const patchers = {};
 patchers[types.APPEND_CHILD] = appendChild;
 patchers[types.REMOVE_ATTRIBUTE] = removeAttribute;
 patchers[types.REMOVE_CHILD] = removeChild;
 patchers[types.REPLACE_CHILD] = replaceChild;
 patchers[types.SET_ATTRIBUTE] = setAttribute;
+patchers[types.SET_PROPERTY] = setProperty;
 patchers[types.TEXT_CONTENT] = textContent;
 
 function patch (instruction) {

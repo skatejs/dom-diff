@@ -1,23 +1,22 @@
 import createTextNode from './text';
 
-function ensureAttributes (obj) {
-  const map = {};
-  let index = 0;
-  for (let a in obj) {
-    const val = obj[a];
+function separateAttrsAndProps (obj) {
+  const attrs = {};
+  const props = {};
+  let attrIdx = 0;
 
-    // Take boolean attributes into account and don't set undefined values.
-    if (val === false || typeof val === 'undefined') {
-      continue;
+  for (let name in obj) {
+    const value = obj[name];
+
+    if (typeof value === 'string') {
+      attrs[attrIdx++] = attrs[name] = { name, value };
+    } else {
+      props[name] = value;
     }
-
-    map[index++] = map[a] = {
-      name: a,
-      value: val
-    };
   }
-  map.length = index;
-  return map;
+
+  attrs.length = attrIdx;
+  return { attrs, props };
 }
 
 function ensureNodes (arr) {
@@ -38,11 +37,13 @@ function ensureTagName (name) {
   return (typeof name === 'function' ? name.id || name.name : name).toUpperCase();
 }
 
-export default function (name, props = {}, ...chren) {
+export default function (name, attrs = {}, ...chren) {
+  const attrsAndProps = separateAttrsAndProps(attrs);
   return {
-    tagName: ensureTagName(name),
     nodeType: 1,
-    attributes: ensureAttributes(props),
+    tagName: ensureTagName(name),
+    attributes: attrsAndProps.attrs,
+    properties: attrsAndProps.props,
     childNodes: ensureNodes(chren)
   };
 }
