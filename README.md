@@ -138,6 +138,8 @@ The above would generate:
 }
 ```
 
+That information is then used to diff and generate patch instructions for the real DOM nodes. Upon initial mounting, the entire virtual tree is used to create the initial structure.
+
 #### Diffing and patching a virtual tree
 
 Diffing a virtual tree is almost the same as diffing real nodes except that you must mount your virtual tree to an empty node before you can diff that tree with a new tree.
@@ -205,3 +207,25 @@ const renderer = render(function (root, React) {
 ```
 
 This is useful when you want to avoid extra transpilation steps, but you can transpile down to anything you want as long as it has a `createElement` function on the second argument.
+
+#### Attribute conventions
+
+When you specify attributes to the function that creates a virtual element, it will apply the following conventions in order to each one.
+
+1. If the attribute value is a `string`, it will be set as an attribute.
+2. If the attribute name begins with `on`, the value will be added as the corresponding event listener (but only if it is a function, otherwise it's a no-op). For example, if you specified `{ onclick: handler }`, then internally it does something like `element.addEventListener('click', handler)`.
+3. If 1 or 2 is not met, then it is set as a property.
+
+This comes in handy when using JSX because you can do stuff like:
+
+```js
+<input type="checkbox" checked={true} onchange={function(){}} />
+```
+
+The resulting HTML would be:
+
+```html
+<input type="checkbox">
+```
+
+Additionally, it would have the `checked` property set to `true` and the `change` event would be handled by the value passed to `onchange`.
