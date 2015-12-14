@@ -3,5 +3,5 @@ import realNode from '../util/real-node';
 
 export default function (src, dst) {
   const realNodeSrc = realNode(src);
-  realNodeSrc.parentNode && realNodeSrc.parentNode.replaceChild(dom(dst), realNodeSrc);
+  realNodeSrc && realNodeSrc.parentNode && realNodeSrc.parentNode.replaceChild(dom(dst), realNodeSrc);
 }
