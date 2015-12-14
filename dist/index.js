@@ -20,7 +20,11 @@
   exports.REPLACE_CHILD = REPLACE_CHILD;
   var SET_ATTRIBUTE = 5;
   exports.SET_ATTRIBUTE = SET_ATTRIBUTE;
-  var TEXT_CONTENT = 6;
+  var SET_EVENT = 6;
+  exports.SET_EVENT = SET_EVENT;
+  var SET_PROPERTY = 7;
+  exports.SET_PROPERTY = SET_PROPERTY;
+  var TEXT_CONTENT = 8;
   exports.TEXT_CONTENT = TEXT_CONTENT;
   
   return module.exports;
@@ -101,6 +105,107 @@
   
   return module.exports;
 }).call(this);
+// src/compare/events.js
+(typeof window === 'undefined' ? global : window).__34fcf97edbfdec192096e8fcd1833156 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+  
+  var _types = __0ca807667308490ecea534df3b4369b8;
+  
+  var types = _interopRequireWildcard(_types);
+  
+  exports['default'] = function (src, dst) {
+    var dstEvents = dst.events;
+    var instructions = [];
+  
+    if (!dstEvents) {
+      return instructions;
+    }
+  
+    for (var a in dstEvents) {
+      var dstEvent = dstEvents[a];
+  
+      // Hack, as stated elsewhere, but we need to refer to the old event
+      // handler. We only want to apply a patch if it's changed.
+      if (src['__events_' + a] !== dstEvent) {
+        instructions.push({
+          data: { name: a, value: dstEvent },
+          destination: dst,
+          source: src,
+          type: types.SET_EVENT
+        });
+      }
+    }
+  
+    return instructions;
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+// src/compare/properties.js
+(typeof window === 'undefined' ? global : window).__64df7535a04c95c1d53e467370a46bf6 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+  
+  var _types = __0ca807667308490ecea534df3b4369b8;
+  
+  var types = _interopRequireWildcard(_types);
+  
+  exports['default'] = function (src, dst) {
+    // We only use destination prop specs since it could be a vDOM.
+    var srcProps = src.properties || src;
+    var dstProps = dst.properties;
+    var instructions = [];
+  
+    // Bail early if possible.
+    if (!dstProps) {
+      return instructions;
+    }
+  
+    // We use the destination prop spec as the source of truth.
+    for (var a in dstProps) {
+      var srcProp = srcProps[a];
+      var dstProp = dstProps[a];
+  
+      if (srcProp !== dstProp) {
+        instructions.push({
+          data: { name: a, value: dstProp },
+          destination: dst,
+          source: src,
+          type: types.SET_PROPERTY
+        });
+      }
+    }
+  
+    return instructions;
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
 // src/compare/element.js
 (typeof window === 'undefined' ? global : window).__8a4ddda1ca8be7b0c056814a3966d1ca = (function () {
   var module = {
@@ -120,9 +225,17 @@
   
   var _attributes2 = _interopRequireDefault(_attributes);
   
+  var _events = __34fcf97edbfdec192096e8fcd1833156;
+  
+  var _events2 = _interopRequireDefault(_events);
+  
+  var _properties = __64df7535a04c95c1d53e467370a46bf6;
+  
+  var _properties2 = _interopRequireDefault(_properties);
+  
   exports['default'] = function (src, dst) {
     if (src.tagName === dst.tagName) {
-      return (0, _attributes2['default'])(src, dst);
+      return (0, _attributes2['default'])(src, dst).concat((0, _events2['default'])(src, dst)).concat((0, _properties2['default'])(src, dst));
     }
   };
   
@@ -358,25 +471,40 @@
     value: true
   });
   exports['default'] = render;
-  function shouldBeProp(value) {
-    var type = typeof value;
-    return type === 'function' || type === 'object';
-  }
-  
   function createElement(el) {
     var realNode = document.createElement(el.tagName);
+    var attributes = el.attributes;
+    var events = el.events;
+    var properties = el.properties;
   
-    if (el.attributes) {
-      for (var a = 0; a < el.attributes.length; a++) {
-        var attr = el.attributes[a];
+    if (attributes) {
+      var attributesLen = attributes.length;
+      for (var a = 0; a < attributesLen; a++) {
+        var attr = attributes[a];
         var _name = attr.name;
         var value = attr.value;
+        realNode.setAttribute(_name, value);
+      }
+    }
   
-        if (!value) {
-          continue;
+    if (events) {
+      for (var _name2 in events) {
+        var handler = events[_name2];
+        if (typeof handler === 'function') {
+          // This is a hack, but there's no way to get a handler for a specific
+          // event bound to an element so we have to store the handler on it so
+          // that the patcher can later unbind it when setting a new event
+          // listener when / if the value changes.
+          realNode['__events_' + _name2] = handler;
+          realNode.addEventListener(_name2, handler);
         }
+      }
+    }
   
-        if (_name === 'content') {
+    if (properties) {
+      for (var _name3 in properties) {
+        var value = properties[_name3];
+        if (_name3 === 'content') {
           if (Array.isArray(value)) {
             value.forEach(function (ch) {
               return realNode.appendChild(render(ch));
@@ -384,12 +512,8 @@
           } else {
             realNode.appendChild(render(value));
           }
-        } else if (_name.indexOf('on') === 0) {
-          realNode.addEventListener(_name.substring(2).toLowerCase(), value);
-        } else if (shouldBeProp(value)) {
-          realNode[_name] = value;
-        } else {
-          realNode.setAttribute(_name, value);
+        } else if (typeof value !== 'undefined') {
+          realNode[_name3] = value;
         }
       }
     }
@@ -502,7 +626,8 @@
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
   exports['default'] = function (src, dst, data) {
-    (0, _utilRealNode2['default'])(src).removeAttribute(data.name);
+    var node = (0, _utilRealNode2['default'])(src);
+    node.removeAttribute(data.name);
   };
   
   module.exports = exports['default'];
@@ -589,7 +714,72 @@
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
   exports['default'] = function (src, dst, data) {
-    (0, _utilRealNode2['default'])(src).setAttribute(data.name, data.value);
+    var node = (0, _utilRealNode2['default'])(src);
+    node.setAttribute(data.name, data.value);
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+// src/patch/set-event.js
+(typeof window === 'undefined' ? global : window).__9ec9c3aabc290894371d127fb1088492 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  
+  var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
+  
+  exports['default'] = function (src, dst, data) {
+    var node = (0, _utilRealNode2['default'])(src);
+    var name = data.name;
+    var func = data.value;
+  
+    // This is a hack as described in the vDOM -> DOM creation function but we
+    // need to be able to unbind the previous event handler otherwise events may
+    // stack causing major issues.
+    var temp = '__events_' + name;
+    node.removeEventListener(name, node[temp]);
+    node.addEventListener(name, node[temp] = func);
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+// src/patch/set-property.js
+(typeof window === 'undefined' ? global : window).__6c15bb643eba896c1c9d7e9c23db0b2b = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  
+  var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
+  
+  exports['default'] = function (src, dst, data) {
+    var node = (0, _utilRealNode2['default'])(src);
+    node[data.name] = data.value;
   };
   
   module.exports = exports['default'];
@@ -664,6 +854,14 @@
   
   var _patchSetAttribute2 = _interopRequireDefault(_patchSetAttribute);
   
+  var _patchSetEvent = __9ec9c3aabc290894371d127fb1088492;
+  
+  var _patchSetEvent2 = _interopRequireDefault(_patchSetEvent);
+  
+  var _patchSetProperty = __6c15bb643eba896c1c9d7e9c23db0b2b;
+  
+  var _patchSetProperty2 = _interopRequireDefault(_patchSetProperty);
+  
   var _patchTextContent = __2ecd35541218022de8f33fe72ae13c79;
   
   var _patchTextContent2 = _interopRequireDefault(_patchTextContent);
@@ -674,6 +872,8 @@
   patchers[types.REMOVE_CHILD] = _patchRemoveChild2['default'];
   patchers[types.REPLACE_CHILD] = _patchReplaceChild2['default'];
   patchers[types.SET_ATTRIBUTE] = _patchSetAttribute2['default'];
+  patchers[types.SET_EVENT] = _patchSetEvent2['default'];
+  patchers[types.SET_PROPERTY] = _patchSetProperty2['default'];
   patchers[types.TEXT_CONTENT] = _patchTextContent2['default'];
   
   function patch(instruction) {
@@ -765,24 +965,26 @@
   
   var _text2 = _interopRequireDefault(_text);
   
-  function ensureAttributes(obj) {
-    var map = {};
-    var index = 0;
-    for (var a in obj) {
-      var val = obj[a];
+  function separateData(obj) {
+    var attrs = {};
+    var events = {};
+    var props = {};
+    var attrIdx = 0;
   
-      // Take boolean attributes into account.
-      if (val === false) {
-        continue;
+    for (var _name in obj) {
+      var value = obj[_name];
+  
+      if (typeof value === 'string') {
+        attrs[attrIdx++] = attrs[_name] = { name: _name, value: value };
+      } else if (_name.indexOf('on') === 0) {
+        events[_name.substring(2)] = value;
+      } else {
+        props[_name] = value;
       }
-  
-      map[index++] = map[a] = {
-        name: a,
-        value: val
-      };
     }
-    map.length = index;
-    return map;
+  
+    attrs.length = attrIdx;
+    return { attrs: attrs, events: events, props: props };
   }
   
   function ensureNodes(arr) {
@@ -804,16 +1006,20 @@
   }
   
   exports['default'] = function (name) {
-    var props = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  
+    var data = separateData(attrs);
   
     for (var _len = arguments.length, chren = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
       chren[_key - 2] = arguments[_key];
     }
   
     return {
-      tagName: ensureTagName(name),
       nodeType: 1,
-      attributes: ensureAttributes(props),
+      tagName: ensureTagName(name),
+      attributes: data.attrs,
+      events: data.events,
+      properties: data.props,
       childNodes: ensureNodes(chren)
     };
   };
@@ -946,23 +1152,6 @@
   
   return module.exports;
 }).call(this);
-// src/api/version.js
-(typeof window === 'undefined' ? global : window).__f0f794673c5d3a1e236a581ba84d8321 = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  'use strict';
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  exports['default'] = '0.1.0';
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
 // src/index.js
 (typeof window === 'undefined' ? global : window).__d0534c9e7312e01df51511bab04ed9e4 = (function () {
   var module = {
@@ -1002,18 +1191,13 @@
   
   var _vdom2 = _interopRequireDefault(_vdom);
   
-  var _apiVersion = __f0f794673c5d3a1e236a581ba84d8321;
-  
-  var _apiVersion2 = _interopRequireDefault(_apiVersion);
-  
   exports['default'] = {
     diff: _diff2['default'],
     merge: _merge2['default'],
     patch: _patch2['default'],
     render: _render2['default'],
     types: _types2['default'],
-    vdom: _vdom2['default'],
-    version: _apiVersion2['default']
+    vdom: _vdom2['default']
   };
   module.exports = exports['default'];
   
