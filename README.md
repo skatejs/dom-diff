@@ -229,3 +229,11 @@ The resulting HTML would be:
 ```
 
 Additionally, it would have the `checked` property set to `true` and the `change` event would be handled by the value passed to `onchange`.
+
+#### Attribute patching behaviour
+
+When diffing and patching, the behaviour is much the same. If you're diffing real DOM nodes, then events and properties are ignored. Those are only available to virtual trees unless the element has an `events` and / or `properties` object on them. This is an implementation detail and may change and / or be formalised in the future. Nonetheless, it's something to be aware of.
+
+When patching event listeners, the previous one will be completely unbound and the new one will be bound. This prevents handlers from stacking.
+
+When patching properties, they're simply just set if the source and destination values aren't the same.
