@@ -210,7 +210,7 @@ This is useful when you want to avoid extra transpilation steps, but you can tra
 
 #### Attribute conventions
 
-When you specify attributes to the function that creates a virtual element, it will apply the following conventions in order to each one.
+When you specify attributes to the function that creates a virtual element, it will apply the following conventions - in the specified order - to each one.
 
 1. If the attribute value is a `string`, it will be set as an attribute.
 2. If the attribute name begins with `on`, the value will be added as the corresponding event listener (but only if it is a function, otherwise it's a no-op). For example, if you specified `{ onclick: handler }`, then internally it does something like `element.addEventListener('click', handler)`.
