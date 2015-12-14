@@ -10,9 +10,7 @@ function createElement (el) {
       const attr = attributes[a];
       const name = attr.name;
       const value = attr.value;
-      if (value) {
-        realNode.setAttribute(name, value);
-      }
+      realNode.setAttribute(name, value);
     }
   }
 
@@ -39,7 +37,7 @@ function createElement (el) {
         } else {
           realNode.appendChild(render(value));
         }
-      } else if (value) {
+      } else if (typeof value !== 'undefined') {
         realNode[name] = value;
       }
     }
