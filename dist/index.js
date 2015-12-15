@@ -687,7 +687,7 @@
   
   exports['default'] = function (src, dst) {
     var realNodeSrc = (0, _utilRealNode2['default'])(src);
-    realNodeSrc.parentNode && realNodeSrc.parentNode.replaceChild((0, _vdomDom2['default'])(dst), realNodeSrc);
+    realNodeSrc && realNodeSrc.parentNode && realNodeSrc.parentNode.replaceChild((0, _vdomDom2['default'])(dst), realNodeSrc);
   };
   
   module.exports = exports['default'];
