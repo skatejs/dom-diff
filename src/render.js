@@ -1,8 +1,10 @@
+import 'weakmap';
 import createElement from './vdom/element';
 import merge from './merge';
 import mount from './vdom/mount';
 
-const { Node } = window;
+const { Node, WeakMap } = window;
+const oldTreeMap = new WeakMap();
 
 export default function (render) {
   return function (elem) {
@@ -14,14 +16,17 @@ export default function (render) {
 
     // Create a new element to house the new tree since we diff fragments.
     const newTree = createElement('div', null, render(elem, { createElement }));
-    if (elem.__oldTree) {
+    const oldTree = oldTreeMap.get(elem);
+
+    if (oldTree) {
       merge({
         destination: newTree,
-        source: elem.__oldTree
+        source: oldTree
       });
     } else {
       mount(elem, newTree.childNodes[0]);
     }
-    elem.__oldTree = newTree;
+
+    oldTreeMap.set(elem, newTree);
   };
 }

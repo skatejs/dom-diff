@@ -33,5 +33,7 @@
     "url": "https://github.com/skatejs/dom-diff/issues"
   },
   "homepage": "https://github.com/skatejs/dom-diff#readme",
-  "dependencies": {}
+  "dependencies": {
+    "weakmap": "0.0.6"
+  }
 }

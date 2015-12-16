@@ -1,3 +1,7 @@
+import realNodeMap from './real-node-map';
+
+const { Node } = window;
+
 export default function (node) {
-  return node instanceof Node ? node : node.__realNode;
+  return node instanceof Node ? node : realNodeMap.get(node);
 }
