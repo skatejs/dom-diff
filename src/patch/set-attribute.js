@@ -1,5 +1,6 @@
+import { setAccessor } from '../util/accessor';
 import realNode from '../util/real-node';
 
 export default function (src, dst, data) {
-  realNode(src).setAttribute(data.name, data.value);
+  setAccessor(realNode(src), data.name, data.value);
 }

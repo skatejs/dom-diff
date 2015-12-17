@@ -5,7 +5,6 @@ function createElement (el) {
   const realNode = document.createElement(el.tagName);
   const attributes = el.attributes;
   const events = el.events;
-  const properties = el.properties;
   const eventHandlers = eventMap(realNode);
   const children = el.childNodes;
 
@@ -13,27 +12,13 @@ function createElement (el) {
     const attributesLen = attributes.length;
     for (let a = 0; a < attributesLen; a++) {
       const attr = attributes[a];
-      const name = attr.name;
-      const value = attr.value;
-      realNode.setAttribute(name, value);
+      realNode.setAttribute(attr.name, attr.value);
     }
   }
 
   if (events) {
     for (let name in events) {
-      const handler = events[name];
-      if (typeof handler === 'function') {
-        realNode.addEventListener(name, eventHandlers[name] = handler);
-      }
-    }
-  }
-
-  if (properties) {
-    for (let name in properties) {
-      const value = properties[name];
-      if (typeof value !== 'undefined') {
-        realNode[name] = value;
-      }
+      realNode.addEventListener(name, eventHandlers[name] = events[name]);
     }
   }
 

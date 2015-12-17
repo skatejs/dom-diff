@@ -1,4 +1,5 @@
 import * as types from '../types';
+import { getAccessor } from '../util/accessor';
 
 export default function (src, dst) {
   let srcAttrs = src.attributes;
@@ -10,23 +11,26 @@ export default function (src, dst) {
   // Bail early if possible.
   if (!srcAttrsLen && !dstAttrsLen) {
     return instructions;
-  }
+  }  
 
   // Merge attributes that exist in source with destination's.
   for (let a = 0; a < srcAttrsLen; a++) {
-    let srcAttr = srcAttrs[a];
-    let dstAttr = dstAttrs[srcAttr.name];
+    const srcAttr = srcAttrs[a];
+    const srcAttrName = srcAttr.name;
+    const srcAttrValue = getAccessor(src, srcAttrName);
+    const dstAttr = dstAttrs[srcAttrName];
+    const dstAttrValue = getAccessor(dst, srcAttrName);
 
     if (!dstAttr) {
       instructions.push({
-        data: { name: srcAttr.name },
+        data: { name: srcAttrName },
         destination: dst,
         source: src,
         type: types.REMOVE_ATTRIBUTE
       });
-    } else if (srcAttr.value !== dstAttr.value) {
+    } else if (srcAttrValue !== dstAttrValue) {
       instructions.push({
-        data: { name: srcAttr.name, value: dstAttr.value },
+        data: { name: srcAttrName, value: dstAttrValue },
         destination: dst,
         source: src,
         type: types.SET_ATTRIBUTE
@@ -37,12 +41,14 @@ export default function (src, dst) {
   // We only need to worry about setting attributes that don't already exist
   // in the source.
   for (let a = 0; a < dstAttrsLen; a++) {
-    let dstAttr = dstAttrs[a];
-    let srcAttr = srcAttrs[dstAttr.name];
+    const dstAttr = dstAttrs[a];
+    const dstAttrName = dstAttr.name;
+    const dstAttrValue = getAccessor(dst, dstAttrName);
+    const srcAttr = srcAttrs[dstAttr.name];
 
     if (!srcAttr) {
       instructions.push({
-        data: { name: dstAttr.name, value: dstAttr.value },
+        data: { name: dstAttrName, value: dstAttrValue },
         destination: dst,
         source: src,
         type: types.SET_ATTRIBUTE

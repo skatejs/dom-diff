@@ -1,137 +1,149 @@
 import * as types from '../src/types';
 import sd from '../src/index';
 
-function elem (name, html) {
-  let el = document.createElement(name);
-  el.innerHTML = html;
-  return el;
+function createElement (...args) {
+  return sd.vdom.dom(sd.vdom.element.apply(null, args));
 }
 
-let div = elem.bind(null, 'div');
-
-describe('diff', function () {
-  it('instructions array', function () {
-    let diffed = sd.diff({
-      destination: div(),
-      source: div()
-    });
-    assert.ok(Array.isArray(diffed));
+describe('vdom/element', function () {
+  const create = sd.vdom.element;
+  
+  it('should render a built-in element', function () {
+    const el = create('div');
+    expect(el.tagName).to.equal('DIV');
   });
-
-  it('instruction object', function () {
-    let src = div('<span></span>');
-    let dst = div('<a></a>');
-    let instructions = sd.diff({
-      destination: dst,
-      source: src
-    });
-    assert.equal(instructions.length, 1, 'instruction length');
-    assert.equal(instructions[0].destination.tagName, 'A', 'destination tagName');
-    assert.equal(instructions[0].source.tagName, 'SPAN', 'source tagName');
-    assert.equal(instructions[0].type, types.REPLACE_CHILD, 'type');
+  
+  it('should render a custom element', function () {
+    const el = create('x-div');
+    expect(el.tagName).to.equal('X-DIV');
   });
-});
-
-describe('patch', function () {
-  it('host should not change', function () {
-    let src = div('<span></span>');
-    let dst = div('<a></a>');
-    let instructions = sd.diff({
-      destination: dst,
-      source: src
-    });
-    sd.patch(instructions);
-    assert.equal(src.tagName, 'DIV');
+  
+  it('should set attributes', function () {
+    const el = create('div', { attr1: undefined, attr2: null, attr3: false, attr4: 0, attr5: '' });
+    expect(el.attributes.attr1.name).to.equal('attr1');
+    expect(el.attributes.attr2.name).to.equal('attr2');
+    expect(el.attributes.attr3.name).to.equal('attr3');
+    expect(el.attributes.attr4.name).to.equal('attr4');
+    expect(el.attributes.attr5.name).to.equal('attr5');
+    expect(el.attributes.attr1.value).to.equal(undefined);
+    expect(el.attributes.attr2.value).to.equal(null);
+    expect(el.attributes.attr3.value).to.equal(false);
+    expect(el.attributes.attr4.value).to.equal(0);
+    expect(el.attributes.attr5.value).to.equal('');
   });
-
-  it('same elements should not change', function () {
-    let src = div('<span></span>');
-    let dst = div('<span></span><a></a>');
-    let instructions = sd.diff({
-      destination: dst,
-      source: src
-    });
-    let srcSpan = src.childNodes[0];
-    sd.patch(instructions);
-    assert.equal(src.childNodes[0], srcSpan);
-  });
-
-  it('only compares items at the same index', function () {
-    let src = div('<span></span>');
-    let dst = div('<a></a><span></span>');
-    let instructions = sd.diff({
-      destination: dst,
-      source: src
-    });
-    let srcSpan = src.childNodes[0];
-    sd.patch(instructions);
-    assert.notEqual(src.childNodes[0], srcSpan);
-    assert.notEqual(src.childNodes[1], srcSpan);
-  });
-
-  it('should not patch equal text nodes', function () {
-    let src = div('text');
-    let dst = div('text');
-    let text = src.childNodes[0];
-    sd.merge({ source: src, destination: dst });
-    assert.equal(text, src.childNodes[0]);
-  });
-
-  it('should patch on subsequent runs', function () {
-    let src = div('test 1');
-
-    sd.merge({ source: src, destination: div('test 2') });
-    assert.equal(src.textContent, 'test 2');
-
-    sd.merge({ source: src, destination: div('test 3') });
-    assert.equal(src.textContent, 'test 3');
+  
+  it('should bind events', function () {
+    const el = create('div', { onclick: function(){} });
+    expect(el.events.click).to.be.a('function');
   });
 });
 
-describe('vdom/dom', function () {
-  it('should create a real element from a virtual element', function () {
-    const vEl = sd.vdom.element('div');
-    const rEl = sd.vdom.dom(vEl);
-    expect(rEl.tagName).to.equal('DIV');
+describe('jsx', function () {
+  const React = { createElement: sd.vdom.element };
+  
+  it('should render a built-in element', function () {
+    const el = <div />;
+    expect(el.tagName).to.equal('DIV');
   });
+  
+  it('should render a custom element', function () {
+    const el = <x-div />;
+    expect(el.tagName).to.equal('X-DIV');
+  });
+  
+  it('should set attributes', function () {
+    const el = <div attr1={undefined} attr2={null} attr3={false} attr4={0} attr5={''} />;
+    expect(el.attributes.attr1.name).to.equal('attr1');
+    expect(el.attributes.attr2.name).to.equal('attr2');
+    expect(el.attributes.attr3.name).to.equal('attr3');
+    expect(el.attributes.attr4.name).to.equal('attr4');
+    expect(el.attributes.attr5.name).to.equal('attr5');
+    expect(el.attributes.attr1.value).to.equal(undefined);
+    expect(el.attributes.attr2.value).to.equal(null);
+    expect(el.attributes.attr3.value).to.equal(false);
+    expect(el.attributes.attr4.value).to.equal(0);
+    expect(el.attributes.attr5.value).to.equal('');
+  });
+  
+  it('should bind events', function () {
+    const el = <div onclick={function(){}} />;
+    expect(el.events.click).to.be.a('function');
+  });
+});
 
-  describe('attributes', function () {
-    it('should set attributes if they are a string', function () {
-      const vEl = sd.vdom.element('div', {
-        key1: null ,
-        key2: 'val2'
-      });
-      expect(vEl.attributes.key1).to.equal(undefined);
-      expect(vEl.attributes.key2.name).to.equal('key2');
-      expect(vEl.attributes.key2.value).to.equal('val2');
+// Run the same tests for both real and virtual elements.
+[createElement, sd.vdom.element].forEach(function (element) {
+  describe('diff', function () {
+    it('instructions array', function () {
+      const src = createElement('div'); 
+      const dst = element('div');
+      const instructions = sd.diff({ destination: dst, source: src });
+      
+      assert.ok(Array.isArray(instructions));
     });
-
-    it('should set events if the name begins with "on"', function () {
-      const vEl = sd.vdom.element('div', {
-        click: () => 'click',
-        onclick: () => 'onclick',
-        once: () => 'once'
-      });
-      expect(vEl.events.click()).to.equal('onclick');
-
-      // This is currently expected behaviour, but we are looking for ways to
-      // get around this.
-      //
-      // https://github.com/skatejs/dom-diff/issues/32
-      expect(vEl.events.ce()).to.equal('once');
+  
+    it('instruction object', function () {
+      const src = createElement('div', null, element('span'));
+      const dst = element('div', null, element('a'));
+      const instructions = sd.diff({ destination: dst, source: src });
+      
+      assert.equal(instructions.length, 1, 'instruction length');
+      assert.equal(instructions[0].destination.tagName, 'A', 'destination tagName');
+      assert.equal(instructions[0].source.tagName, 'SPAN', 'source tagName');
+      assert.equal(instructions[0].type, types.REPLACE_CHILD, 'type');
     });
-
-    it('should set properties if the value is does not meet attribute or event requirements, but not if it is undefined', function () {
-      const vEl = sd.vdom.element('div', {
-        key1: false,
-        key2: 0,
-        key3: null,
-        key4: undefined
-      });
-      expect(vEl.properties.key1).to.equal(false);
-      expect(vEl.properties.key2).to.equal(0);
-      expect(vEl.properties.key3).to.equal(null);
-      expect(Object.hasOwnProperty(vEl, 'key4')).to.equal(false);
+  });
+  
+  describe('patch', function () {
+    it('host should not change', function () {
+      const src = createElement('div', null, element('span'));
+      const dst = element('div', null, element('a'));
+      const instructions = sd.diff({ destination: dst, source: src });
+      
+      sd.patch(instructions);
+      assert.equal(src.tagName, 'DIV');
+    });
+  
+    it('same elements should not change', function () {
+      const src = createElement('div', null, element('span'));
+      const dst = element('div', null, element('span'), element('a'));
+      const instructions = sd.diff({ destination: dst, source: src });
+      const srcSpan = src.childNodes[0];
+      
+      sd.patch(instructions);
+      assert.equal(src.childNodes[0], srcSpan);
+    });
+  
+    it('only compares items at the same index', function () {
+      const src = createElement('div', null, element('span'));
+      const dst = element('div', null, element('a'), element('span'));
+      const instructions = sd.diff({ destination: dst, source: src });
+      const srcSpan = src.childNodes[0];
+      
+      sd.patch(instructions);
+      assert.notEqual(src.childNodes[0], srcSpan);
+      assert.notEqual(src.childNodes[1], srcSpan);
+    });
+  
+    it('should not patch equal text nodes', function () {
+      const src = createElement('div', null, 'text');
+      const dst = element('div', null, 'text');
+      const text = src.childNodes[0];
+      
+      sd.merge({ source: src, destination: dst });
+      assert.equal(text, src.childNodes[0]);
+    });
+  
+    it('should patch on subsequent runs', function () {
+      const src = createElement('div', null, 'test 1');
+      const dst1 = element('div', null, 'test 2');
+      const dst2 = element('div', null, 'test 3');
+  
+      sd.merge({ source: src, destination: dst1 });
+      assert.equal(src.textContent, 'test 2');
+  
+      sd.merge({ source: src, destination: dst2 });
+      assert.equal(src.textContent, 'test 3');
     });
   });
 });
