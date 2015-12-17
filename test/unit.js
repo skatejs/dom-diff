@@ -1,3 +1,4 @@
+import 'custom-event-polyfill';
 import * as types from '../src/types';
 import sd from '../src/index';
 
@@ -72,8 +73,13 @@ describe('jsx', function () {
 });
 
 // Run the same tests for both real and virtual elements.
-[createElement, sd.vdom.element].forEach(function (element) {
-  describe('diff', function () {
+[createElement, sd.vdom.element].forEach(function (element, index) {
+  function _describe (name, func) {
+    const prefix = index === 0 ? 'REAL destination' : 'VIRTUAL destination';
+    describe(`${prefix} - ${name}`, func);
+  }
+  
+  _describe('diff', function () {
     it('instructions array', function () {
       const src = createElement('div'); 
       const dst = element('div');
@@ -94,7 +100,7 @@ describe('jsx', function () {
     });
   });
   
-  describe('patch', function () {
+  _describe('patch', function () {
     it('host should not change', function () {
       const src = createElement('div', null, element('span'));
       const dst = element('div', null, element('a'));
@@ -145,6 +151,215 @@ describe('jsx', function () {
       sd.merge({ source: src, destination: dst2 });
       assert.equal(src.textContent, 'test 3');
     });
+    
+    describe('attributes', function () {
+      it('should add attributes', function () {
+        const src = createElement('div', null, createElement('div'));
+        const dst = element('div', null, element('div', { name: 'value' }));
+  
+        sd.merge({ source: src, destination: dst });
+        expect(src.children[0].getAttribute('name')).to.equal('value');
+      });
+      
+      it('should updated attributes', function () {
+        const src = createElement('div', null, createElement('div', { name: 'old' }));
+        const dst = element('div', null, element('div', { name: 'new' }));
+  
+        sd.merge({ source: src, destination: dst });
+        expect(src.children[0].getAttribute('name')).to.equal('new');
+      });
+      
+      it('should remove attributes', function () {
+        const src = createElement('div', null, createElement('div', { name: 'value' }));
+        const dst = element('div', null, element('div'));
+  
+        sd.merge({ source: src, destination: dst });
+        expect(src.children[0].hasAttribute('name')).to.equal(false);
+      });
+    });
+    
+    describe('properties', function () {
+      describe('props "in" an element', function () {
+        it('sets a property', function () {
+          const src = createElement('div', null, createElement('input'));
+          const dst = element('div', null, element('input', { name: 'value' }));
+          const instructions = sd.merge({ source: src, destination: dst });
+          
+          expect(instructions.length).to.equal(1);
+          expect(instructions[0].type).to.equal(types.SET_ATTRIBUTE);
+          expect(src.children[0].getAttribute('name')).to.equal('value');
+          expect(src.children[0].name).to.equal('value');
+        });
+        
+        it('updates a property', function () {
+          const src = createElement('div', null, createElement('input', { name: 'old' }));
+          const dst = element('div', null, element('input', { name: 'new' }));
+          const instructions = sd.merge({ source: src, destination: dst });
+          
+          expect(instructions.length).to.equal(1);
+          expect(instructions[0].type).to.equal(types.SET_ATTRIBUTE);
+          expect(src.children[0].getAttribute('name')).to.equal('new');
+          expect(src.children[0].name).to.equal('new');
+        });
+        
+        it('does not update an attribute if the values are the same', function () {
+          const src = createElement('div', null, createElement('input', { name: 'value' }));
+          const dst = element('div', null, element('input', { name: 'value' }));
+          const instructions = sd.merge({ source: src, destination: dst });
+          
+          expect(instructions.length).to.equal(0);
+        });
+        
+        it('removes a property', function () {
+          const src = createElement('div', null, createElement('input', { name: 'old' }));
+          const dst = element('div', null, element('input'));
+          const instructions = sd.merge({ source: src, destination: dst });
+          
+          expect(instructions.length).to.equal(1);
+          expect(instructions[0].type).to.equal(types.REMOVE_ATTRIBUTE);
+          expect(src.children[0].getAttribute('name')).to.equal('');
+          expect(src.children[0].name).to.equal('');
+        });
+      });
+      
+      describe('props *not* "in" an element', function () {
+        it('sets an attribute', function () {
+          const src = createElement('div', null, createElement('div'));
+          const dst = element('div', null, element('div', { name: 'value' }));
+          const instructions = sd.merge({ source: src, destination: dst });
+          
+          expect(instructions.length).to.equal(1);
+          expect(instructions[0].type).to.equal(types.SET_ATTRIBUTE);
+          expect(src.children[0].getAttribute('name')).to.equal('value');
+          expect(src.children[0].name).to.equal(undefined);
+        });
+        
+        it('updates an attribute', function () {
+          const src = createElement('div', null, createElement('div', { name: 'old' }));
+          const dst = element('div', null, element('div', { name: 'new' }));
+          const instructions = sd.merge({ source: src, destination: dst });
+          
+          expect(instructions.length).to.equal(1);
+          expect(instructions[0].type).to.equal(types.SET_ATTRIBUTE);
+          expect(src.children[0].getAttribute('name')).to.equal('new');
+          expect(src.children[0].name).to.equal(undefined);
+        });
+        
+        it('does not update a property if the values are the same', function () {
+          const src = createElement('div', null, createElement('div', { name: 'value' }));
+          const dst = element('div', null, element('div', { name: 'value' }));
+          const instructions = sd.merge({ source: src, destination: dst });
+          
+          expect(instructions.length).to.equal(0);
+        });
+        
+        it('removes an attribute', function () {
+          const src = createElement('div', null, createElement('div', { name: 'old' }));
+          const dst = element('div', null, element('div'));
+          const instructions = sd.merge({ source: src, destination: dst });
+          
+          expect(instructions.length).to.equal(1);
+          expect(instructions[0].type).to.equal(types.REMOVE_ATTRIBUTE);
+          expect(src.children[0].hasAttribute('name')).to.equal(false);
+          expect(src.children[0].name).to.equal(undefined);
+        });
+      });
+      
+      describe('class -> className', function () {
+        it('sets', function () {
+          const src = createElement('div', null, createElement('div'));
+          const dst = element('div', null, element('div', { class: 'value' }));
+    
+          sd.merge({ source: src, destination: dst });
+          expect(src.children[0].getAttribute('class')).to.equal('value');
+          expect(src.children[0].className).to.equal('value');
+        });
+      });
+      
+      describe('style -> style.cssText', function () {
+        it('sets', function () {
+          const src = createElement('div', null, createElement('div'));
+          const dst = element('div', null, element('div', { style: 'display: block;' }));
+    
+          sd.merge({ source: src, destination: dst });
+          expect(src.children[0].getAttribute('style')).to.equal('display: block;');
+          expect(src.children[0].style.cssText).to.equal('display: block;');
+        });
+      });
+      
+      describe('type -> type', function () {
+        it('sets', function () {
+          const src = createElement('div', null, createElement('input'));
+          const dst = element('div', null, element('input', { type: 'text' }));
+    
+          sd.merge({ source: src, destination: dst });
+          expect(src.children[0].getAttribute('type')).to.equal('text');
+          expect(src.children[0].type).to.equal('text');
+        });
+      });
+    });
+  });
+});
+
+describe('events', function () {
+  const onclick = e => e.target.triggered = true;
+  
+  it('should add listeners', function () {
+    const src = createElement('div', null, createElement('button'));
+    const dst = sd.vdom.element('div', null, sd.vdom.element('button', { onclick }));
+    const instructions = sd.merge({ source: src, destination: dst });
+    
+    // The instruction should explicitly set an event.
+    expect(instructions.length).to.equal(1);
+    expect(instructions[0].type).to.equal(types.SET_EVENT);
+    expect(instructions[0].data.name).to.equal('click');
+    expect(instructions[0].data.value).to.equal(onclick);
+    
+    // It should be added via addEventListener().
+    expect(src.children[0].hasAttribute('onclick')).to.equal(false);
+    expect(src.children[0].onclick).to.equal(null);
+
+    src.children[0].dispatchEvent(new CustomEvent('click'));
+    expect(src.children[0].triggered).to.equal(true);
+  });
+  
+  it('should replace different listeners', function () {
+    const src = createElement('div', null, createElement('button'));
+    const dst1 = sd.vdom.element('div', null, sd.vdom.element('button', { onclick }));
+    const dst2 = sd.vdom.element('div', null, sd.vdom.element('button', { onclick: function(){} }));
+    
+    const instructions1 = sd.merge({ source: src, destination: dst1 });
+    expect(instructions1.length).to.equal(1);
+    
+    const instructions2 = sd.merge({ source: src, destination: dst2 });
+    expect(instructions2.length).to.equal(1);
+  });
+  
+  it('should not replace same listeners', function () {
+    const src = createElement('div', null, createElement('button'));
+    const dst1 = sd.vdom.element('div', null, sd.vdom.element('button', { onclick }));
+    const dst2 = sd.vdom.element('div', null, sd.vdom.element('button', { onclick }));
+    
+    const instructions1 = sd.merge({ source: src, destination: dst1 });
+    expect(instructions1.length).to.equal(1);
+    
+    const instructions2 = sd.merge({ source: src, destination: dst2 });
+    expect(instructions2.length).to.equal(0);
+  });
+  
+  it('should remove listeners', function () {
+    const src = createElement('div', null, createElement('button'));
+    const dst1 = sd.vdom.element('div', null, sd.vdom.element('button', { onclick }));
+    const dst2 = sd.vdom.element('div', null, sd.vdom.element('button'));
+    
+    const instructions1 = sd.merge({ source: src, destination: dst1 });
+    expect(instructions1.length).to.equal(1);
+    
+    const instructions2 = sd.merge({ source: src, destination: dst2 });
+    expect(instructions2.length).to.equal(1);
+    
+    src.children[0].dispatchEvent(new CustomEvent('click'));
+    expect(src.children[0].triggered).to.equal(undefined);
   });
 });
 
