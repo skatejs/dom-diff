@@ -1,8 +1,10 @@
+import { mapAccessor } from '../util/accessor';
 import createTextNode from './text';
 
 function separateData (obj) {
   const attrs = {};
   const events = {};
+  const node = {};
   let attrIdx = 0;
 
   for (let name in obj) {
@@ -12,11 +14,12 @@ function separateData (obj) {
       events[name.substring(2)] = value;
     } else {
       attrs[attrIdx++] = attrs[name] = { name, value };
+      mapAccessor(node, name, value);
     }
   }
 
   attrs.length = attrIdx;
-  return { attrs, events };
+  return { attrs, events, node };
 }
 
 function ensureNodes (arr) {
@@ -39,11 +42,11 @@ function ensureTagName (name) {
 
 export default function (name, attrs = {}, ...chren) {
   const data = separateData(attrs);
-  return {
-    nodeType: 1,
-    tagName: ensureTagName(name),
-    attributes: data.attrs,
-    events: data.events,
-    childNodes: ensureNodes(chren)
-  };
+  const node = data.node;
+  node.nodeType = 1;
+  node.tagName = ensureTagName(name);
+  node.attributes = data.attrs;
+  node.events = data.events;
+  node.childNodes = ensureNodes(chren);
+  return node;
 }
