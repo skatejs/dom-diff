@@ -1,3 +1,4 @@
+import { setAccessor } from '../util/accessor';
 import eventMap from '../util/event-map';
 import realNodeMap from '../util/real-node-map';
 
@@ -12,7 +13,7 @@ function createElement (el) {
     const attributesLen = attributes.length;
     for (let a = 0; a < attributesLen; a++) {
       const attr = attributes[a];
-      realNode.setAttribute(attr.name, attr.value);
+      setAccessor(realNode, attr.name, attr.value);
     }
   }
 
