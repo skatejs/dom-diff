@@ -3,25 +3,34 @@ import eventMap from '../util/event-map';
 
 export default function (src, dst) {
   const eventHandlers = eventMap(src);
-  let dstEvents = dst.events;
-  let instructions = [];
-
-  if (!dstEvents) {
-    return instructions;
-  }
-
-  for (let name in dstEvents) {
-    let dstEvent = dstEvents[name];
-
-    // Hack, as stated elsewhere, but we need to refer to the old event
-    // handler. We only want to apply a patch if it's changed.
-    if (eventHandlers[name] !== dstEvent) {
+  const dstEvents = dst.events;
+  const instructions = [];
+  
+  // Remove all handlers not being set.
+  for (let name in eventHandlers) {
+    if (!(name in dstEvents)) {
+      const value = null;
       instructions.push({
-        data: { name: name, value: dstEvent },
+        data: { name, value },
         destination: dst,
         source: src,
         type: types.SET_EVENT
       });
+    }
+  }
+
+  // Add new handlers, not changing existing ones.
+  if (dstEvents) {
+    for (let name in dstEvents) {
+      const value = dstEvents[name];
+      if (eventHandlers[name] !== value) {
+        instructions.push({
+          data: { name, value },
+          destination: dst,
+          source: src,
+          type: types.SET_EVENT
+        });
+      }
     }
   }
 
