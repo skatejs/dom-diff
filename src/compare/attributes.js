@@ -11,7 +11,7 @@ export default function (src, dst) {
   // Bail early if possible.
   if (!srcAttrsLen && !dstAttrsLen) {
     return instructions;
-  }  
+  }
 
   // Merge attributes that exist in source with destination's.
   for (let a = 0; a < srcAttrsLen; a++) {
@@ -44,7 +44,7 @@ export default function (src, dst) {
     const dstAttr = dstAttrs[a];
     const dstAttrName = dstAttr.name;
     const dstAttrValue = getAccessor(dst, dstAttrName);
-    const srcAttr = srcAttrs[dstAttr.name];
+    const srcAttr = srcAttrs[dstAttrName];
 
     if (!srcAttr) {
       instructions.push({
