@@ -5,10 +5,10 @@ export default function (src, dst) {
   const eventHandlers = eventMap(src);
   const dstEvents = dst.events;
   const instructions = [];
-  
+
   // Remove all handlers not being set.
   for (let name in eventHandlers) {
-    if (!(name in dstEvents)) {
+    if (!dstEvents || !(name in dstEvents)) {
       const value = null;
       instructions.push({
         data: { name, value },
