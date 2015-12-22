@@ -900,12 +900,10 @@
   
   var _realNode2 = _interopRequireDefault(_realNode);
   
-  var Node = window.Node;
-  
   exports['default'] = function (node) {
     var tmp = (0, _realNode2['default'])(node);
     var contentNode = tmp.content;
-    return contentNode instanceof Node ? contentNode : tmp;
+    return contentNode && contentNode.appendChild ? contentNode : tmp;
   };
   
   module.exports = exports['default'];
@@ -1448,7 +1446,7 @@
   var _dom2 = _interopRequireDefault(_dom);
   
   exports['default'] = function (elem, tree) {
-    var content = (0, _utilContentNode2['default'])(elem) || elem;
+    var content = elem;
     while (content.firstChild) {
       content.firstChild.remove();
     }
