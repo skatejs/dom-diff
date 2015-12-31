@@ -51,13 +51,16 @@
       return node.className;
     } else if (name === 'style') {
       return node.style.cssText;
+      // most things
     } else if (name !== 'type' && name in node) {
-      return node[name];
-    } else if (node.getAttribute) {
-      return node.getAttribute(name);
-    } else if (node.attributes && node.attributes[name]) {
-      return node.attributes[name].value;
-    }
+        return node[name];
+        // real DOM elements
+      } else if (node.getAttribute) {
+          return node.getAttribute(name);
+          // vDOM nodes
+        } else if (node.attributes && node.attributes[name]) {
+            return node.attributes[name].value;
+          }
   }
   
   function mapAccessor(node, name, value) {
@@ -73,13 +76,16 @@
       node.className = '';
     } else if (name === 'style') {
       node.style.cssText = '';
+      // most things
     } else if (name !== 'type' && name in node) {
-      node[name] = '';
-    } else if (node.removeAttribute) {
-      node.removeAttribute(name);
-    } else if (node.attributes) {
-      delete node.attributes[name];
-    }
+        node[name] = '';
+        // real DOM elements
+      } else if (node.removeAttribute) {
+          node.removeAttribute(name);
+          // vDOM nodes
+        } else if (node.attributes) {
+            delete node.attributes[name];
+          }
   }
   
   function setAccessor(node, name, value) {
@@ -87,13 +93,16 @@
       node.className = value;
     } else if (name === 'style') {
       node.style.cssText = value;
-    } else if (name !== 'type' && name in node) {
-      node[name] = value;
-    } else if (node.setAttribute) {
-      node.setAttribute(name, value);
-    } else if (node.attributes) {
-      node.attributes[node.attributes.length] = node.attributes[name] = { name: name, value: value };
-    }
+      // most things
+    } else if (name !== 'type' && name in node || typeof value !== 'string') {
+        node[name] = value;
+        // real DOM elements
+      } else if (node.setAttribute) {
+          node.setAttribute(name, value);
+          // vDOM nodes
+        } else if (node.attributes) {
+            node.attributes[node.attributes.length] = node.attributes[name] = { name: name, value: value };
+          }
   }
   
   return module.exports;
