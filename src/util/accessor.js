@@ -47,7 +47,10 @@ export function setAccessor (node, name, value) {
     node.style.cssText = value;
   // most things
   } else if (name !== 'type' && name in node || typeof value !== 'string' && name !== 'content') {
-    node[name] = value;
+    // We check if it's undefined or null because IE throws "invalid argument"
+    // errors for some types of properties. Essentially this is the same as
+    // removing the accessor.
+    node[name] = value == null ? '' : value;
   // real DOM elements
   } else if (node.setAttribute) {
     node.setAttribute(name, value);
