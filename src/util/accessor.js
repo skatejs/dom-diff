@@ -46,7 +46,7 @@ export function setAccessor (node, name, value) {
   } else if (name === 'style') {
     node.style.cssText = value;
   // most things
-  } else if (name !== 'type' && name in node) {
+  } else if (name !== 'type' && name in node || typeof value !== 'string' && name !== 'content') {
     node[name] = value;
   // real DOM elements
   } else if (node.setAttribute) {
