@@ -6,20 +6,6 @@ export default function (src, dst) {
   const dstEvents = dst.events;
   const instructions = [];
 
-  // Remove all handlers not being set.
-  for (let name in eventHandlers) {
-    if (!dstEvents || !(name in dstEvents)) {
-      const value = null;
-      instructions.push({
-        data: { name, value },
-        destination: dst,
-        source: src,
-        type: types.SET_EVENT
-      });
-    }
-  }
-
-  // Add new handlers, not changing existing ones.
   if (dstEvents) {
     for (let name in dstEvents) {
       const value = dstEvents[name];
