@@ -94,7 +94,7 @@
     } else if (name === 'style') {
       node.style.cssText = value;
       // most things
-    } else if (name !== 'type' && name in node || typeof value !== 'string') {
+    } else if (name !== 'type' && name in node || typeof value !== 'string' && name !== 'content') {
         node[name] = value;
         // real DOM elements
       } else if (node.setAttribute) {
@@ -547,26 +547,12 @@
     var dstEvents = dst.events;
     var instructions = [];
   
-    // Remove all handlers not being set.
-    for (var _name in eventHandlers) {
-      if (!dstEvents || !(_name in dstEvents)) {
-        var value = null;
-        instructions.push({
-          data: { name: _name, value: value },
-          destination: dst,
-          source: src,
-          type: types.SET_EVENT
-        });
-      }
-    }
-  
-    // Add new handlers, not changing existing ones.
     if (dstEvents) {
-      for (var _name2 in dstEvents) {
-        var value = dstEvents[_name2];
-        if (eventHandlers[_name2] !== value) {
+      for (var _name in dstEvents) {
+        var value = dstEvents[_name];
+        if (eventHandlers[_name] !== value) {
           instructions.push({
-            data: { name: _name2, value: value },
+            data: { name: _name, value: value },
             destination: dst,
             source: src,
             type: types.SET_EVENT
@@ -1181,6 +1167,7 @@
     var nextHandler = data.value;
   
     if (typeof prevHandler === 'function') {
+      delete eventHandlers[name];
       realSrc.removeEventListener(name, prevHandler);
     }
   
