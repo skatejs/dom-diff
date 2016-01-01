@@ -1,6 +1,5 @@
-import 'weakmap';
+import WeakMap from 'weakmap';
 
-const { WeakMap }  = window;
 const map = new WeakMap();
 
 export default function (elem) {

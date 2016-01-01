@@ -1,9 +1,9 @@
-import 'weakmap';
+import WeakMap from 'weakmap';
 import createElement from './vdom/element';
 import merge from './merge';
 import mount from './vdom/mount';
 
-const { Node, WeakMap } = window;
+const { Node } = window;
 const oldTreeMap = new WeakMap();
 
 export default function (render) {
