@@ -9,6 +9,7 @@ export default function (src, dst, data) {
   const nextHandler = data.value;
 
   if (typeof prevHandler === 'function') {
+    delete eventHandlers[name];
     realSrc.removeEventListener(name, prevHandler);
   }
 
