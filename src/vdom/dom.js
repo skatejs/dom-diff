@@ -49,6 +49,11 @@ export default function render (el) {
   if (el instanceof Node) {
     return el;
   }
+  if (Array.isArray(el)) {
+    const frag = document.createDocumentFragment();
+    el.forEach(item => frag.appendChild(render(item)));
+    return frag;
+  }
   const realNode = el.tagName ? createElement(el) : createText(el);
   realNodeMap.set(el, realNode);
   return realNode;

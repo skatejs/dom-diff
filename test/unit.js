@@ -430,14 +430,18 @@ describe('content property', function () {
   it('if it returns a Node, then that node should be used for patching', function () {
     const elem = document.createElement('div');
     const render = sd.render(function (elem) {
-      return sd.vdom.element('div', null,
-        elem.test && elem.test.map(function (child) {
-          return sd.vdom.element(child.name, null, child.text);
-        })
-      );
+      return [
+        sd.vdom.element('p', null, 'shadow dom'),
+        sd.vdom.element('div', { class: 'content' },
+          sd.vdom.element('div', null,
+            elem.test && elem.test.map(function (child) {
+              return sd.vdom.element(child.name, null, child.text);
+            })
+          )
+        )
+      ];
     });
 
-    initialiseTemplate(elem);
     defineContentProperty(elem);
 
     render(elem);

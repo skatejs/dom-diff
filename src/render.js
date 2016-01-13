@@ -14,7 +14,7 @@ export default function (render) {
       throw new Error('No node provided to diff renderer as either the first argument or the context.');
     }
 
-    // Create a new element to house the new tree since we diff fragments.
+    // Create a new element to house the new tree since we diff / mount fragments.
     const newTree = createElement('div', null, render(elem, { createElement }));
     const oldTree = oldTreeMap.get(elem);
 
@@ -24,7 +24,7 @@ export default function (render) {
         source: oldTree
       });
     } else {
-      mount(elem, newTree.childNodes[0]);
+      mount(elem, newTree.childNodes);
     }
 
     oldTreeMap.set(elem, newTree);
