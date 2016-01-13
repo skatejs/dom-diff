@@ -1,4 +1,4 @@
-import WeakMap from 'es6-weak-map';
+import WeakMap from './weak-map';
 
 const map = new WeakMap();
 

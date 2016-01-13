@@ -1,4 +1,4 @@
-import WeakMap from 'es6-weak-map';
+import WeakMap from './util/weak-map';
 import createElement from './vdom/element';
 import merge from './merge';
 import mount from './vdom/mount';

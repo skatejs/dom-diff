@@ -36,7 +36,6 @@
   },
   "homepage": "https://github.com/skatejs/dom-diff#readme",
   "dependencies": {
-    "es6-weak-map": "^2.0.1",
     "object-assign": "^4.0.1"
   }
 }
