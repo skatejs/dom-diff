@@ -95,7 +95,10 @@
       node.style.cssText = value;
       // most things
     } else if (name !== 'type' && name in node || typeof value !== 'string' && name !== 'content') {
-        node[name] = value;
+        // We check if it's undefined or null because IE throws "invalid argument"
+        // errors for some types of properties. Essentially this is the same as
+        // removing the accessor.
+        node[name] = value == null ? '' : value;
         // real DOM elements
       } else if (node.setAttribute) {
           node.setAttribute(name, value);
@@ -501,11 +504,13 @@
     value: true
   });
   
-  __99ae6500534ecca2cc3945bfe4109057;
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var WeakMap = window.WeakMap;
+  var _weakmap = __99ae6500534ecca2cc3945bfe4109057;
   
-  var map = new WeakMap();
+  var _weakmap2 = _interopRequireDefault(_weakmap);
+  
+  var map = new _weakmap2['default']();
   
   exports['default'] = function (elem) {
     var events = map.get(elem);
@@ -730,10 +735,13 @@
     value: true
   });
   
-  __99ae6500534ecca2cc3945bfe4109057;
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var WeakMap = window.WeakMap;
-  exports['default'] = new WeakMap();
+  var _weakmap = __99ae6500534ecca2cc3945bfe4109057;
+  
+  var _weakmap2 = _interopRequireDefault(_weakmap);
+  
+  exports['default'] = new _weakmap2['default']();
   module.exports = exports['default'];
   
   return module.exports;
@@ -1433,10 +1441,6 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilContentNode = __3e012eccf6c20915a9e6a53685db63fd;
-  
-  var _utilContentNode2 = _interopRequireDefault(_utilContentNode);
-  
   var _dom = __c672b2ab009d1b5af8a22c830a9d5ab6;
   
   var _dom2 = _interopRequireDefault(_dom);
@@ -1444,7 +1448,8 @@
   exports['default'] = function (elem, tree) {
     var content = elem;
     while (content.firstChild) {
-      content.firstChild.remove();
+      var first = content.firstChild;
+      first.parentNode.removeChild(first);
     }
     content.appendChild((0, _dom2['default'])(tree));
   };
@@ -1468,7 +1473,9 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  __99ae6500534ecca2cc3945bfe4109057;
+  var _weakmap = __99ae6500534ecca2cc3945bfe4109057;
+  
+  var _weakmap2 = _interopRequireDefault(_weakmap);
   
   var _vdomElement = __90cd00536bcb3b42d1659021f5337f5f;
   
@@ -1483,9 +1490,8 @@
   var _vdomMount2 = _interopRequireDefault(_vdomMount);
   
   var Node = window.Node;
-  var WeakMap = window.WeakMap;
   
-  var oldTreeMap = new WeakMap();
+  var oldTreeMap = new _weakmap2['default']();
   
   exports['default'] = function (render) {
     return function (elem) {
