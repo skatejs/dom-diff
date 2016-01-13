@@ -227,6 +227,8 @@
         obj[this.key] = val;
       }
     };
+  
+    return Polyfill;
   })();
   
   module.exports = exports['default'];

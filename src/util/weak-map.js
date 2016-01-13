@@ -22,4 +22,6 @@ export default (function () {
       obj[this.key] = val;
     }
   };
+
+  return Polyfill;
 })();
