@@ -94,7 +94,7 @@
     } else if (name === 'style') {
       node.style.cssText = value;
       // most things
-    } else if (name !== 'type' && name in node || typeof value !== 'string' && name !== 'content') {
+    } else if (name !== 'type' && name in node || typeof value !== 'string') {
         // We check if it's undefined or null because IE throws "invalid argument"
         // errors for some types of properties. Essentially this is the same as
         // removing the accessor.
@@ -694,7 +694,6 @@
     }
   
     if (children) {
-      var content = realNode.content || realNode;
       var docfrag = document.createDocumentFragment();
       var childrenLen = children.length;
   
@@ -703,8 +702,8 @@
         ch && docfrag.appendChild(render(ch));
       }
   
-      if (content.appendChild) {
-        content.appendChild(docfrag);
+      if (realNode.appendChild) {
+        realNode.appendChild(docfrag);
       }
     }
   
@@ -1191,17 +1190,16 @@
   
   var _dom2 = _interopRequireDefault(_dom);
   
-  function removeChildNodes(content) {
-    while (content.firstChild) {
-      var first = content.firstChild;
+  function removeChildNodes(elem) {
+    while (elem.firstChild) {
+      var first = elem.firstChild;
       first.parentNode.removeChild(first);
     }
   }
   
   exports['default'] = function (elem, tree) {
-    var content = elem;
-    removeChildNodes(content);
-    content.appendChild((0, _dom2['default'])(tree));
+    removeChildNodes(elem);
+    elem.appendChild((0, _dom2['default'])(tree));
   };
   
   module.exports = exports['default'];
