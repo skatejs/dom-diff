@@ -646,35 +646,6 @@
   
   return module.exports;
 }).call(this);
-// src/util/content-node.js
-(typeof window === 'undefined' ? global : window).__3e012eccf6c20915a9e6a53685db63fd = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  'use strict';
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-  
-  var _realNode = __5867064010dd8ce98a03e6d693c0b368;
-  
-  var _realNode2 = _interopRequireDefault(_realNode);
-  
-  exports['default'] = function (node) {
-    var tmp = (0, _realNode2['default'])(node);
-    var contentNode = tmp.content;
-    return contentNode && contentNode.appendChild ? contentNode : tmp;
-  };
-  
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
 // src/vdom/dom.js
 (typeof window === 'undefined' ? global : window).__c672b2ab009d1b5af8a22c830a9d5ab6 = (function () {
   var module = {
@@ -785,16 +756,16 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilContentNode = __3e012eccf6c20915a9e6a53685db63fd;
+  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
   
-  var _utilContentNode2 = _interopRequireDefault(_utilContentNode);
+  var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
   var _vdomDom = __c672b2ab009d1b5af8a22c830a9d5ab6;
   
   var _vdomDom2 = _interopRequireDefault(_vdomDom);
   
   exports['default'] = function (src, dst) {
-    (0, _utilContentNode2['default'])(src).appendChild((0, _vdomDom2['default'])(dst));
+    (0, _utilRealNode2['default'])(src).appendChild((0, _vdomDom2['default'])(dst));
   };
   
   module.exports = exports['default'];
@@ -979,12 +950,12 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilContentNode = __3e012eccf6c20915a9e6a53685db63fd;
+  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
   
-  var _utilContentNode2 = _interopRequireDefault(_utilContentNode);
+  var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
   exports['default'] = function (src, dst) {
-    (0, _utilContentNode2['default'])(src).textContent = dst.textContent;
+    (0, _utilRealNode2['default'])(src).textContent = dst.textContent;
   };
   
   module.exports = exports['default'];
