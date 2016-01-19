@@ -24,7 +24,6 @@ function createElement (el) {
   }
 
   if (children) {
-    const content = realNode.content || realNode;
     const docfrag = document.createDocumentFragment();
     const childrenLen = children.length;
 
@@ -33,8 +32,8 @@ function createElement (el) {
       ch && docfrag.appendChild(render(ch));
     }
 
-    if (content.appendChild) {
-      content.appendChild(docfrag);
+    if (realNode.appendChild) {
+      realNode.appendChild(docfrag);
     }
   }
 
