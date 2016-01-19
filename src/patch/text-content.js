@@ -1,5 +1,5 @@
-import contentNode from '../util/content-node';
+import realNode from '../util/real-node';
 
 export default function (src, dst) {
-  contentNode(src).textContent = dst.textContent;
+  realNode(src).textContent = dst.textContent;
 }
