@@ -40,7 +40,7 @@ describe('vdom/element', function () {
 });
 
 describe('jsx', function () {
-  const React = { createElement: sd.vdom.element };
+  const React = { createElement: sd.vdom.element }; // eslint-disable-line no-unused-vars
 
   it('should render a built-in element', function () {
     const el = <div />;
