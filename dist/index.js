@@ -1,5 +1,5 @@
 // src/types.js
-(typeof window === 'undefined' ? global : window).__0ca807667308490ecea534df3b4369b8 = (function () {
+(typeof window === 'undefined' ? global : window).__306adb5c6fd9dc9c0701f97d61c88c29 = (function () {
   var module = {
     exports: {}
   };
@@ -30,7 +30,7 @@
   return module.exports;
 }).call(this);
 // src/util/accessor.js
-(typeof window === 'undefined' ? global : window).__c1565a66d0c7d169b4ad86c2905cfafc = (function () {
+(typeof window === 'undefined' ? global : window).__67e3bc52527f64dd454cbf743becd3ce = (function () {
   var module = {
     exports: {}
   };
@@ -111,7 +111,7 @@
   return module.exports;
 }).call(this);
 // src/compare/attributes.js
-(typeof window === 'undefined' ? global : window).__bad2e851182eb57480d47d0d1303f9cd = (function () {
+(typeof window === 'undefined' ? global : window).__9121c7689d7449da988fa114a9538a75 = (function () {
   var module = {
     exports: {}
   };
@@ -125,11 +125,11 @@
   
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
   
-  var _types = __0ca807667308490ecea534df3b4369b8;
+  var _types = __306adb5c6fd9dc9c0701f97d61c88c29;
   
   var types = _interopRequireWildcard(_types);
   
-  var _utilAccessor = __c1565a66d0c7d169b4ad86c2905cfafc;
+  var _utilAccessor = __67e3bc52527f64dd454cbf743becd3ce;
   
   exports['default'] = function (src, dst) {
     var srcAttrs = src.attributes;
@@ -194,7 +194,7 @@
   return module.exports;
 }).call(this);
 // src/util/weak-map.js
-(typeof window === 'undefined' ? global : window).__c277de686f7db61e7ee805b0b6bc00f8 = (function () {
+(typeof window === 'undefined' ? global : window).__ce023ebacc34c07d605e08cb00be0fb8 = (function () {
   var module = {
     exports: {}
   };
@@ -236,7 +236,7 @@
   return module.exports;
 }).call(this);
 // src/util/event-map.js
-(typeof window === 'undefined' ? global : window).__179de9e26da518d139b95b2fb8e0e553 = (function () {
+(typeof window === 'undefined' ? global : window).__490e51f7cea3c91781b500cc4a5d8e3c = (function () {
   var module = {
     exports: {}
   };
@@ -250,7 +250,7 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _weakMap = __c277de686f7db61e7ee805b0b6bc00f8;
+  var _weakMap = __ce023ebacc34c07d605e08cb00be0fb8;
   
   var _weakMap2 = _interopRequireDefault(_weakMap);
   
@@ -267,7 +267,7 @@
   return module.exports;
 }).call(this);
 // src/compare/events.js
-(typeof window === 'undefined' ? global : window).__34fcf97edbfdec192096e8fcd1833156 = (function () {
+(typeof window === 'undefined' ? global : window).__810e3e8aff9255d0b6d7cc3d2921fa2a = (function () {
   var module = {
     exports: {}
   };
@@ -283,11 +283,11 @@
   
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
   
-  var _types = __0ca807667308490ecea534df3b4369b8;
+  var _types = __306adb5c6fd9dc9c0701f97d61c88c29;
   
   var types = _interopRequireWildcard(_types);
   
-  var _utilEventMap = __179de9e26da518d139b95b2fb8e0e553;
+  var _utilEventMap = __490e51f7cea3c91781b500cc4a5d8e3c;
   
   var _utilEventMap2 = _interopRequireDefault(_utilEventMap);
   
@@ -336,7 +336,7 @@
   return module.exports;
 }).call(this);
 // src/compare/element.js
-(typeof window === 'undefined' ? global : window).__8a4ddda1ca8be7b0c056814a3966d1ca = (function () {
+(typeof window === 'undefined' ? global : window).__012a3a3a199bd9a8bf288b88ac5d8016 = (function () {
   var module = {
     exports: {}
   };
@@ -350,11 +350,11 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _attributes = __bad2e851182eb57480d47d0d1303f9cd;
+  var _attributes = __9121c7689d7449da988fa114a9538a75;
   
   var _attributes2 = _interopRequireDefault(_attributes);
   
-  var _events = __34fcf97edbfdec192096e8fcd1833156;
+  var _events = __810e3e8aff9255d0b6d7cc3d2921fa2a;
   
   var _events2 = _interopRequireDefault(_events);
   
@@ -369,7 +369,7 @@
   return module.exports;
 }).call(this);
 // src/compare/text.js
-(typeof window === 'undefined' ? global : window).__6be3dfb2c966cc1cf98fbc28ab388768 = (function () {
+(typeof window === 'undefined' ? global : window).__1419767bbbbe333faa9863b1f37f5f45 = (function () {
   var module = {
     exports: {}
   };
@@ -383,7 +383,7 @@
   
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
   
-  var _types = __0ca807667308490ecea534df3b4369b8;
+  var _types = __306adb5c6fd9dc9c0701f97d61c88c29;
   
   var types = _interopRequireWildcard(_types);
   
@@ -404,7 +404,7 @@
   return module.exports;
 }).call(this);
 // src/compare/comment.js
-(typeof window === 'undefined' ? global : window).__b61b794da4779d6fe0fb5684b9f98c70 = (function () {
+(typeof window === 'undefined' ? global : window).__6f37dd78d1ae7423bfc8b440f9867b06 = (function () {
   var module = {
     exports: {}
   };
@@ -418,7 +418,7 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _text = __6be3dfb2c966cc1cf98fbc28ab388768;
+  var _text = __1419767bbbbe333faa9863b1f37f5f45;
   
   var _text2 = _interopRequireDefault(_text);
   
@@ -428,7 +428,7 @@
   return module.exports;
 }).call(this);
 // src/compare/node.js
-(typeof window === 'undefined' ? global : window).__d1a542bf52dea3e669dda0475c050479 = (function () {
+(typeof window === 'undefined' ? global : window).__083b9bfc83c334ff19a2673ae8faba7c = (function () {
   var module = {
     exports: {}
   };
@@ -442,15 +442,15 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _element = __8a4ddda1ca8be7b0c056814a3966d1ca;
+  var _element = __012a3a3a199bd9a8bf288b88ac5d8016;
   
   var _element2 = _interopRequireDefault(_element);
   
-  var _text = __6be3dfb2c966cc1cf98fbc28ab388768;
+  var _text = __1419767bbbbe333faa9863b1f37f5f45;
   
   var _text2 = _interopRequireDefault(_text);
   
-  var _comment = __b61b794da4779d6fe0fb5684b9f98c70;
+  var _comment = __6f37dd78d1ae7423bfc8b440f9867b06;
   
   var _comment2 = _interopRequireDefault(_comment);
   
@@ -485,7 +485,7 @@
   return module.exports;
 }).call(this);
 // src/util/real-node-map.js
-(typeof window === 'undefined' ? global : window).__9474e90f826080a0598483aba75ba887 = (function () {
+(typeof window === 'undefined' ? global : window).__26261b175dc60fa17898718402ac16b0 = (function () {
   var module = {
     exports: {}
   };
@@ -499,7 +499,7 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _weakMap = __c277de686f7db61e7ee805b0b6bc00f8;
+  var _weakMap = __ce023ebacc34c07d605e08cb00be0fb8;
   
   var _weakMap2 = _interopRequireDefault(_weakMap);
   
@@ -509,7 +509,7 @@
   return module.exports;
 }).call(this);
 // src/util/real-node.js
-(typeof window === 'undefined' ? global : window).__5867064010dd8ce98a03e6d693c0b368 = (function () {
+(typeof window === 'undefined' ? global : window).__d18ac5c3473b294694afebfe4eb84766 = (function () {
   var module = {
     exports: {}
   };
@@ -523,7 +523,7 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _realNodeMap = __9474e90f826080a0598483aba75ba887;
+  var _realNodeMap = __26261b175dc60fa17898718402ac16b0;
   
   var _realNodeMap2 = _interopRequireDefault(_realNodeMap);
   
@@ -538,7 +538,7 @@
   return module.exports;
 }).call(this);
 // src/diff.js
-(typeof window === 'undefined' ? global : window).__22dce1b31df73fb8f06bda10d9498f07 = (function () {
+(typeof window === 'undefined' ? global : window).__bc43ec47db3e25bfd4fae86b6294f1ff = (function () {
   var module = {
     exports: {}
   };
@@ -555,19 +555,19 @@
   
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
   
-  var _types = __0ca807667308490ecea534df3b4369b8;
+  var _types = __306adb5c6fd9dc9c0701f97d61c88c29;
   
   var types = _interopRequireWildcard(_types);
   
-  var _compareNode = __d1a542bf52dea3e669dda0475c050479;
+  var _compareNode = __083b9bfc83c334ff19a2673ae8faba7c;
   
   var _compareNode2 = _interopRequireDefault(_compareNode);
   
-  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  var _utilRealNode = __d18ac5c3473b294694afebfe4eb84766;
   
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
-  var _utilRealNodeMap = __9474e90f826080a0598483aba75ba887;
+  var _utilRealNodeMap = __26261b175dc60fa17898718402ac16b0;
   
   var _utilRealNodeMap2 = _interopRequireDefault(_utilRealNodeMap);
   
@@ -647,7 +647,7 @@
   return module.exports;
 }).call(this);
 // src/vdom/dom.js
-(typeof window === 'undefined' ? global : window).__c672b2ab009d1b5af8a22c830a9d5ab6 = (function () {
+(typeof window === 'undefined' ? global : window).__945bdb727c61042f47a5a0d3e0e5b373 = (function () {
   var module = {
     exports: {}
   };
@@ -662,13 +662,13 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilAccessor = __c1565a66d0c7d169b4ad86c2905cfafc;
+  var _utilAccessor = __67e3bc52527f64dd454cbf743becd3ce;
   
-  var _utilEventMap = __179de9e26da518d139b95b2fb8e0e553;
+  var _utilEventMap = __490e51f7cea3c91781b500cc4a5d8e3c;
   
   var _utilEventMap2 = _interopRequireDefault(_utilEventMap);
   
-  var _utilRealNodeMap = __9474e90f826080a0598483aba75ba887;
+  var _utilRealNodeMap = __26261b175dc60fa17898718402ac16b0;
   
   var _utilRealNodeMap2 = _interopRequireDefault(_utilRealNodeMap);
   
@@ -741,7 +741,7 @@
   return module.exports;
 }).call(this);
 // src/patch/append-child.js
-(typeof window === 'undefined' ? global : window).__3ed6aa44bf4d6b9365bed745b80029cf = (function () {
+(typeof window === 'undefined' ? global : window).__541cede3d2af09d7444130961c7580d8 = (function () {
   var module = {
     exports: {}
   };
@@ -755,11 +755,11 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  var _utilRealNode = __d18ac5c3473b294694afebfe4eb84766;
   
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
-  var _vdomDom = __c672b2ab009d1b5af8a22c830a9d5ab6;
+  var _vdomDom = __945bdb727c61042f47a5a0d3e0e5b373;
   
   var _vdomDom2 = _interopRequireDefault(_vdomDom);
   
@@ -772,7 +772,7 @@
   return module.exports;
 }).call(this);
 // src/patch/remove-attribute.js
-(typeof window === 'undefined' ? global : window).__9bbe6d2e49edcd9d91aac0c352f01bb0 = (function () {
+(typeof window === 'undefined' ? global : window).__dafc4b689867f9e1cab3f635b7ca06d5 = (function () {
   var module = {
     exports: {}
   };
@@ -786,9 +786,9 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilAccessor = __c1565a66d0c7d169b4ad86c2905cfafc;
+  var _utilAccessor = __67e3bc52527f64dd454cbf743becd3ce;
   
-  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  var _utilRealNode = __d18ac5c3473b294694afebfe4eb84766;
   
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
@@ -801,7 +801,7 @@
   return module.exports;
 }).call(this);
 // src/patch/remove-child.js
-(typeof window === 'undefined' ? global : window).__b306d2b34b0fbb399cbb13b5dc7dd96a = (function () {
+(typeof window === 'undefined' ? global : window).__cac9724529e3dd1fe6dd8d3590baaf01 = (function () {
   var module = {
     exports: {}
   };
@@ -815,7 +815,7 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  var _utilRealNode = __d18ac5c3473b294694afebfe4eb84766;
   
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
@@ -829,7 +829,7 @@
   return module.exports;
 }).call(this);
 // src/patch/replace-child.js
-(typeof window === 'undefined' ? global : window).__36e2ac600d355b297d4888bed8e557b1 = (function () {
+(typeof window === 'undefined' ? global : window).__7ad8f3427b223f6cc9ccad7cefa4b11b = (function () {
   var module = {
     exports: {}
   };
@@ -843,11 +843,11 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _vdomDom = __c672b2ab009d1b5af8a22c830a9d5ab6;
+  var _vdomDom = __945bdb727c61042f47a5a0d3e0e5b373;
   
   var _vdomDom2 = _interopRequireDefault(_vdomDom);
   
-  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  var _utilRealNode = __d18ac5c3473b294694afebfe4eb84766;
   
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
@@ -861,7 +861,7 @@
   return module.exports;
 }).call(this);
 // src/patch/set-attribute.js
-(typeof window === 'undefined' ? global : window).__3a0f75dfacfe0f1a25269b7ec38195ba = (function () {
+(typeof window === 'undefined' ? global : window).__b5a8920cbdd51a0ae50dab8b2c57986d = (function () {
   var module = {
     exports: {}
   };
@@ -875,9 +875,9 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilAccessor = __c1565a66d0c7d169b4ad86c2905cfafc;
+  var _utilAccessor = __67e3bc52527f64dd454cbf743becd3ce;
   
-  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  var _utilRealNode = __d18ac5c3473b294694afebfe4eb84766;
   
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
@@ -890,7 +890,7 @@
   return module.exports;
 }).call(this);
 // src/patch/set-event.js
-(typeof window === 'undefined' ? global : window).__9ec9c3aabc290894371d127fb1088492 = (function () {
+(typeof window === 'undefined' ? global : window).__d792960cb7c1fceba10ffac05d208c61 = (function () {
   var module = {
     exports: {}
   };
@@ -904,11 +904,11 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilEventMap = __179de9e26da518d139b95b2fb8e0e553;
+  var _utilEventMap = __490e51f7cea3c91781b500cc4a5d8e3c;
   
   var _utilEventMap2 = _interopRequireDefault(_utilEventMap);
   
-  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  var _utilRealNode = __d18ac5c3473b294694afebfe4eb84766;
   
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
@@ -935,7 +935,7 @@
   return module.exports;
 }).call(this);
 // src/patch/text-content.js
-(typeof window === 'undefined' ? global : window).__2ecd35541218022de8f33fe72ae13c79 = (function () {
+(typeof window === 'undefined' ? global : window).__95ec5c51245495ab504f016cbf8634bd = (function () {
   var module = {
     exports: {}
   };
@@ -949,7 +949,7 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilRealNode = __5867064010dd8ce98a03e6d693c0b368;
+  var _utilRealNode = __d18ac5c3473b294694afebfe4eb84766;
   
   var _utilRealNode2 = _interopRequireDefault(_utilRealNode);
   
@@ -962,7 +962,7 @@
   return module.exports;
 }).call(this);
 // src/patch.js
-(typeof window === 'undefined' ? global : window).__d49832510105705a679155ef252b6786 = (function () {
+(typeof window === 'undefined' ? global : window).__a261ed1a49da6c3f0b98b8a62875f939 = (function () {
   var module = {
     exports: {}
   };
@@ -978,35 +978,35 @@
   
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
   
-  var _types = __0ca807667308490ecea534df3b4369b8;
+  var _types = __306adb5c6fd9dc9c0701f97d61c88c29;
   
   var types = _interopRequireWildcard(_types);
   
-  var _patchAppendChild = __3ed6aa44bf4d6b9365bed745b80029cf;
+  var _patchAppendChild = __541cede3d2af09d7444130961c7580d8;
   
   var _patchAppendChild2 = _interopRequireDefault(_patchAppendChild);
   
-  var _patchRemoveAttribute = __9bbe6d2e49edcd9d91aac0c352f01bb0;
+  var _patchRemoveAttribute = __dafc4b689867f9e1cab3f635b7ca06d5;
   
   var _patchRemoveAttribute2 = _interopRequireDefault(_patchRemoveAttribute);
   
-  var _patchRemoveChild = __b306d2b34b0fbb399cbb13b5dc7dd96a;
+  var _patchRemoveChild = __cac9724529e3dd1fe6dd8d3590baaf01;
   
   var _patchRemoveChild2 = _interopRequireDefault(_patchRemoveChild);
   
-  var _patchReplaceChild = __36e2ac600d355b297d4888bed8e557b1;
+  var _patchReplaceChild = __7ad8f3427b223f6cc9ccad7cefa4b11b;
   
   var _patchReplaceChild2 = _interopRequireDefault(_patchReplaceChild);
   
-  var _patchSetAttribute = __3a0f75dfacfe0f1a25269b7ec38195ba;
+  var _patchSetAttribute = __b5a8920cbdd51a0ae50dab8b2c57986d;
   
   var _patchSetAttribute2 = _interopRequireDefault(_patchSetAttribute);
   
-  var _patchSetEvent = __9ec9c3aabc290894371d127fb1088492;
+  var _patchSetEvent = __d792960cb7c1fceba10ffac05d208c61;
   
   var _patchSetEvent2 = _interopRequireDefault(_patchSetEvent);
   
-  var _patchTextContent = __2ecd35541218022de8f33fe72ae13c79;
+  var _patchTextContent = __95ec5c51245495ab504f016cbf8634bd;
   
   var _patchTextContent2 = _interopRequireDefault(_patchTextContent);
   
@@ -1032,7 +1032,7 @@
   return module.exports;
 }).call(this);
 // src/merge.js
-(typeof window === 'undefined' ? global : window).__397f1a21725eb3fd4fbf51ee69fe1006 = (function () {
+(typeof window === 'undefined' ? global : window).__2e9135a2ef2b350ee8af5b3e08ec84b7 = (function () {
   var module = {
     exports: {}
   };
@@ -1046,11 +1046,11 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _diff = __22dce1b31df73fb8f06bda10d9498f07;
+  var _diff = __bc43ec47db3e25bfd4fae86b6294f1ff;
   
   var _diff2 = _interopRequireDefault(_diff);
   
-  var _patch = __d49832510105705a679155ef252b6786;
+  var _patch = __a261ed1a49da6c3f0b98b8a62875f939;
   
   var _patch2 = _interopRequireDefault(_patch);
   
@@ -1065,7 +1065,7 @@
   return module.exports;
 }).call(this);
 // src/vdom/text.js
-(typeof window === 'undefined' ? global : window).__a6dacf85b92d2d194c29d40bfdfc8927 = (function () {
+(typeof window === 'undefined' ? global : window).__3fe370f8eb8648250c674292a235d325 = (function () {
   var module = {
     exports: {}
   };
@@ -1090,7 +1090,7 @@
   return module.exports;
 }).call(this);
 // src/vdom/element.js
-(typeof window === 'undefined' ? global : window).__90cd00536bcb3b42d1659021f5337f5f = (function () {
+(typeof window === 'undefined' ? global : window).__e55e1024ac264e83b0b8ddc06e546322 = (function () {
   var module = {
     exports: {}
   };
@@ -1104,9 +1104,9 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilAccessor = __c1565a66d0c7d169b4ad86c2905cfafc;
+  var _utilAccessor = __67e3bc52527f64dd454cbf743becd3ce;
   
-  var _text = __a6dacf85b92d2d194c29d40bfdfc8927;
+  var _text = __3fe370f8eb8648250c674292a235d325;
   
   var _text2 = _interopRequireDefault(_text);
   
@@ -1172,7 +1172,7 @@
   return module.exports;
 }).call(this);
 // src/vdom/mount.js
-(typeof window === 'undefined' ? global : window).__64984ff90aff8eb27308803984d99dfd = (function () {
+(typeof window === 'undefined' ? global : window).__7217705187e312511385208c2d01bd13 = (function () {
   var module = {
     exports: {}
   };
@@ -1186,7 +1186,7 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _dom = __c672b2ab009d1b5af8a22c830a9d5ab6;
+  var _dom = __945bdb727c61042f47a5a0d3e0e5b373;
   
   var _dom2 = _interopRequireDefault(_dom);
   
@@ -1207,7 +1207,7 @@
   return module.exports;
 }).call(this);
 // src/render.js
-(typeof window === 'undefined' ? global : window).__7716f1488710dcad35ac89f2ee13769f = (function () {
+(typeof window === 'undefined' ? global : window).__8e4981978325bbbace4c93eaed2f3553 = (function () {
   var module = {
     exports: {}
   };
@@ -1221,19 +1221,19 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilWeakMap = __c277de686f7db61e7ee805b0b6bc00f8;
+  var _utilWeakMap = __ce023ebacc34c07d605e08cb00be0fb8;
   
   var _utilWeakMap2 = _interopRequireDefault(_utilWeakMap);
   
-  var _vdomElement = __90cd00536bcb3b42d1659021f5337f5f;
+  var _vdomElement = __e55e1024ac264e83b0b8ddc06e546322;
   
   var _vdomElement2 = _interopRequireDefault(_vdomElement);
   
-  var _merge = __397f1a21725eb3fd4fbf51ee69fe1006;
+  var _merge = __2e9135a2ef2b350ee8af5b3e08ec84b7;
   
   var _merge2 = _interopRequireDefault(_merge);
   
-  var _vdomMount = __64984ff90aff8eb27308803984d99dfd;
+  var _vdomMount = __7217705187e312511385208c2d01bd13;
   
   var _vdomMount2 = _interopRequireDefault(_vdomMount);
   
@@ -1271,7 +1271,7 @@
   return module.exports;
 }).call(this);
 // src/vdom/index.js
-(typeof window === 'undefined' ? global : window).__1642ccd4766a5b54382caa2ba439f592 = (function () {
+(typeof window === 'undefined' ? global : window).__574c147f21d8725abb5385f6059045f0 = (function () {
   var module = {
     exports: {}
   };
@@ -1285,19 +1285,19 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _dom = __c672b2ab009d1b5af8a22c830a9d5ab6;
+  var _dom = __945bdb727c61042f47a5a0d3e0e5b373;
   
   var _dom2 = _interopRequireDefault(_dom);
   
-  var _element = __90cd00536bcb3b42d1659021f5337f5f;
+  var _element = __e55e1024ac264e83b0b8ddc06e546322;
   
   var _element2 = _interopRequireDefault(_element);
   
-  var _mount = __64984ff90aff8eb27308803984d99dfd;
+  var _mount = __7217705187e312511385208c2d01bd13;
   
   var _mount2 = _interopRequireDefault(_mount);
   
-  var _text = __a6dacf85b92d2d194c29d40bfdfc8927;
+  var _text = __3fe370f8eb8648250c674292a235d325;
   
   var _text2 = _interopRequireDefault(_text);
   
@@ -1312,7 +1312,7 @@
   return module.exports;
 }).call(this);
 // src/index.js
-(typeof window === 'undefined' ? global : window).__d0534c9e7312e01df51511bab04ed9e4 = (function () {
+(typeof window === 'undefined' ? global : window).__18793bf9f3a784e4820048b2556b99d3 = (function () {
   var module = {
     exports: {}
   };
@@ -1326,27 +1326,27 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _diff = __22dce1b31df73fb8f06bda10d9498f07;
+  var _diff = __bc43ec47db3e25bfd4fae86b6294f1ff;
   
   var _diff2 = _interopRequireDefault(_diff);
   
-  var _merge = __397f1a21725eb3fd4fbf51ee69fe1006;
+  var _merge = __2e9135a2ef2b350ee8af5b3e08ec84b7;
   
   var _merge2 = _interopRequireDefault(_merge);
   
-  var _patch = __d49832510105705a679155ef252b6786;
+  var _patch = __a261ed1a49da6c3f0b98b8a62875f939;
   
   var _patch2 = _interopRequireDefault(_patch);
   
-  var _render = __7716f1488710dcad35ac89f2ee13769f;
+  var _render = __8e4981978325bbbace4c93eaed2f3553;
   
   var _render2 = _interopRequireDefault(_render);
   
-  var _types = __0ca807667308490ecea534df3b4369b8;
+  var _types = __306adb5c6fd9dc9c0701f97d61c88c29;
   
   var _types2 = _interopRequireDefault(_types);
   
-  var _vdom = __1642ccd4766a5b54382caa2ba439f592;
+  var _vdom = __574c147f21d8725abb5385f6059045f0;
   
   var _vdom2 = _interopRequireDefault(_vdom);
   
@@ -1363,7 +1363,7 @@
   return module.exports;
 }).call(this);
 // src/global.js
-(typeof window === 'undefined' ? global : window).__a072583ef3bdddb0fc56ec2a2194ea95 = (function () {
+(typeof window === 'undefined' ? global : window).__51ccd9a24e2190fb93f04af8ed8916fe = (function () {
   var module = {
     exports: {}
   };
@@ -1373,7 +1373,7 @@
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _index = __d0534c9e7312e01df51511bab04ed9e4;
+  var _index = __18793bf9f3a784e4820048b2556b99d3;
   
   var _index2 = _interopRequireDefault(_index);
   
