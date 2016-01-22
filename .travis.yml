@@ -1,0 +1,16 @@
+sudo: false
+language: node_js
+node_js:
+- stable
+before_script:
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- npm install
+script:
+- npm run lint
+- if [ "${TRAVIS_SECURE_ENV_VARS}" = "true" ]; then npm test -- --saucelabs; else npm test -- --browsers Firefox; fi
+env:
+  global:
+  - SAUCE_TESTNAME="SkateJS - dom-diff"
+  - SAUCE_USERNAME=skatejs-dom-diff
+  - secure: V9HMHadJEu18wWMNQgkXEUP9RhRaFc8r2gehb3NwYREntlu14rLCVRA9P5LgHJbEKe+4icQP4vW8A/cJZL7HCWuDKnr9D+BH2/f2DO8KyMvGAdQjzm6+eOUU+B9ErGcVrloB94BGF8oTD+dUtP4Jwu1E/8jvqrcFTnxOjnhGo/sv+/GBxCS/RX25U4ysVtCrfT0Fsu8AP9ku5/FqHJxjBtHDz2nkgxT4rEnJQJ/V0o0uU+nKqNyn4fgFuup0E+yDu30PvCVo9tWWipvGlwOdxqyZpkivMFCGoai/XE06OiZRYxcFdInZuXLIUpazeXc0GWYlpXMU7aZkIVp9sLHoMGs9pn4sHSBQRPFqi9nWZiJDcJRpIBaLv9OAFQWJJyzZjqDxbvPjPhmtrUK3ECir5U5a++5pQKQz1WGUj5eLFQEhZd6bb5uJzgwAuJZ/NmJ7cg+XDqvprSMZX2tUw0dTkwc0q4ug5bk/UN+Br5aQtUerj/7A2uw5VRPIdVo5qncg8774UkIuSzA1mtaAMmI2AZI7P+ugFYjv93WEjhoschxCtbAOCcvGyDQzO/7A7orPm2ZdIUx1b/Y9TABXkI8NCUDAoxqPDLYZrPGJw6YliOVysrGKwpig4aEdJC9tl9uhWr7C7jN+8TTVw+cOt8eTnvfrjO5iAHLPPAz3M2NFA14=

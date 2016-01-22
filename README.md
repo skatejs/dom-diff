@@ -2,6 +2,8 @@
 
 Skate's DOM Diff is a library can diff and patch both real and virtual DOMs trees.
 
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/skatejs-dom-diff.svg)](https://saucelabs.com/u/skatejs-dom-diff)
+
 ## Installing
 
 ```sh
