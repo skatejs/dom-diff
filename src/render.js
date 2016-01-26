@@ -15,7 +15,7 @@ export default function (render) {
     }
 
     // Create a new element to house the new tree since we diff / mount fragments.
-    const newTree = createElement('div', null, render(elem, { createElement }));
+    const newTree = createElement('div', null, render(elem));
     const oldTree = oldTreeMap.get(elem);
 
     if (oldTree) {
