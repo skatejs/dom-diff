@@ -3,6 +3,7 @@
   "version": "0.3.0",
   "description": "Library for efficiently diffing and patching DOM fragments.",
   "main": "lib/index.js",
+  "jsnext:main": "src/index.js",
   "directories": {
     "doc": "docs",
     "test": "test"
