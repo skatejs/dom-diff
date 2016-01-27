@@ -18,5 +18,13 @@
   "plugins": [
     "react"
   ],
-  "extends": "eslint:recommended"
+  "extends": "eslint:recommended",
+  "globals": {
+    "afterEach": true,
+    "assert": true,
+    "beforeEach": true,
+    "describe": true,
+    "expect": true,
+    "it": true
+  }
 }
