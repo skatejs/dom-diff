@@ -8,20 +8,18 @@ function createElement (...args) {
 }
 
 describe('vdom/element', function () {
-  const create = sd.vdom.element;
-
   it('should render a built-in element', function () {
-    const el = create('div');
+    const el = vdom('div');
     expect(el.tagName).to.equal('DIV');
   });
 
   it('should render a custom element', function () {
-    const el = create('x-div');
+    const el = vdom('x-div');
     expect(el.tagName).to.equal('X-DIV');
   });
 
   it('should set attributes', function () {
-    const el = create('div', { attr1: undefined, attr2: null, attr3: false, attr4: 0, attr5: '' });
+    const el = vdom('div', { attr1: undefined, attr2: null, attr3: false, attr4: 0, attr5: '' });
     expect(el.attributes.attr1.name).to.equal('attr1');
     expect(el.attributes.attr2.name).to.equal('attr2');
     expect(el.attributes.attr3.name).to.equal('attr3');
@@ -35,8 +33,39 @@ describe('vdom/element', function () {
   });
 
   it('should bind events', function () {
-    const el = create('div', { onclick: function(){} });
+    const el = vdom('div', { onclick: function(){} });
     expect(el.events.click).to.be.a('function');
+  });
+
+  it('should take children as the second and third arguments', function () {
+    const el1 = vdom('div', 'text-1-1', 'text-1-2');
+    const el2 = vdom('div', vdom('span-2-1'), vdom('span-2-2'));
+    const el3 = vdom('div', ['text-3-1', vdom('span-3-1')], ['text-3-2', vdom('span-3-2')]);
+    const el4 = vdom('div', [['text-4-1'], [vdom('span-4-1')]], [['text-4-2'], [vdom('span-4-2')]]);
+
+    expect(el1.childNodes[0].textContent).to.equal('text-1-1');
+    expect(el1.childNodes[1].textContent).to.equal('text-1-2');
+
+    expect(el2.childNodes[0].tagName).to.equal('SPAN-2-1');
+    expect(el2.childNodes[1].tagName).to.equal('SPAN-2-2');
+
+    expect(el3.childNodes[0].textContent).to.equal('text-3-1');
+    expect(el3.childNodes[1].tagName).to.equal('SPAN-3-1');
+    expect(el3.childNodes[2].textContent).to.equal('text-3-2');
+    expect(el3.childNodes[3].tagName).to.equal('SPAN-3-2');
+
+    expect(el4.childNodes[0].textContent).to.equal('text-4-1');
+    expect(el4.childNodes[1].tagName).to.equal('SPAN-4-1');
+    expect(el4.childNodes[2].textContent).to.equal('text-4-2');
+    expect(el4.childNodes[3].tagName).to.equal('SPAN-4-2');
+  });
+
+  it('should take style as an object', function () {
+
+  });
+
+  it('should export factories for standard HTML5 elements', function () {
+
   });
 });
 

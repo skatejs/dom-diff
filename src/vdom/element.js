@@ -40,13 +40,18 @@ function ensureTagName (name) {
   return (typeof name === 'function' ? name.id || name.name : name).toUpperCase();
 }
 
+function isChildren (arg) {
+  return arg && (typeof arg === 'string' || Array.isArray(arg) || typeof arg.nodeType === 'number');
+}
+
 export default function (name, attrs = {}, ...chren) {
-  const data = separateData(attrs);
+  const isAttrsNode = isChildren(attrs);
+  const data = separateData(isAttrsNode ? {} : attrs);
   const node = data.node;
   node.nodeType = 1;
   node.tagName = ensureTagName(name);
   node.attributes = data.attrs;
   node.events = data.events;
-  node.childNodes = ensureNodes(chren);
+  node.childNodes = ensureNodes(isAttrsNode ? [attrs].concat(chren) : chren);
   return node;
 }
