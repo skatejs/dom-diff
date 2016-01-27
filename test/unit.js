@@ -1,6 +1,7 @@
 import 'custom-event-polyfill';
 import * as types from '../src/types';
 import sd from '../src/index';
+import vdom from '../src/vdom/element';
 
 function createElement (...args) {
   return sd.vdom.dom(sd.vdom.element.apply(null, args));
