@@ -630,7 +630,7 @@ var types = Object.freeze({
     text: createTextNode
   };
 
-  var version = '0.3.0';
+  var version = '0.3.1';
 
   var main = {
     diff: diff,
