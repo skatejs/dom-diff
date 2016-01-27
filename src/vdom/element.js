@@ -1,6 +1,12 @@
 import { mapAccessor } from '../util/accessor';
 import createTextNode from './text';
 
+function objectToStyle (obj) {
+  return Object.keys(obj).map(function (key) {
+    return `${key}: ${obj[key]};`;
+  }).join(' ');
+}
+
 function separateData (obj) {
   const attrs = {};
   const events = {};
@@ -8,11 +14,14 @@ function separateData (obj) {
   let attrIdx = 0;
 
   for (let name in obj) {
-    const value = obj[name];
+    let value = obj[name];
 
     if (name.indexOf('on') === 0) {
       events[name.substring(2)] = value;
     } else {
+      if (name === 'style' && typeof value === 'object') {
+        value = objectToStyle(value);
+      }
       attrs[attrIdx++] = attrs[name] = { name, value };
       mapAccessor(node, name, value);
     }

@@ -60,8 +60,22 @@ describe('vdom/element', function () {
     expect(el4.childNodes[3].tagName).to.equal('SPAN-4-2');
   });
 
-  it('should take style as an object', function () {
+  it('should take class as an array of strings', function () {
 
+  });
+
+  it('should take class as an object of key (string) value (boolean) pairs', function () {
+
+  });
+
+  it('should take style as an object', function () {
+    const el = vdom('div', {
+      style: {
+        background: 'something',
+        display: 'none'
+      }
+    });
+    expect(el.style.cssText).to.equal('background: something; display: none;');
   });
 
   it('should export factories for standard HTML5 elements', function () {
