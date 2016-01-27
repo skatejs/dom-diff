@@ -88,7 +88,9 @@ describe('vdom/element', function () {
   });
 
   it('should export factories for standard HTML5 elements', function () {
-
+    expect(vdom.a).to.be.a('function');
+    expect(vdom.wbr).to.be.a('function');
+    expect(vdom.div().tagName).to.equal('DIV');
   });
 });
 
