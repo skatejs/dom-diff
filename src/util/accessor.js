@@ -1,3 +1,27 @@
+function classToString (obj) {
+  if (typeof obj === 'string') {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.join(' ');
+  }
+
+  return Object.keys(obj).filter(function (key) {
+    return obj[key] ? key : false;
+  }).join(' ');
+}
+
+function styleToString (obj) {
+  if (typeof obj === 'string') {
+    return obj;
+  }
+
+  return Object.keys(obj).map(function (key) {
+    return `${key}: ${obj[key]};`;
+  }).join(' ');
+}
+
 export function getAccessor (node, name) {
   if (name === 'class') {
     return node.className;
@@ -17,9 +41,9 @@ export function getAccessor (node, name) {
 
 export function mapAccessor (node, name, value) {
   if (name === 'class') {
-    node.className = value;
+    node.className = classToString(value);
   } else if (name === 'style') {
-    node.style = { cssText: value };
+    node.style = { cssText: styleToString(value) };
   }
 }
 

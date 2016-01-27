@@ -61,11 +61,20 @@ describe('vdom/element', function () {
   });
 
   it('should take class as an array of strings', function () {
-
+    const el = vdom('div', {
+      class: ['class1', 'class2']
+    });
+    expect(el.className).to.equal('class1 class2');
   });
 
   it('should take class as an object of key (string) value (boolean) pairs', function () {
-
+    const el = vdom('div', {
+      class: {
+        class1: false,
+        class2: true
+      }
+    });
+    expect(el.className).to.equal('class2');
   });
 
   it('should take style as an object', function () {
