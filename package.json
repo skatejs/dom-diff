@@ -13,7 +13,7 @@
     "eslint": "1.10.3",
     "eslint-plugin-react": "^3.11.3",
     "gulp": "gulpjs/gulp#3311fca",
-    "skatejs-build": "skatejs/build#654f33e"
+    "skatejs-build": "skatejs/build#b99a9e0"
   },
   "scripts": {
     "build": "gulp build",
