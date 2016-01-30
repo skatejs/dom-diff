@@ -24,11 +24,14 @@ function separateData (obj) {
 
 function ensureNodes (arr) {
   let out = [];
+  if (!Array.isArray(arr)) {
+    arr = [arr];
+  }
   arr.filter(Boolean).forEach(function (item) {
     if (Array.isArray(item)) {
       out = out.concat(ensureNodes(item));
     } else if (typeof item === 'object') {
-      out.push(item);
+      out.push(translateFromReact(item));
     } else {
       out.push(createTextNode(item));
     }
@@ -41,7 +44,26 @@ function ensureTagName (name) {
 }
 
 function isChildren (arg) {
-  return arg && (typeof arg === 'string' || Array.isArray(arg) || typeof arg.nodeType === 'number');
+  return arg && (typeof arg === 'string' || Array.isArray(arg) || typeof arg.nodeType === 'number' || isReactNode(arg));
+}
+
+function isReactNode (item) {
+  return item && item.type && item.props;
+}
+
+function translateFromReact (item) {
+  if (isReactNode(item)) {
+    const props = item.props;
+    const chren = ensureNodes(props.children);
+    delete props.children;
+    return {
+      nodeType: 1,
+      tagName: item.type,
+      attributes: props,
+      childNodes: chren
+    };
+  }
+  return item;
 }
 
 export default function element (name, attrs = {}, ...chren) {
@@ -55,6 +77,9 @@ export default function element (name, attrs = {}, ...chren) {
   node.childNodes = ensureNodes(isAttrsNode ? [attrs].concat(chren) : chren);
   return node;
 }
+
+// Add an array factory that returns an array of virtual nodes.
+element.array = ensureNodes;
 
 // Generate built-in factories.
 [
