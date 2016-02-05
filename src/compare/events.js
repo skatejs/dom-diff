@@ -6,11 +6,11 @@ export default function (src, dst) {
   const srcEvents = eventMap(src);
   const instructions = [];
 
-  // Remove any source events that aren't in the source before seeing if we
-  // need to add any from the destination.
+  // Remove any source events that aren't in the destination before seeing if
+  // we need to add any from the destination.
   if (srcEvents) {
     for (let name in srcEvents) {
-      if (dstEvents[name] !== srcEvents[name]) {
+      if (dstEvents && dstEvents[name] !== srcEvents[name]) {
         instructions.push({
           data: { name, value: undefined },
           destination: dst,
