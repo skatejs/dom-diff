@@ -450,7 +450,11 @@ var types = Object.freeze({
 
   function removeChild (src, dst) {
     var realDst = realNode(dst);
-    realDst.parentNode.removeChild(realDst);
+    var realSrc = realNode(src);
+
+    // We don't do parentNode.removeChild because parentNode may report
+    // incorrectly in some prollyfills since it's impossible (?) to spoof.
+    realSrc.removeChild(realDst);
   }
 
   function replaceChild (src, dst) {
