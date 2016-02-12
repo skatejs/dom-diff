@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "custom-event-polyfill": "^0.2.1",
-    "eslint": "1.10.3",
+    "eslint": "2.0.0",
     "eslint-plugin-react": "^3.11.3",
     "gulp": "gulpjs/gulp#3311fca",
     "skatejs-build": "skatejs/build#b99a9e0"
