@@ -11,7 +11,7 @@
   "devDependencies": {
     "custom-event-polyfill": "^0.2.1",
     "eslint": "1.10.3",
-    "eslint-plugin-react": "^3.11.3",
+    "eslint-plugin-react": "^6.2.2",
     "gulp": "gulpjs/gulp#3311fca",
     "skatejs-build": "skatejs/build#1242c84"
   },
