@@ -9,7 +9,7 @@
     "test": "test"
   },
   "devDependencies": {
-    "custom-event-polyfill": "^0.2.1",
+    "custom-event-polyfill": "^0.3.0",
     "eslint": "1.10.3",
     "eslint-plugin-react": "^6.4.1",
     "gulp": "gulpjs/gulp#3311fca",
