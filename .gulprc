@@ -1,8 +1,0 @@
-{
-  "babel": {
-    "jsx": {
-      "pragma": "vdom"
-    }
-  },
-  "base": "node_modules/skatejs-build/task"
-}

@@ -10,7 +10,7 @@ export default function (render) {
   return function (elem) {
     elem = elem instanceof Node ? elem : this;
 
-    if (!elem instanceof Node) {
+    if (!(elem instanceof Node)) {
       throw new Error('No node provided to diff renderer as either the first argument or the context.');
     }
 

@@ -1,7 +1,11 @@
+/* eslint-env jasmine, mocha */
+
 import 'custom-event-polyfill';
 import * as types from '../src/types';
 import sd from '../src/index';
 import vdom from '../src/vdom/element';
+
+const { assert, CustomEvent } = window;
 
 function createElement (...args) {
   return sd.vdom.dom(sd.vdom.element.apply(null, args));
@@ -33,7 +37,7 @@ describe('vdom/element', function () {
   });
 
   it('should bind events', function () {
-    const el = vdom('div', { onclick: function(){} });
+    const el = vdom('div', { onclick: function () {} });
     expect(el.events.click).to.be.a('function');
   });
 
@@ -122,7 +126,7 @@ describe('jsx', function () {
   });
 
   it('should bind events', function () {
-    const el = <div onclick={function(){}} />;
+    const el = <div onclick={function () {}} />;
     expect(el.events.click).to.be.a('function');
   });
 });
@@ -357,7 +361,7 @@ describe('jsx', function () {
 });
 
 describe('events', function () {
-  const onclick = e => e.target.triggered = true;
+  const onclick = e => (e.target.triggered = true);
 
   it('should add listeners', function () {
     const src = createElement('div', null, createElement('button'));
@@ -379,7 +383,7 @@ describe('events', function () {
   });
 
   it('should replace different listeners', function () {
-    const noop = function(){};
+    const noop = function () {};
     const src = createElement('div', null, createElement('button'));
     const dst1 = sd.vdom.element('div', null, sd.vdom.element('button', { onclick }));
     const dst2 = sd.vdom.element('div', null, sd.vdom.element('button', { onclick: noop }));

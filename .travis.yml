@@ -1,14 +1,26 @@
 sudo: false
 language: node_js
-node_js:
-- stable
+node_js: stable
+notifications:
+  email: false
 before_script:
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
-- npm install
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+install:
+  - npm install -g yarn
+  - yarn install
 script:
-- npm run lint
-- if [ "${TRAVIS_SECURE_ENV_VARS}" = "true" ]; then npm test -- --saucelabs; else npm test -- --browsers Firefox; fi
+  - sk-bundle
+  - if [ "${TRAVIS_SECURE_ENV_VARS}" = "true" ]; then
+    npm test -- --all;
+    else
+    npm test;
+    fi
+after_success:
+  - sk-release
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
 env:
   global:
     - SAUCE_TESTNAME="skatejs-dom-diff"

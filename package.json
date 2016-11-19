@@ -10,17 +10,11 @@
   },
   "devDependencies": {
     "custom-event-polyfill": "^0.2.1",
-    "eslint": "3.10.1",
-    "eslint-plugin-react": "^6.7.0",
-    "gulp": "gulpjs/gulp#3311fca",
-    "skatejs-build": "skatejs/build#1242c84"
+    "cz-conventional-changelog": "^1.2.0"
   },
   "scripts": {
-    "build": "gulp build",
-    "lint": "gulp lint",
-    "perf": "gulp perf",
-    "test": "gulp test",
-    "test-watch": "gulp test-watch"
+    "build": "sk-build",
+    "test": "sk-tests"
   },
   "repository": {
     "type": "git",
@@ -37,6 +31,12 @@
   },
   "homepage": "https://github.com/skatejs/dom-diff#readme",
   "dependencies": {
-    "object-assign": "^4.0.1"
+    "object-assign": "^4.0.1",
+    "skatejs-build": "^12.1.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

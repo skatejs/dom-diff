@@ -4,8 +4,22 @@
   "main": "lib/index.js",
   "authors": [],
   "license": "MIT",
-  "keywords": ["dom","diff"],
+  "keywords": [
+    "dom",
+    "diff"
+  ],
   "homepage": "https://github.com/skatejs/dom-diff#readme",
-  "moduleType": [ "amd", "es6", "globals", "node" ],
-  "ignore": [ "**/.*", "node_modules", "bower_components", "test", "tests" ]
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }

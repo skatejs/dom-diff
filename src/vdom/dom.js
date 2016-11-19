@@ -2,6 +2,8 @@ import { setAccessor } from '../util/accessor';
 import eventMap from '../util/event-map';
 import realNodeMap from '../util/real-node-map';
 
+const { Node } = window;
+
 function createElement (el) {
   const realNode = document.createElement(el.tagName);
   const attributes = el.attributes;

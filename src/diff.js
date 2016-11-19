@@ -3,6 +3,8 @@ import compareNode from './compare/node';
 import realNode from './util/real-node';
 import realNodeMap from './util/real-node-map';
 
+const { Node } = window;
+
 export default function diff (opts = {}) {
   let src = opts.source;
   let dst = opts.destination;
