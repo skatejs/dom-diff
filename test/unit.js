@@ -157,6 +157,20 @@ describe('jsx', function () {
       assert.equal(instructions[0].source.tagName, 'SPAN', 'source tagName');
       assert.equal(instructions[0].type, types.REPLACE_CHILD, 'type');
     });
+
+    it('diffing root nodes (as opposed to only decendant trees)', () => {
+      const root = true;
+      const source = createElement('div');
+      const destination = element('div', { test: 'test' });
+      const instructions = sd.diff({ destination, root, source });
+
+      assert.equal(instructions.length, 1, 'should have instructions');
+      assert.equal(instructions[0].data.name, 'test');
+      assert.equal(instructions[0].data.value, 'test');
+      assert.equal(instructions[0].destination, destination);
+      assert.equal(instructions[0].source, source);
+      assert.equal(instructions[0].type, types.SET_ATTRIBUTE);
+    });
   });
 
   _describe('patch', function () {

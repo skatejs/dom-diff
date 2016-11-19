@@ -5,23 +5,42 @@ import realNodeMap from './util/real-node-map';
 
 const { Node } = window;
 
+function diffNode (source, destination) {
+  let nodeInstructions = compareNode(source, destination);
+
+  // If there are instructions (even an empty array) it means the node can be
+  // diffed and doesn't have to be replaced. If the instructions are falsy
+  // it means that the nodes are not similar (cannot be changed) and must be
+  // replaced instead.
+  if (nodeInstructions) {
+    return nodeInstructions.concat(diff({ source, destination }));
+  }
+
+  return [{
+    destination,
+    source,
+    type: types.REPLACE_CHILD
+  }];
+}
+
 export default function diff (opts = {}) {
-  let src = opts.source;
-  let dst = opts.destination;
-  let instructions = [];
+  const src = opts.source;
+  const dst = opts.destination;
 
   if (!src || !dst) {
     return [];
   }
 
-  let srcChs = src.childNodes;
-  let dstChs = dst.childNodes;
-  let srcChsLen = srcChs ? srcChs.length : 0;
-  let dstChsLen = dstChs ? dstChs.length : 0;
+  let instructions = opts.root ? diffNode(src, dst) : [];
+
+  const srcChs = src.childNodes;
+  const dstChs = dst.childNodes;
+  const srcChsLen = srcChs ? srcChs.length : 0;
+  const dstChsLen = dstChs ? dstChs.length : 0;
 
   for (let a = 0; a < dstChsLen; a++) {
-    let curSrc = srcChs[a];
-    let curDst = dstChs[a];
+    const curSrc = srcChs[a];
+    const curDst = dstChs[a];
 
     // If there is no matching destination node it means we need to remove the
     // current source node from the source.
@@ -41,24 +60,7 @@ export default function diff (opts = {}) {
       }
     }
 
-    let nodeInstructions = compareNode(curSrc, curDst);
-
-    // If there are instructions (even an empty array) it means the node can be
-    // diffed and doesn't have to be replaced. If the instructions are falsy
-    // it means that the nodes are not similar (cannot be changed) and must be
-    // replaced instead.
-    if (nodeInstructions) {
-      const newOpts = opts;
-      newOpts.destination = curDst;
-      newOpts.source = curSrc;
-      instructions = instructions.concat(nodeInstructions, diff(newOpts));
-    } else {
-      instructions.push({
-        destination: curDst,
-        source: curSrc,
-        type: types.REPLACE_CHILD
-      });
-    }
+    instructions = instructions.concat(diffNode(curSrc, curDst));
   }
 
   if (dstChsLen < srcChsLen) {
