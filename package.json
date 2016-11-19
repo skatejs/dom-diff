@@ -1,12 +1,12 @@
 {
   "name": "skatejs-dom-diff",
   "description": "Library for efficiently diffing and patching DOM fragments.",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "jsnext:main": "src/index.js",
-  "directories": {
-    "doc": "docs",
-    "test": "test"
-  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "devDependencies": {
     "custom-event-polyfill": "^0.2.1",
     "cz-conventional-changelog": "^1.2.0",
