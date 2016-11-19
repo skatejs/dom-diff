@@ -1,6 +1,5 @@
 {
   "name": "skatejs-dom-diff",
-  "version": "0.3.1",
   "description": "Library for efficiently diffing and patching DOM fragments.",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
@@ -10,15 +9,17 @@
   },
   "devDependencies": {
     "custom-event-polyfill": "^0.2.1",
-    "cz-conventional-changelog": "^1.2.0"
+    "cz-conventional-changelog": "^1.2.0",
+    "semantic-release": "^6.3.2"
   },
   "scripts": {
     "build": "sk-build",
-    "test": "sk-tests"
+    "test": "sk-tests",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/skatejs/dom-diff.git"
+    "url": "https://github.com/skatejs/dom-diff.git"
   },
   "keywords": [
     "dom",
