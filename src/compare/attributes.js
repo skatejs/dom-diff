@@ -2,11 +2,11 @@ import * as types from '../types';
 import { getAccessor } from '../util/accessor';
 
 export default function (src, dst) {
-  let srcAttrs = src.attributes;
-  let dstAttrs = dst.attributes;
-  let srcAttrsLen = (srcAttrs || 0) && srcAttrs.length;
-  let dstAttrsLen = (dstAttrs || 0) && dstAttrs.length;
-  let instructions = [];
+  const srcAttrs = src.attributes;
+  const dstAttrs = dst.attributes;
+  const srcAttrsLen = (srcAttrs || 0) && srcAttrs.length;
+  const dstAttrsLen = (dstAttrs || 0) && dstAttrs.length;
+  const instructions = [];
 
   // Bail early if possible.
   if (!srcAttrsLen && !dstAttrsLen) {
