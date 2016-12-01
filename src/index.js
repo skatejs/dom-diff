@@ -4,7 +4,6 @@ import patch from './patch';
 import render from './render';
 import * as types from './types';
 import vdom from './vdom';
-import version from './version';
 
 export default {
   diff,
@@ -12,6 +11,5 @@ export default {
   patch,
   render,
   types,
-  vdom,
-  version
+  vdom
 };
