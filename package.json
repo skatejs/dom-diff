@@ -11,7 +11,8 @@
     "custom-event-polyfill": "^0.2.1",
     "cz-conventional-changelog": "^1.2.0",
     "semantic-release": "^6.3.2",
-    "skatejs-build": "^12.1.0"
+    "skatejs-build": "^12.1.0",
+    "worker-loader": "^0.7.1"
   },
   "scripts": {
     "build": "sk-build",

@@ -465,3 +465,22 @@ describe('render', function () {
     });
   });
 });
+
+describe('diff worker', function () {
+  it('should do work in a worker if opts.done is specified', done => {
+    const source = sd.vdom.element('div', null, 'text 1');
+    const destination = sd.vdom.element('div', null, 'text 2');
+    const realDom = sd.vdom.dom(source);
+
+    sd.diff({
+      destination,
+      source,
+      done (instructions) {
+        assert.ok(Array.isArray(instructions));
+        sd.patch(instructions);
+        assert.ok(realDom.textContent === 'text 2');
+        done();
+      }
+    });
+  });
+});

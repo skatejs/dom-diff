@@ -1,7 +1,8 @@
 import realNodeMap from './real-node-map';
 
-const { Node } = window;
+const isWindow = typeof window !== 'undefined';
+const { Node } = isWindow ? window : self;
 
 export default function (node) {
-  return node instanceof Node ? node : realNodeMap.get(node);
+  return isWindow && node instanceof Node ? node : realNodeMap.get(node.__id);
 }

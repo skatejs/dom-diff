@@ -56,6 +56,6 @@ export default function render (el) {
     return frag;
   }
   const realNode = el.tagName ? createElement(el) : createText(el);
-  realNodeMap.set(el, realNode);
+  realNodeMap.set(el.__id, realNode);
   return realNode;
 }

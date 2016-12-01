@@ -66,10 +66,12 @@ function translateFromReact (item) {
   return item;
 }
 
+let count = 0;
 export default function element (name, attrs = {}, ...chren) {
   const isAttrsNode = isChildren(attrs);
   const data = separateData(isAttrsNode ? {} : attrs);
   const node = data.node;
+  node.__id = ++count;
   node.nodeType = 1;
   node.tagName = ensureTagName(name);
   node.attributes = data.attrs;
