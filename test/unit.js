@@ -504,19 +504,15 @@ describe('worker', function () {
     const render = sd.render(function (root) {
       return sd.vdom.element('div', null, root.test);
     });
-    let wasSyncRendered = false;
 
     root.test = 'test 1';
     render(root, () => {
       assert.ok(root.textContent === 'test 1', 'not updated to test 1');
-      wasSyncRendered = true;
-    });
-
-    root.test = 'test 2';
-    render(root, () => {
-      assert.ok(wasSyncRendered, 'initial sync render callback');
-      assert.ok(root.textContent === 'test 2', 'not updated to test 2');
-      done();
+      root.test = 'test 2';
+      render(root, () => {
+        assert.ok(root.textContent === 'test 2', 'not updated to test 2');
+        done();
+      });
     });
   });
 });
