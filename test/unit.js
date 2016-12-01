@@ -466,8 +466,8 @@ describe('render', function () {
   });
 });
 
-describe('diff worker', function () {
-  it('should do work in a worker if opts.done is specified', done => {
+describe('worker', function () {
+  it('diff', done => {
     const source = sd.vdom.element('div', null, 'text 1');
     const destination = sd.vdom.element('div', null, 'text 2');
     const realDom = sd.vdom.dom(source);
@@ -481,6 +481,42 @@ describe('diff worker', function () {
         assert.ok(realDom.textContent === 'text 2');
         done();
       }
+    });
+  });
+
+  it('merge', done => {
+    const source = sd.vdom.element('div', null, 'test 1');
+    const destination = sd.vdom.element('div', null, 'test 2');
+    const realDom = sd.vdom.dom(source);
+
+    sd.merge({
+      destination,
+      source,
+      done () {
+        assert.ok(realDom.textContent === 'test 2');
+        done();
+      }
+    });
+  });
+
+  it('render', done => {
+    const root = document.createElement('div');
+    const render = sd.render(function (root) {
+      return sd.vdom.element('div', null, root.test);
+    });
+    let wasSyncRendered = false;
+
+    root.test = 'test 1';
+    render(root, () => {
+      assert.ok(root.textContent === 'test 1', 'not updated to test 1');
+      wasSyncRendered = true;
+    });
+
+    root.test = 'test 2';
+    render(root, () => {
+      assert.ok(wasSyncRendered, 'initial sync render callback');
+      assert.ok(root.textContent === 'test 2', 'not updated to test 2');
+      done();
     });
   });
 });

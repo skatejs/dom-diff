@@ -7,7 +7,7 @@ const { Node } = window;
 const oldTreeMap = new WeakMap();
 
 export default function (render) {
-  return function (elem) {
+  return function (elem, done) {
     elem = elem instanceof Node ? elem : this;
 
     if (!(elem instanceof Node)) {
@@ -21,10 +21,14 @@ export default function (render) {
     if (oldTree) {
       merge({
         destination: newTree,
-        source: oldTree
+        source: oldTree,
+        done
       });
     } else {
       mount(elem, newTree.childNodes);
+      if (typeof done === 'function') {
+        done();
+      }
     }
 
     oldTreeMap.set(elem, newTree);
