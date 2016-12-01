@@ -239,3 +239,48 @@ When diffing and patching, the behaviour is much the same. If you're diffing rea
 When patching event listeners, the previous one will be completely unbound and the new one will be bound. This prevents handlers from stacking.
 
 When patching properties, they're simply just set if the source and destination values aren't the same.
+
+### Web workers
+
+You can tell the differ to do its work in a web worker simply by passing a `done` callback option to any of the three major entry functions (`diff()`, `merge()`, `render()`).
+
+#### `diff()`
+
+In the case of `diff()`, it's called once the diffing algorithm has finished in the worker and passed the `instructions`. The patch `instructions` are the only argument passed into the callback.
+
+```js
+function done (instructions) {
+  patch(instructions);
+}
+diff({ source, destination, done });
+```
+
+#### `merge()`
+
+For `done()`, it's passed in the same exact way. The only difference is that it's called after the patch is performed but it's still passed the instructions that were performed by the patch algorithm.
+
+```js
+function done (instructions) {
+  // The DOM has been updated, do what you want here.
+}
+merge({ source, destination, done });
+```
+
+#### `render()`
+
+And for `render()`, it is the same as the `merge()` function. So once the vDOM is rendered and DOM is patched, `done()` is called with the instructions that were performed.
+
+```js
+function done (instructions) {
+  // Renering and patching is done...
+}
+const root = document.createElement('div');
+const doRender = render(function (root) {
+  return sd.vdom.element('div', null, root.test);
+});
+
+div.test = 'initial text';
+doRender(div, done);
+div.test = 'updated text';
+doRender(div, done);
+```
