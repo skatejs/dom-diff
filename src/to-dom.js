@@ -1,0 +1,46 @@
+import eventMap from './util/event-map';
+import realNodeMap from './util/real-node-map';
+
+const { Node } = window;
+
+function createElement (node) {
+  const { attributes, childNodes, events } = node;
+  const realNode = document.createElement(node.tagName);
+  const eventHandlers = eventMap(realNode);
+
+  if (attributes) {
+    for (let name in attributes) {
+      realNode.setAttribute(name, attributes[name]);
+    }
+  }
+
+  if (events) {
+    for (let name in events) {
+      realNode.addEventListener(name, eventHandlers[name] = events[name]);
+    }
+  }
+
+  if (childNodes) {
+    childNodes.forEach(ch => realNode.appendChild(render(ch)));
+  }
+
+  return realNode;
+}
+
+function createText (el) {
+  return document.createTextNode(el.textContent);
+}
+
+export default function render (node) {
+  if (node instanceof Node) {
+    return node;
+  }
+  if (Array.isArray(node)) {
+    const frag = document.createDocumentFragment();
+    node.forEach(item => frag.appendChild(render(item)));
+    return frag;
+  }
+  const realNode = node.tagName ? createElement(node) : createText(node);
+  realNodeMap.set(node.__id, realNode);
+  return realNode;
+}

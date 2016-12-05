@@ -1,7 +1,7 @@
-import * as types from './types';
-import compareNode from './compare/node';
-import realNode from './util/real-node';
-import realNodeMap from './util/real-node-map';
+import * as types from '../types';
+import compareNode from '../compare/node';
+import realNode from '../util/real-node';
+import realNodeMap from '../util/real-node-map';
 
 function diffNode (source, destination) {
   let nodeInstructions = compareNode(source, destination);

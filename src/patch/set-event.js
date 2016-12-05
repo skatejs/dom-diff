@@ -3,6 +3,12 @@ import realNode from '../util/real-node';
 
 export default function (src, dst, data) {
   const realSrc = realNode(src);
+
+  if (!realSrc) {
+    src.events[data.name] = data.value;
+    return;
+  }
+
   const eventHandlers = eventMap(realSrc);
   const name = data.name;
   const prevHandler = eventHandlers[name];

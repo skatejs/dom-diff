@@ -1,4 +1,4 @@
-import diff from './diff-main';
+import diff from './main';
 
 self.addEventListener('message', e => {
   const instructions = diff(e.data);

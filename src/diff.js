@@ -1,5 +1,5 @@
-import diffMain from './diff-main';
-import DiffWorker from 'worker-loader?name=./dist/[hash].[ext]!./diff-worker';
+import diffMain from './diff/main';
+import DiffWorker from 'worker-loader?name=./dist/[hash].[ext]!./diff/worker';
 
 const { Node } = window;
 

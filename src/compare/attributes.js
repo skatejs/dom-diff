@@ -1,59 +1,51 @@
 import * as types from '../types';
-import { getAccessor } from '../util/accessor';
+
+function formatAttributes (attrs) {
+  if (typeof attrs === 'object' && typeof attrs.length === 'undefined') {
+    return attrs;
+  }
+  const obj = {};
+  const len = attrs.length;
+  for (let a = 0; a < len; a++) {
+    const att = attrs[a];
+    obj[att.name] = att.value;
+  }
+  return obj;
+}
 
 export default function (src, dst) {
-  const srcAttrs = src.attributes;
-  const dstAttrs = dst.attributes;
-  const srcAttrsLen = (srcAttrs || 0) && srcAttrs.length;
-  const dstAttrsLen = (dstAttrs || 0) && dstAttrs.length;
+  const srcAttrs = formatAttributes(src.attributes);
+  const dstAttrs = formatAttributes(dst.attributes);
   const instructions = [];
 
-  // Bail early if possible.
-  if (!srcAttrsLen && !dstAttrsLen) {
-    return instructions;
-  }
-
   // Merge attributes that exist in source with destination's.
-  for (let a = 0; a < srcAttrsLen; a++) {
-    const srcAttr = srcAttrs[a];
-    const srcAttrName = srcAttr.name;
-    const srcAttrValue = getAccessor(src, srcAttrName);
-    const dstAttr = dstAttrs[srcAttrName];
-    const dstAttrValue = getAccessor(dst, srcAttrName);
-
-    if (!dstAttr) {
+  for (let name in srcAttrs) {
+    if (name in dstAttrs) {
       instructions.push({
-        data: { name: srcAttrName },
-        destination: dst,
-        source: src,
-        type: types.REMOVE_ATTRIBUTE
-      });
-    } else if (srcAttrValue !== dstAttrValue) {
-      instructions.push({
-        data: { name: srcAttrName, value: dstAttrValue },
+        data: { name, value: dstAttrs[name] },
         destination: dst,
         source: src,
         type: types.SET_ATTRIBUTE
+      });
+    } else {
+      instructions.push({
+        data: { name },
+        destination: dst,
+        source: src,
+        type: types.REMOVE_ATTRIBUTE
       });
     }
   }
 
   // We only need to worry about setting attributes that don't already exist
   // in the source.
-  for (let a = 0; a < dstAttrsLen; a++) {
-    const dstAttr = dstAttrs[a];
-    const dstAttrName = dstAttr.name;
-    const dstAttrValue = getAccessor(dst, dstAttrName);
-    const srcAttr = srcAttrs[dstAttrName];
-
-    if (!srcAttr) {
-      instructions.push({
-        data: { name: dstAttrName, value: dstAttrValue },
-        destination: dst,
-        source: src,
-        type: types.SET_ATTRIBUTE
-      });
-    }
+  for (let name in dstAttrs) {
+    instructions.push({
+      data: { name, value: dstAttrs[name] },
+      destination: dst,
+      source: src,
+      type: types.SET_ATTRIBUTE
+    });
   }
 
   return instructions;

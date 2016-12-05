@@ -1,4 +1,4 @@
-import dom from './dom';
+import toDom from './to-dom';
 
 function removeChildNodes (elem) {
   while (elem.firstChild) {
@@ -9,5 +9,5 @@ function removeChildNodes (elem) {
 
 export default function (elem, tree) {
   removeChildNodes(elem);
-  elem.appendChild(dom(tree));
+  elem.appendChild(toDom(tree));
 }
