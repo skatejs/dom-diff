@@ -1,5 +1,5 @@
-import realNode from '../util/real-node';
+import nodeMap from '../util/node-map';
 
 export default function (src, dst) {
-  (realNode(src) || src).textContent = dst.textContent;
+  nodeMap[src.__id].textContent = dst.textContent;
 }

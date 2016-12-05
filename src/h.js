@@ -56,14 +56,12 @@ export default function (name, props, ...chren) {
 
   if (isPropsNode) {
     node.attributes = {};
-    node.childNodes = [props].concat(chren);
     node.events = {};
     node.properties = {};
   } else {
     props = props || {};
     const { attributes, events } = props;
     node.attributes = attributes || {};
-    node.childNodes = chren;
     node.events = events || {};
     node.properties = props;
     delete props.attributes;

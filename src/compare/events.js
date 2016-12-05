@@ -1,18 +1,19 @@
 import * as types from '../types';
-import eventMap from '../util/event-map';
 
 export default function (src, dst) {
   const dstEvents = dst.events;
-  const srcEvents = eventMap(src);
+  const srcEvents = src.events;
   const instructions = [];
 
   // Remove any source events that aren't in the destination before seeing if
   // we need to add any from the destination.
   if (srcEvents) {
     for (let name in srcEvents) {
-      if (dstEvents && dstEvents[name] !== srcEvents[name]) {
+      const srcEvent = srcEvents[name];
+      const dstEvent = dstEvents[name];
+      if (!dstEvent || srcEvent !== dstEvent) {
         instructions.push({
-          data: { name, value: undefined },
+          data: { name },
           destination: dst,
           source: src,
           type: types.SET_EVENT
@@ -26,10 +27,11 @@ export default function (src, dst) {
   // instructions.
   if (dstEvents) {
     for (let name in dstEvents) {
-      const value = dstEvents[name];
-      if (srcEvents[name] !== value) {
+      const srcEvent = srcEvents[name];
+      const dstEvent = dstEvents[name];
+      if (srcEvent !== dstEvent) {
         instructions.push({
-          data: { name, value },
+          data: { name, value: dstEvent },
           destination: dst,
           source: src,
           type: types.SET_EVENT

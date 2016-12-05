@@ -1,7 +1,5 @@
 import * as types from '../types';
 import compareNode from '../compare/node';
-import realNode from '../util/real-node';
-import realNodeMap from '../util/real-node-map';
 
 function diffNode (source, destination) {
   let nodeInstructions = compareNode(source, destination);
@@ -29,7 +27,7 @@ export default function diff (opts) {
     return [];
   }
 
-  let instructions = opts.root ? diffNode(src, dst) : [];
+  let instructions = compareNode(src, dst);
 
   const srcChs = src.childNodes;
   const dstChs = dst.childNodes;
@@ -49,13 +47,6 @@ export default function diff (opts) {
         type: types.APPEND_CHILD
       });
       continue;
-    } else {
-      // Ensure the real node is carried over even if the destination isn't used.
-      // This is used in the render() function to keep track of the real node
-      // that corresponds to a virtual node if a virtual tree is being used.
-      if (typeof curDst.__id !== 'undefined') {
-        realNodeMap.set(curDst.__id, realNode(curSrc));
-      }
     }
 
     instructions = instructions.concat(diffNode(curSrc, curDst));

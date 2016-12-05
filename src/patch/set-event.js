@@ -1,14 +1,8 @@
 import eventMap from '../util/event-map';
-import realNode from '../util/real-node';
+import nodeMap from '../util/node-map';
 
 export default function (src, dst, data) {
-  const realSrc = realNode(src);
-
-  if (!realSrc) {
-    src.events[data.name] = data.value;
-    return;
-  }
-
+  const realSrc = nodeMap[src.__id];
   const eventHandlers = eventMap(realSrc);
   const name = data.name;
   const prevHandler = eventHandlers[name];

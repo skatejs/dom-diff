@@ -2,7 +2,7 @@
 
 import { h, merge, mount } from '../../../src';
 
-describe('key', () => {
+describe.skip('key', () => {
   it('should maintain nodes in a list', () => {
     const source = h('ul', null,
       h('li', { key: 0 }, '0'),

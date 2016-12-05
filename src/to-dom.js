@@ -1,10 +1,10 @@
 import eventMap from './util/event-map';
-import realNodeMap from './util/real-node-map';
+import nodeMap from './util/node-map';
 
 const { Node } = window;
 
 function createElement (node) {
-  const { attributes, childNodes, events } = node;
+  const { attributes, childNodes, events, properties } = node;
   const realNode = document.createElement(node.tagName);
   const eventHandlers = eventMap(realNode);
 
@@ -14,14 +14,20 @@ function createElement (node) {
     }
   }
 
+  if (childNodes) {
+    childNodes.forEach(ch => realNode.appendChild(render(ch)));
+  }
+
   if (events) {
     for (let name in events) {
       realNode.addEventListener(name, eventHandlers[name] = events[name]);
     }
   }
 
-  if (childNodes) {
-    childNodes.forEach(ch => realNode.appendChild(render(ch)));
+  if (properties) {
+    for (let name in properties) {
+      realNode[name] = properties[name];
+    }
   }
 
   return realNode;
@@ -41,6 +47,6 @@ export default function render (node) {
     return frag;
   }
   const realNode = node.tagName ? createElement(node) : createText(node);
-  realNodeMap.set(node.__id, realNode);
+  nodeMap[node.__id] = realNode;
   return realNode;
 }

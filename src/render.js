@@ -1,5 +1,4 @@
 import WeakMap from './util/weak-map';
-import h from './h';
 import merge from './merge';
 import mount from './mount';
 
@@ -15,7 +14,7 @@ export default function (render) {
     }
 
     // Create a new element to house the new tree since we diff / mount fragments.
-    const newTree = h('div', null, render(elem));
+    const newTree = render(elem);
     const oldTree = oldTreeMap.get(elem);
 
     if (oldTree) {
@@ -25,7 +24,7 @@ export default function (render) {
         done
       });
     } else {
-      mount(elem, newTree.childNodes);
+      mount(newTree, elem);
       if (typeof done === 'function') {
         done();
       }

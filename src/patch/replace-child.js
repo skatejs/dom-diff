@@ -1,8 +1,8 @@
 import dom from '../to-dom';
-import realNode from '../util/real-node';
+import nodeMap from '../util/node-map';
 
 export default function (src, dst) {
-  const realSrc = realNode(src);
+  const realSrc = nodeMap[src.__id];
   if (realSrc) {
     realSrc.parentNode && realSrc.parentNode.replaceChild(dom(dst), realSrc);
   } else {

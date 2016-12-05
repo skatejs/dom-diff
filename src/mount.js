@@ -1,13 +1,8 @@
 import toDom from './to-dom';
 
-function removeChildNodes (elem) {
-  while (elem.firstChild) {
-    const first = elem.firstChild;
-    first.parentNode.removeChild(first);
-  }
-}
-
-export default function (elem, tree) {
-  removeChildNodes(elem);
+export default function (tree, elem) {
+  elem = elem || document.createElement('div');
+  elem.innerHTML = '';
   elem.appendChild(toDom(tree));
+  return elem;
 }
