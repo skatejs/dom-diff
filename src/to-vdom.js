@@ -59,7 +59,9 @@ export default function (dom) {
 
   const walker = document.createTreeWalker(
     dom,
-    SHOW_DOCUMENT_FRAGMENT | SHOW_ELEMENT | SHOW_TEXT
+    SHOW_DOCUMENT_FRAGMENT | SHOW_ELEMENT | SHOW_TEXT,
+    null,
+    false
   );
 
   while (walker.nextNode()) {
