@@ -25,7 +25,11 @@ export default function (src, tar, data) {
     if (typeof prop === 'string') {
       style.cssText = prop;
     } else {
-      Object.assign(style, prop);
+      for (let name in prop) {
+        if (prop.hasOwnProperty(name)) {
+          style[name] = prop[name];
+        }
+      }
     }
   } else {
     node[name] = prop;
