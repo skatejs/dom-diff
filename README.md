@@ -14,6 +14,10 @@ npm install skatejs-dom-diff
 
 ## Usage
 
+Where `options` are accepted, you may provide:
+
+- `done` If specified, diffing is performed in a web worker and this callback is called when it's done.
+
 ### `diff(source, target, options)`
 
 Diffs two virtual trees.
@@ -264,43 +268,52 @@ const {
 
 You can tell the differ to do its work in a web worker simply by passing a `done` callback option to any of the three major entry functions (`diff()`, `merge()`, `render()`).
 
-#### `diff()`
+#### `diff(source, target, options)`
 
 In the case of `diff()`, it's called once the diffing algorithm has finished in the worker and passed the `instructions`. The patch `instructions` are the only argument passed into the callback.
 
 ```js
+/** @jsx h */
+import { h, diff } from 'skatejs-dom-diff';
+
 function done (instructions) {
   patch(instructions);
 }
-diff({ source, destination, done });
+diff(<p>source</p>, <p>target</p>, { done });
 ```
 
-#### `merge()`
+#### `merge(source, target, options)`
 
 For `done()`, it's passed in the same exact way. The only difference is that it's called after the patch is performed but it's still passed the instructions that were performed by the patch algorithm.
 
 ```js
+/** @jsx h */
+import { h, merge } from 'skatejs-dom-diff';
+
 function done (instructions) {
   // The DOM has been updated, do what you want here.
 }
-merge({ source, destination, done });
+merge(<p>source</p>, <p>target</p>, { done });
 ```
 
-#### `render()`
+#### `render(source, target, options)`
 
 And for `render()`, it is the same as the `merge()` function. So once the vDOM is rendered and DOM is patched, `done()` is called with the instructions that were performed.
 
 ```js
+import { h, render } from 'skatejs-dom-diff';
+
 function done (instructions) {
   // Renering and patching is done...
 }
 const root = document.createElement('div');
-const doRender = render(function (root) {
-  return sd.vdom.element('div', null, root.test);
-});
+const doRender = render((root) => (
+  <div>{root.test}</div>
+));
 
 div.test = 'initial text';
 doRender(div, done);
+
 div.test = 'updated text';
 doRender(div, done);
 ```
