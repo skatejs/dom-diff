@@ -1,11 +1,12 @@
 import eventMap from './util/event-map';
 import nodeMap from './util/node-map';
+import root from './util/root';
 
-const { Node } = window;
+const { Node } = root;
 
 function createElement (node) {
   const { attributes, childNodes, events, properties } = node;
-  const realNode = document.createElement(node.tagName);
+  const realNode = document.createElement(node.localName);
   const eventHandlers = eventMap(realNode);
 
   if (attributes) {
@@ -46,7 +47,7 @@ export default function render (node) {
     node.forEach(item => frag.appendChild(render(item)));
     return frag;
   }
-  const realNode = node.tagName ? createElement(node) : createText(node);
+  const realNode = node.localName ? createElement(node) : createText(node);
   nodeMap[node.__id] = realNode;
   return realNode;
 }

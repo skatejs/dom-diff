@@ -1,18 +1,16 @@
 import diffMain from './diff/main';
 import DiffWorker from 'worker-loader?name=./dist/[hash].[ext]!./diff/worker';
+import root from './util/root';
 
-const { Node } = window;
+const { Node } = root;
 
-function diffWorker (opts) {
+function diffWorker (src, tar, { done }) {
   const worker = new DiffWorker();
-  const { done } = opts;
   worker.addEventListener('message', e => done(e.data));
-  delete opts.done;
-  worker.postMessage(opts);
+  worker.postMessage([ src, tar ]);
 }
 
-export default function diff (opts = {}) {
-  const { source, destination, done } = opts;
-  const canDiffInWorker = done && !(source instanceof Node && destination instanceof Node);
-  return canDiffInWorker ? diffWorker(opts) : diffMain(opts);
+export default function diff (src, tar, { done } = {}) {
+  const canDiffInWorker = done && !(src instanceof Node && tar instanceof Node);
+  return canDiffInWorker ? diffWorker(src, tar, { done }) : diffMain(src, tar, { done });
 }

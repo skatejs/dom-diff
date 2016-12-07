@@ -1,4 +1,9 @@
 import createTextNode from './text';
+import root from './util/root';
+import WeakMap from './util/weak-map';
+
+const { HTMLElement } = root;
+const localNameMap = new WeakMap();
 
 function ensureNodes (arr) {
   let out = [];
@@ -17,8 +22,8 @@ function ensureNodes (arr) {
   return out;
 }
 
-function ensureTagName (name) {
-  return (typeof name === 'function' ? name.id || name.name : name).toUpperCase();
+function ensureObject (val) {
+  return val && typeof val === 'object' ? val : {};
 }
 
 function isNode (arg) {
@@ -35,38 +40,87 @@ function translateFromReact (item) {
     const chren = ensureNodes(props.children);
     delete props.children;
     return {
-      nodeType: 1,
-      tagName: item.type,
       attributes: props,
-      childNodes: chren
+      childNodes: chren,
+      localName: item.type,
+      nodeType: 1
     };
   }
   return item;
 }
 
 let count = 0;
-export default function (name, props, ...chren) {
+export default function (localName, props, ...chren) {
   const isPropsNode = isNode(props);
-  const node = {
-    __id: ++count,
-    childNodes: ensureNodes(isPropsNode ? [props].concat(chren) : chren),
-    nodeType: 1,
-    tagName: ensureTagName(name)
-  };
 
   if (isPropsNode) {
-    node.attributes = {};
-    node.events = {};
-    node.properties = {};
+    chren = ensureNodes([props].concat(chren));
+    props = {
+      attributes: {},
+      events: {},
+      properties: {}
+    };
   } else {
-    props = props || {};
-    const { attributes, events } = props;
-    node.attributes = attributes || {};
-    node.events = events || {};
-    node.properties = props;
-    delete props.attributes;
-    delete props.events;
+    props = ensureObject(props);
+    chren = ensureNodes(chren);
   }
+
+  // If it's a function that isn't an HTMLElement constructor. We test for a
+  // common property since this may be used in a worker / non browser
+  // environment.
+  if (localName.prototype instanceof HTMLElement) {
+    const cache = localNameMap.get(localName);
+    if (cache) {
+      return cache;
+    }
+    // eslint-disable-next-line new-cap
+    const tempLocalName = new localName().localName;
+    localNameMap.set(localName, tempLocalName);
+    localName = tempLocalName;
+  } else if (typeof localName === 'function') {
+    return localName(props, chren);
+  }
+
+  const node = {
+    __id: ++count,
+    childNodes: chren,
+    localName,
+    nodeType: 1
+  };
+
+  // Special props
+  //
+  // - aria: object that sets aria-* attributes
+  // - attributes: object of attributes to set
+  // - data: object that sets data-* attributes
+  // - events: object of event listeners to set
+  const { aria, attributes, data, events } = props;
+
+  node.attributes = ensureObject(attributes);
+  node.events = ensureObject(events);
+  node.properties = ensureObject(props);
+
+  const { attributes: nodeAttributes } = node;
+
+  // Aria attributes
+  if (typeof aria === 'object') {
+    for (let name in aria) {
+      nodeAttributes[`aria-${name}`] = aria[name];
+    }
+  }
+
+  // Data attributes
+  if (typeof data === 'object') {
+    for (let name in data) {
+      nodeAttributes[`data-${name}`] = data[name];
+    }
+  }
+
+  // Clean up special props.
+  delete props.aria;
+  delete props.attributes;
+  delete props.data;
+  delete props.events;
 
   return node;
 }

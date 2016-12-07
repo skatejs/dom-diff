@@ -1,25 +1,31 @@
 import nodeMap from '../util/node-map';
 
-const { prototype: HTMLElementPrototype } = window.HTMLElement;
+const propToAttrMap = {
+  className: 'class'
+};
 
-export default function (src, dst, data) {
+export default function (src, tar, data) {
   const { name } = data;
   const node = nodeMap[src.__id];
-  const prop = dst.properties[name];
+  const prop = tar.properties[name];
+  const mapped = propToAttrMap[name];
 
-  // Unfurtunately we have to handle style manually.
-  if (name === 'style') {
-    node.setAttribute('style', '');
-    if (typeof prop === 'string') {
-      node.style.cssText = prop;
+  if (mapped) {
+    if (prop == null) {
+      node.removeAttribute(mapped);
     } else {
-      Object.assign(node.style, prop);
+      node.className = prop;
     }
-  } else if (name in HTMLElementPrototype) {
-    if (typeof prop === 'undefined') {
-      delete node[name];
+  } else if (name === 'style') {
+    const { style } = node;
+    // Clear so we don't have to diff.
+    style.cssText = '';
+
+    // Handle both strings and objects.
+    if (typeof prop === 'string') {
+      style.cssText = prop;
     } else {
-      node[name] = prop;
+      Object.assign(style, prop);
     }
   } else {
     node[name] = prop;

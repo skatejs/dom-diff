@@ -4,10 +4,11 @@
 import 'custom-event-polyfill';
 import { h } from '../../../src/index';
 import { run } from '../../lib';
+import root from '../../../src/util/root';
 
-const { CustomEvent } = window;
+const { CustomEvent } = root;
 
-describe('events', function () {
+describe('patch/events', function () {
   const click = e => (e.target.triggered = true);
 
   it('should add listeners', function () {

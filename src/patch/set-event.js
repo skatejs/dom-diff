@@ -1,7 +1,7 @@
 import eventMap from '../util/event-map';
 import nodeMap from '../util/node-map';
 
-export default function (src, dst, data) {
+export default function (src, tar, data) {
   const realSrc = nodeMap[src.__id];
   const eventHandlers = eventMap(realSrc);
   const name = data.name;

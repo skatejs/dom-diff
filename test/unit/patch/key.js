@@ -2,24 +2,24 @@
 
 import { h, merge, mount } from '../../../src';
 
-describe.skip('key', () => {
+describe.skip('patch/key', () => {
   it('should maintain nodes in a list', () => {
-    const source = h('ul', null,
+    const src = h('ul', null,
       h('li', { key: 0 }, '0'),
       h('li', { key: 1 }, '1'),
       h('li', { key: 2 }, '2')
     );
-    const destination = h('ul', null,
+    const tar = h('ul', null,
       h('li', { key: 0 }, '0'),
       h('li', { key: 2 }, '2')
     );
 
     const root = document.createElement('div');
-    mount(root, source);
+    mount(root, src);
 
     const lastLiBefore = root.firstElementChild.children[2];
 
-    merge({ source, destination });
+    merge(src, tar);
 
     const lastLiAfter = root.firstElementChild.children[1];
 

@@ -1,19 +1,19 @@
-import { SET_PROPERTY } from '../types';
+import { REMOVE_ATTRIBUTE, SET_ATTRIBUTE } from '../types';
+
+const empty = v => v == null;
 
 export default function (src, tar) {
-  const { properties: srcValues } = src;
-  const { properties: tarValues } = tar;
+  const { attributes: srcValues } = src;
+  const { attributes: tarValues } = tar;
   const instructions = [];
 
   for (let name in srcValues) {
-    const srcValue = srcValues[name];
-    const tarValue = tarValues[name];
-    if (srcValue !== tarValue) {
+    if (empty(tarValues[name])) {
       instructions.push({
         data: { name },
         target: tar,
         source: src,
-        type: SET_PROPERTY
+        type: REMOVE_ATTRIBUTE
       });
     }
   }
@@ -21,12 +21,14 @@ export default function (src, tar) {
   for (let name in tarValues) {
     const srcValue = srcValues[name];
     const tarValue = tarValues[name];
-    if (srcValue !== tarValue) {
+
+    // Only add attributes that have changed.
+    if (srcValue !== tarValue && !empty(tarValues[name])) {
       instructions.push({
         data: { name },
         target: tar,
         source: src,
-        type: SET_PROPERTY
+        type: SET_ATTRIBUTE
       });
     }
   }

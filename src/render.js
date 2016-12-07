@@ -1,35 +1,17 @@
-import WeakMap from './util/weak-map';
-import merge from './merge';
-import mount from './mount';
+/** @jsx h */
 
-const { Node } = window;
-const oldTreeMap = new WeakMap();
+import fragment from './fragment';
+import merge from './merge';
+import toVdom from './to-vdom';
+import WeakMap from './util/weak-map';
+
+const targetMap = new WeakMap();
 
 export default function (render) {
-  return function (elem, done) {
-    elem = elem instanceof Node ? elem : this;
-
-    if (!(elem instanceof Node)) {
-      throw new Error('No node provided to diff renderer as either the first argument or the context.');
-    }
-
-    // Create a new element to house the new tree since we diff / mount fragments.
-    const newTree = render(elem);
-    const oldTree = oldTreeMap.get(elem);
-
-    if (oldTree) {
-      merge({
-        destination: newTree,
-        source: oldTree,
-        done
-      });
-    } else {
-      mount(newTree, elem);
-      if (typeof done === 'function') {
-        done();
-      }
-    }
-
-    oldTreeMap.set(elem, newTree);
+  return function (node, done) {
+    const src = targetMap.get(node) || toVdom(node);
+    const tar = fragment(render(node));
+    merge(src, tar, { done });
+    targetMap.set(node, tar);
   };
 }

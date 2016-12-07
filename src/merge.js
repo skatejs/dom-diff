@@ -1,19 +1,16 @@
 import diff from './diff';
 import patch from './patch';
 
-export default function (opts = {}) {
-  const { source, destination, done } = opts;
+export default function (src, tar, { done } = {}) {
   if (done) {
-    return diff({
-      source,
-      destination,
+    return diff(src, tar, {
       done (instructions) {
         patch(instructions);
         done(instructions);
       }
     });
   }
-  const instructions = diff(opts);
+  const instructions = diff(src, tar);
   patch(instructions);
   return instructions;
 }

@@ -44,6 +44,18 @@
     conventional-changelog "0.0.17"
     github-url-from-git "^1.4.0"
 
+"@webcomponents/custom-elements@https://github.com/webcomponents/custom-elements/archive/fc022e8.tar.gz":
+  version "1.0.0-alpha.3"
+  resolved "https://github.com/webcomponents/custom-elements/archive/fc022e8.tar.gz#f3411042f7301f1ce0b3061c5bb80dcb369be7cc"
+
+"@webcomponents/shadycss@https://github.com/webcomponents/shadycss/archive/19a46c9.tar.gz":
+  version "0.0.1"
+  resolved "https://github.com/webcomponents/shadycss/archive/19a46c9.tar.gz#c4614f09d107128e4945a3f7222ad8d1354c5994"
+
+"@webcomponents/shadydom@https://github.com/webcomponents/shadydom/archive/c162774.tar.gz":
+  version "0.0.1"
+  resolved "https://github.com/webcomponents/shadydom/archive/c162774.tar.gz#a59595b55b0a3422cdad1c428533feedbb99b802"
+
 abbrev@~1.0.9, abbrev@1:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.0.9.tgz#91b4792588a7738c25f35dd6f63752a2f8776135"
@@ -5776,6 +5788,14 @@ skatejs-build:
     style-loader "0.13.1"
     webpack "1.13.3"
     webpack-dev-server "1.16.2"
+
+skatejs-web-components:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/skatejs-web-components/-/skatejs-web-components-5.0.0.tgz#c350ec9614d88cc1331602f4827ecc7210d3286d"
+  dependencies:
+    "@webcomponents/custom-elements" "https://github.com/webcomponents/custom-elements/archive/fc022e8.tar.gz"
+    "@webcomponents/shadycss" "https://github.com/webcomponents/shadycss/archive/19a46c9.tar.gz"
+    "@webcomponents/shadydom" "https://github.com/webcomponents/shadydom/archive/c162774.tar.gz"
 
 slash@^1.0.0:
   version "1.0.0"

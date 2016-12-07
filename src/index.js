@@ -1,4 +1,5 @@
 import diff from './diff';
+import fragment from './fragment';
 import h from './h';
 import merge from './merge';
 import mount from './mount';
@@ -11,6 +12,7 @@ import * as types from './types';
 
 export {
   diff,
+  fragment,
   h,
   merge,
   mount,

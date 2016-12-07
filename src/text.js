@@ -1,6 +1,4 @@
-export default function (item) {
-  return {
-    nodeType: 3,
-    textContent: item
-  };
+const nodeType = 3;
+export default function (textContent) {
+  return { nodeType, textContent };
 }

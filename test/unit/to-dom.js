@@ -2,8 +2,9 @@
 /** @jsx h */
 
 import { h, toDom } from '../../src';
+import root from '../../src/util/root';
 
-const { CustomEvent } = window;
+const { CustomEvent } = root;
 
 describe('toDom', function () {
   it('should set properties', () => {
@@ -15,7 +16,7 @@ describe('toDom', function () {
 
   it('should set attributes', function () {
     const dom = toDom(<div attributes={{ test: true }} />);
-    expect(dom.nonstandard).to.equal(undefined);
+    expect(dom.test).to.equal(undefined);
     expect(dom.getAttribute('test')).to.equal('true');
   });
 

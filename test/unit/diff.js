@@ -2,25 +2,23 @@
 
 import { diff, h, types } from '../../src';
 
-const { assert } = window;
-
 describe('diff', () => {
   it('instructions array', function () {
     const src = h('div');
-    const dst = h('div');
-    const instructions = diff({ destination: dst, source: src });
+    const tar = h('div');
+    const instructions = diff(src, tar);
 
-    assert.ok(Array.isArray(instructions));
+    expect(Array.isArray(instructions)).to.be.true;
   });
 
   it('instruction object', function () {
     const src = h('div', null, h('span'));
-    const dst = h('div', null, h('a'));
-    const instructions = diff({ destination: dst, source: src });
+    const tar = h('div', null, h('a'));
+    const instructions = diff(src, tar);
 
-    assert.equal(instructions.length, 1, 'instruction length');
-    assert.equal(instructions[0].destination.tagName, 'A', 'destination tagName');
-    assert.equal(instructions[0].source.tagName, 'SPAN', 'source tagName');
-    assert.equal(instructions[0].type, types.REPLACE_CHILD, 'type');
+    expect(instructions.length).to.equal(1, 'instruction length');
+    expect(instructions[0].target.localName).to.equal('a', 'target localName');
+    expect(instructions[0].source.localName).to.equal('span', 'source localName');
+    expect(instructions[0].type).to.equal(types.REPLACE_CHILD, 'type');
   });
 });

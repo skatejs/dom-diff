@@ -1,7 +1,7 @@
-import { merge, mount } from '../../src';
+import { fragment, merge, mount } from '../../src';
 
-export function run (source, destination) {
-  const tree = mount(source);
-  merge({ source, destination });
+export function run (src, tar) {
+  const tree = mount(src);
+  merge(fragment(src), fragment(tar));
   return tree;
 }

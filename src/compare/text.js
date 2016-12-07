@@ -1,12 +1,12 @@
 import * as types from '../types';
 
-export default function (src, dst) {
-  if (src.textContent === dst.textContent) {
+export default function (src, tar) {
+  if (src.textContent === tar.textContent) {
     return [];
   }
 
   return [{
-    destination: dst,
+    target: tar,
     source: src,
     type: types.TEXT_CONTENT
   }];
