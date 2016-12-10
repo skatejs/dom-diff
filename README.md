@@ -1,241 +1,319 @@
 # Dom Diff
 
-Skate's DOM Diff is a library can diff and patch both real and virtual DOMs trees.
+Skate's DOM Diff is a virtual DOM library for diffing, patching and converting between virtual and real DOM trees.
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/skatejs-dom-diff.svg)](https://saucelabs.com/u/skatejs-dom-diff)
 
-## Installing
+- Serialise to and from read DOM trees
+- Diff virtual trees and patch real trees
+- Web worker support
 
 ```sh
 npm install skatejs-dom-diff
 ```
 
-## Including
-
-You can use any module format. UMD is in `lib`, ES6 is in `src` and the global `skateDomDiff` is exported from `dist`. The `package.json` points to `lib` so you're probably safe just doing something like:
-
-```js
-import skateDomDiff from 'skatejs-dom-diff';
-```
-
 ## Usage
 
-It will diff the trees of two nodes, excluding the root nodes themselves.
+Where `options` are accepted, you may provide:
+
+- `done` If specified, diffing is performed in a web worker and this callback is called when it's done.
+
+### `diff(source, target, options)`
+
+Diffs two virtual trees.
 
 ```js
-var fragment1 = document.createDocumentFragment();
-var fragment2 = document.createDocumentFragment();
+/** @jsx h **/
+import { diff, h } from 'skatejs-dom-diff';
 
-fragment1.appendChild(document.createElement('span'));
-fragment2.appendChild(document.createElement('div'));
-
-var instructions = skateDomDiff.diff({
-  // The fragment that you want the source to look like.
-  destination: fragment2,
-
-  // The fragment that you want to make look like the destination.
-  source: fragment1
-});
-
-console.log(instructions);
+const source = <div><span>source</span></div>;
+const target = <div><span>target</span></div>;
+const instructions = diff(source, target);
 ```
 
-Would log:
+The `patchInstructions` is an `array` that can be passed to `patch()` to update the `source` tree. Before passing the instructions to `patch()`, however, your source tree must be associated to real DOM nodes. This can be done by using `mount()` or by converting them to a tree using `toDom()`.
+
+### `fragment([virtualNodeOrNodes])`
+
+Creates a virtual fragment. You can pass nothing to create an empty fragment:
 
 ```js
-[{
-  source: [object HTMLSpanElement],
-  destination: [object HTMLDivElement],
-  type: [number skateDomDiff.types.REPLACE_CHILD]
-}]
+import { fragment } from 'skatejs-dom-diff';
+
+const vFrag = fragment();
 ```
 
-You can then take the instructions and `patch()` the source node.
+A single virtual node:
 
 ```js
-skateDomDiff.patch(instructions);
+import { fragment } from 'skatejs-dom-diff';
+
+const vFrag = fragment(<div />);
 ```
 
-If you want to do this all in one go, use `merge()`.
+An array of virtual nodes:
 
 ```js
-skateDomDiff.merge({
-  source: fragment1,
-  destination: fragment2
-});
+import { fragment } from 'skatejs-dom-diff';
+
+const vFrag = fragment([<div />, <span />]);
 ```
 
-### Virtual DOM usage
-
-The algorithm for determining differences between DOM nodes utilises properties on the nodes to gather information about them and because of this, you can simply inject a virtual tree instead of a DOM tree.
-
-It comes with a simple, lightweight virtual DOM implementation but you can use anything that implements the following interface:
+Or even a virtual fragment:
 
 ```js
-const element = {
-  // The name of the node. Must be uppercase.
-  tagName: 'TAG-NAME',
+import { fragment } from 'skatejs-dom-diff';
 
-  // The same thing as `nodeType` on a normal element.
-  nodeType: 1,
-
-  // An object that mimics a named-node map. It must have a `length` attribute
-  // and be able to be accessed by index as well as by name. In the example
-  // below both `0` and `name` should refer to the same object.
-  attributes: {
-    0: { name: 'name', value: 'value' },
-    name: { name: 'name', value: 'value' },
-    length: 1
-  },
-
-  // An array of virtual children. Each item will be an object like this one.
-  childNodes: []
-};
-
-const text = {
-  nodeType: 3,
-  textContent: 'text content'
-};
+const vFrag = fragment(fragment(<div />));
 ```
 
-#### Constructing a virtual tree
+### `h(name, props, ...childrenOrText)`
 
-There is a built-in function for creating virtual elements:
+Creates a virtual node.
 
 ```js
-import el from 'skatejs-dom-diff/vdom/element';
-
-el('div', null,
-  'Hello, ',
-  el('span', { style: 'font-weight: bold'}, 'World!')
-);
+// <div class="my-class">text or...<span /></div>
+h('div', { className: 'my-class' }, 'text or...', h('span'));
 ```
 
-The above would generate:
+Or you could just use JSX:
 
 ```js
-{
-  tagName: 'DIV',
-  nodeType: 1,
-  childNodes: [
-    {
-      nodeType: 3,
-      textContent: 'Hello'
-    }, {
-      tagName: 'SPAN',
-      nodeType: 1,
-      attributes: {
-        0: { name: 'style', value: 'font-weight: bold' },
-        style: { name: 'style', value: 'font-weight: bold' },
-        length: 1
-      },
-      childNodes: [
-        {
-          nodeType: 3,
-          textContent: 'World!'
-        }
-      ]
-    }
-  ]
+/** @jsx h **/
+// <div class="my-class">text or...<span /></div>
+<div className="my-class">text or...<span /></div>
+```
+
+#### Attributes
+
+By default, `h` only sets properties, but you can specify attributes you want to set by passing the special `attributes` prop:
+
+```js
+// <div class="my-class" />
+<div attributes={{ class: 'my-class' }} />
+```
+
+#### Aria attributes
+
+You can pass `aria-*` attributes using `attributes` but you can also specify the `aria` prop:
+
+```js
+// <div aria-label="my label" />
+<div aria={{ label: 'my label' }} />
+```
+
+#### Data attributes
+
+Like the `aria` prop, you can also use the `data` prop:
+
+```js
+// <div data-something="my data" />
+<div data={{ something: 'my data' }} />
+```
+
+#### Events
+
+Events are bound using the special `events` prop:
+
+```js
+const click = e => doSomethingWith(e);
+<div events={{ click }} />
+```
+
+### `merge()`
+
+The `merge()` function is convenience for calling `diff()` and `patch()` sequentially. As with `diff()`, you must ensure the `source` virtual tree has been associated to real nodes first.
+
+```js
+/** @jsx h **/
+import { diff, h } from 'skatejs-dom-diff';
+
+const source = <div><span>source</span></div>;
+const target = <div><span>target</span></div>;
+const dom = mount(source, target);
+merge(source, target);
+```
+
+### `mount(vdom[, root])`
+
+Mounts the `vdom` to the real `root` DOM node. It returns the `root` node. If the `root` node was not specified, it automatically creates a `<div />` and returns it.
+
+```js
+/** @jsx h **/
+import { h, mount } from 'skatejs-dom-diff';
+
+const div = mount(<p>some text</p>);
+```
+
+Is the same thing as:
+
+```js
+/** @jsx h **/
+import { h, mount } from 'skatejs-dom-diff';
+
+const div = document.createElement('div');
+mount(<p>some text</p>, div);
+```
+
+It's more than likely that you'll just mount it directly to the document:
+
+```js
+/** @jsx h **/
+import { h, mount } from 'skatejs-dom-diff';
+
+mount(<p>some text</p>, document.getElementById('app'));
+```
+
+### `patch()`
+
+Takes instructiosn created using `diff()` and performs them on the associated DOM nodes that each instructions is for.
+
+```js
+/** @jsx h **/
+import { diff, h, mount, patch } from 'skatejs-dom-diff';
+
+const source = <p>source tree</p>;
+const target = <p>target tree</p>;
+const instructions = diff(source, target);
+
+mount(source, document.getElementById('app'));
+patch(instructions);
+```
+
+### `render()`
+
+A highly convenient function for continually rendering a given template.
+
+```js
+/** @jsx h **/
+import { h, render } from 'skatejs-dom-diff';
+
+const root = document.getElementById('app');
+const renderer = render((root) => (
+  <p>{root.someProp}</p>
+));
+
+// Set the prop to render with
+root.someProp = 'test 1';
+
+// Initial render: <p>test 1</p>
+renderer(root);
+
+// Update the prop
+root.someProp = 'test 2';
+
+// Re-render: <p>test 2</p>
+renderer(root);
+```
+
+### `text()`
+
+Returns a virtual text node:
+
+```js
+import { text } from 'skatejs-dom-diff';
+
+const vText = text('my text node');
+```
+
+### `toDom()`
+
+Convers a virtual tree to a *real* DOM tree, event listeners and all:
+
+```js
+import { toDom } from 'skatejs-dom-diff';
+
+const vdom = <p>I will soon be real!</p>
+const dom = toDom(vdom);
+
+// <p>I will soon be real!</p>
+console.log(dom.outerHTML);
+```
+
+### `toVdom()`
+
+Converts a real DOM tree into a virtual tree. It only copies over attributes. Event listeners can't be copied because the standard DOM APIs don't provide a way to get bound listeners.
+
+*Properties currently aren't copied either, but is being worked on.*
+
+```js
+import { toVdom } from 'skatejs-dom-diff';
+
+const dom = document.createElement('p');
+dom.textContent = 'I will soon be fake!';
+
+const vdom = toVdom(dom);
+```
+
+### `types`
+
+The types of patches that can occur. Currently these are:
+
+```js
+import { types } from 'skatejs-dom-diff';
+
+const {
+  APPEND_CHILD,
+  REMOVE_CHILD,
+  REMOVE_ATTRIBUTE,
+  REPLACE_CHILD,
+  SET_ATTRIBUTE,
+  SET_EVENT,
+  SET_PROPERTY,
+  TEXT_CONTENT
+} = types;
+```
+
+### Web workers
+
+You can tell the differ to do its work in a web worker simply by passing a `done` callback option to any of the three major entry functions (`diff()`, `merge()`, `render()`).
+
+#### `diff(source, target, options)`
+
+In the case of `diff()`, it's called once the diffing algorithm has finished in the worker and passed the `instructions`. The patch `instructions` are the only argument passed into the callback.
+
+```js
+/** @jsx h */
+import { h, diff } from 'skatejs-dom-diff';
+
+function done (instructions) {
+  patch(instructions);
 }
+diff(<p>source</p>, <p>target</p>, { done });
 ```
 
-That information is then used to diff and generate patch instructions for the real DOM nodes. Upon initial mounting, the entire virtual tree is used to create the initial structure.
+#### `merge(source, target, options)`
 
-#### Diffing and patching a virtual tree
-
-Diffing a virtual tree is almost the same as diffing real nodes except that you must mount your virtual tree to an empty node before you can diff that tree with a new tree.
+For `done()`, it's passed in the same exact way. The only difference is that it's called after the patch is performed but it's still passed the instructions that were performed by the patch algorithm.
 
 ```js
-import merge from 'skatejs-dom-diff/src/merge';
-import mount from 'skatejs-dom-diff/src/vdom/mount';
+/** @jsx h */
+import { h, merge } from 'skatejs-dom-diff';
 
-const container = document.getElementById('container');
-let oldTree = el('div');
-let newTree = el('span');
-
-mount(container, tree);
-merge({
-  destination: newTree,
-  source: oldTree
-});
+function done (instructions) {
+  // The DOM has been updated, do what you want here.
+}
+merge(<p>source</p>, <p>target</p>, { done });
 ```
 
-There is a built-in renderer that will do all of this for you.
+#### `render(source, target, options)`
+
+And for `render()`, it is the same as the `merge()` function. So once the vDOM is rendered and DOM is patched, `done()` is called with the instructions that were performed.
 
 ```js
-import el from 'skatejs-dom-diff/src/vdom/element';
-import render from 'skatejs-dom-diff/src/render';
+import { h, render } from 'skatejs-dom-diff';
 
-// Create a function that takes props and will
-const renderer = render(function (root) {
-  return el('div', { class: root.propName });
-});
+function done (instructions) {
+  // Renering and patching is done...
+}
+const root = document.createElement('div');
+const doRender = render((root) => (
+  <div>{root.test}</div>
+));
 
-// The renderer is called against a real node as it will be mounted to this
-// node. As shown above, you can also use this node for information.
-document.body.propName = 'something';
-renderer(document.body);
+div.test = 'initial text';
+doRender(div, done);
 
-// And then re-render.
-document.body.propName = 'something else';
-renderer(document.body);
+div.test = 'updated text';
+doRender(div, done);
 ```
-
-The above would render:
-
-```html
-<!-- initial render -->
-<body>
-  <div class="something"></div>
-</body>
-
-<!-- re-render -->
-<body>
-  <div class="something else"></div>
-</body>
-```
-
-The only thing that would change would be the `class` attribute on the `<div>` since the node itself doesn't need to be replaced.
-
-#### JSX
-
-JSX works out of the box, even if it's compiling down to `React.createElement` calls. All you have to do is define a second argument to your renderer:
-
-```js
-const renderer = render(function (root, React) {
-  return <div class={root.propName} />;
-});
-```
-
-This is useful when you want to avoid extra transpilation steps, but you can transpile down to anything you want as long as it has a `createElement` function on the second argument.
-
-#### Attribute conventions
-
-When you specify attributes to the function that creates a virtual element, it will apply the following conventions - in the specified order - to each one.
-
-1. If the attribute value is a `string`, it will be set as an attribute.
-2. If the attribute name begins with `on`, the value will be added as the corresponding event listener (but only if it is a function, otherwise it's a no-op). For example, if you specified `{ onclick: handler }`, then internally it does something like `element.addEventListener('click', handler)`.
-3. If 1 or 2 is not met, then it is set as a property.
-
-This comes in handy when using JSX because you can do stuff like:
-
-```js
-<input type="checkbox" checked={true} onchange={function(){}} />
-```
-
-The resulting HTML would be:
-
-```html
-<input type="checkbox">
-```
-
-Additionally, it would have the `checked` property set to `true` and the `change` event would be handled by the value passed to `onchange`.
-
-#### Attribute patching behaviour
-
-When diffing and patching, the behaviour is much the same. If you're diffing real DOM nodes, then events and properties are ignored. Those are only available to virtual trees unless the element has an `events` and / or `properties` object on them. This is an implementation detail and may change and / or be formalised in the future. Nonetheless, it's something to be aware of.
-
-When patching event listeners, the previous one will be completely unbound and the new one will be bound. This prevents handlers from stacking.
-
-When patching properties, they're simply just set if the source and destination values aren't the same.

@@ -1,19 +1,20 @@
 import * as types from '../types';
-import eventMap from '../util/event-map';
 
-export default function (src, dst) {
-  const dstEvents = dst.events;
-  const srcEvents = eventMap(src);
+export default function (src, tar) {
+  const tarEvents = tar.events;
+  const srcEvents = src.events;
   const instructions = [];
 
-  // Remove any source events that aren't in the destination before seeing if
-  // we need to add any from the destination.
+  // Remove any source events that aren't in the target before seeing if
+  // we need to add any from the target.
   if (srcEvents) {
     for (let name in srcEvents) {
-      if (dstEvents && dstEvents[name] !== srcEvents[name]) {
+      const srcEvent = srcEvents[name];
+      const tarEvent = tarEvents[name];
+      if (!tarEvent || srcEvent !== tarEvent) {
         instructions.push({
-          data: { name, value: undefined },
-          destination: dst,
+          data: { name },
+          target: tar,
           source: src,
           type: types.SET_EVENT
         });
@@ -24,13 +25,14 @@ export default function (src, dst) {
   // After instructing to remove any old events, we then can instruct to add
   // new events. This prevents the new events from being removed from earlier
   // instructions.
-  if (dstEvents) {
-    for (let name in dstEvents) {
-      const value = dstEvents[name];
-      if (srcEvents[name] !== value) {
+  if (tarEvents) {
+    for (let name in tarEvents) {
+      const srcEvent = srcEvents[name];
+      const tarEvent = tarEvents[name];
+      if (srcEvent !== tarEvent) {
         instructions.push({
-          data: { name, value },
-          destination: dst,
+          data: { name, value: tarEvent },
+          target: tar,
           source: src,
           type: types.SET_EVENT
         });

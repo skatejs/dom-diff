@@ -1,6 +1,6 @@
-import realNode from '../util/real-node';
-import dom from '../vdom/dom';
+import nodeMap from '../util/node-map';
+import toDom from '../to-dom';
 
-export default function (src, dst) {
-  realNode(src).appendChild(dom(dst));
+export default function (src, tar) {
+  nodeMap[src.__id].appendChild(toDom(tar));
 }

@@ -1,6 +1,6 @@
-import { removeAccessor } from '../util/accessor';
-import realNode from '../util/real-node';
+import nodeMap from '../util/node-map';
 
-export default function (src, dst, data) {
-  removeAccessor(realNode(src), data.name);
+export default function (src, tar, data) {
+  const { name } = data;
+  nodeMap[src.__id].removeAttribute(name);
 }

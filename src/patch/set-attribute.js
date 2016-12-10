@@ -1,6 +1,6 @@
-import { setAccessor } from '../util/accessor';
-import realNode from '../util/real-node';
+import nodeMap from '../util/node-map';
 
-export default function (src, dst, data) {
-  setAccessor(realNode(src), data.name, data.value);
+export default function (src, tar, data) {
+  const { name } = data;
+  nodeMap[src.__id].setAttribute(name, tar.attributes[name]);
 }
