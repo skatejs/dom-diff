@@ -35,7 +35,7 @@
   "homepage": "https://github.com/skatejs/dom-diff#readme",
   "dependencies": {
     "object-assign": "^4.0.1",
-    "skatejs-web-components": "^5.0.0"
+    "skatejs-web-components": "^5.0.1"
   },
   "config": {
     "commitizen": {
