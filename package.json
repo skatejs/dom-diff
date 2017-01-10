@@ -12,6 +12,7 @@
     "cz-conventional-changelog": "^1.2.0",
     "semantic-release": "^6.3.2",
     "skatejs-build": "^12.1.0",
+    "skatejs-web-components": "^5.0.1",
     "worker-loader": "^0.7.1"
   },
   "scripts": {
@@ -33,10 +34,7 @@
     "url": "https://github.com/skatejs/dom-diff/issues"
   },
   "homepage": "https://github.com/skatejs/dom-diff#readme",
-  "dependencies": {
-    "object-assign": "^4.0.1",
-    "skatejs-web-components": "^5.0.1"
-  },
+  "dependencies": {},
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
