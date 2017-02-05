@@ -12,7 +12,7 @@ install:
 script:
   - sk-bundle
   - if [ "${TRAVIS_SECURE_ENV_VARS}" = "true" ]; then
-    npm test -- --ci;
+    npm test -- --all;
     else
     npm test;
     fi
