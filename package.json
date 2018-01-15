@@ -8,7 +8,7 @@
     "src"
   ],
   "devDependencies": {
-    "custom-event-polyfill": "0.2.2",
+    "custom-event-polyfill": "0.3.0",
     "cz-conventional-changelog": "2.1.0",
     "semantic-release": "6.3.6",
     "skatejs-build": "12.2.0",
