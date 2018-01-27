@@ -10,7 +10,7 @@
   "devDependencies": {
     "custom-event-polyfill": "0.3.0",
     "cz-conventional-changelog": "2.1.0",
-    "semantic-release": "6.3.6",
+    "semantic-release": "12.4.1",
     "skatejs-build": "12.2.0",
     "skatejs-web-components": "5.2.1",
     "worker-loader": "0.8.1"
