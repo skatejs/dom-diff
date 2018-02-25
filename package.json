@@ -13,7 +13,7 @@
     "semantic-release": "6.3.6",
     "skatejs-build": "12.2.0",
     "skatejs-web-components": "5.2.1",
-    "worker-loader": "0.8.1"
+    "worker-loader": "1.1.1"
   },
   "scripts": {
     "build": "sk-build",
