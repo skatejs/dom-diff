@@ -130,7 +130,7 @@ import { diff, h } from 'skatejs-dom-diff';
 
 const source = <div><span>source</span></div>;
 const target = <div><span>target</span></div>;
-const dom = mount(source, target);
+const dom = mount(source);
 merge(source, target);
 ```
 
