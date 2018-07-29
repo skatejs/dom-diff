@@ -34,9 +34,7 @@
     "url": "https://github.com/skatejs/dom-diff/issues"
   },
   "homepage": "https://github.com/skatejs/dom-diff#readme",
-  "dependencies": {
-    "object-assign": "^4.0.1"
-  },
+  "dependencies": {},
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
